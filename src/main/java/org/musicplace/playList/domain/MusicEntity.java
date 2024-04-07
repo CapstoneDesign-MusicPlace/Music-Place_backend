@@ -22,5 +22,9 @@ public class MusicEntity {
     @Column(name = "TITLE", nullable = false)
     private String title;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private PLEntity plEntity;
+
 
 }
