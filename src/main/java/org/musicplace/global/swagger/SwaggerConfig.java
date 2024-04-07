@@ -1,4 +1,4 @@
-package org.musicplace.swagger;
+package org.musicplace.global.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
