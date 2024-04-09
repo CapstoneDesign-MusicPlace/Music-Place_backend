@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Table(name = "PLMUSIC")
@@ -17,14 +18,16 @@ public class MusicEntity {
     private Long music_id;
 
     @Column(name = "SINGER", nullable = false)
+    @Comment("가수")
     private String singer;
 
     @Column(name = "TITLE", nullable = false)
+    @Comment("노래 제목")
     private String title;
 
-    @ManyToOne
+/*    @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    private PLEntity plEntity;
+    private PLEntity plEntity;*/
 
 
 }
