@@ -30,12 +30,18 @@ public class PLService {
     @Transactional
     public void PLUpdate(Long id, PLUpdateDto plUpdateDto) {
         PLEntity plEntity = PLFindById(id);
+        checkDeleteStatus(plEntity);
         plEntity.PLUpdate(plUpdateDto.getOnOff(),
                 plUpdateDto.getCover_img(),
                 plUpdateDto.getComment());
     }
 
-    public void PLDelete() {}
+    @Transactional
+    public void PLDelete(Long id) {
+        PLEntity plEntity = PLFindById(id);
+        checkDeleteStatus(plEntity);
+        plEntity.delete();
+    }
 
     public void PLFindAll() {}
 
@@ -45,6 +51,11 @@ public class PLService {
         return plEntity;
     }
 
+    private void checkDeleteStatus(PLEntity plEntity) {
+        if (plEntity.isDelete()) {
+            throw new ExceptionHandler(ErrorCode.ID_DELETE);
+        }
+    }
 
 
 }
