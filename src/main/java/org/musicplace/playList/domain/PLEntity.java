@@ -52,13 +52,17 @@ public class PLEntity {
 */
 
     @Builder
-    public PLEntity(String title, OnOff onOff) {
+    public PLEntity(String title, OnOff onOff, String cover_img, String comment) {
         this.PLTitle = title;
         this.onOff = onOff;
+        this.comment = comment;
+        this.cover_img = cover_img;
     }
 
-    public void PLUpdate() {
-
+    public void PLUpdate(OnOff onOff, String cover_img, String comment) {
+        this.onOff = onOff;
+        this.comment = comment;
+        this.cover_img = cover_img;
     }
 
 

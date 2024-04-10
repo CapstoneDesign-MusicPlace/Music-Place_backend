@@ -19,6 +19,8 @@ public class PLService {
         plRepository.save(PLEntity.builder()
                 .title(plSaveDto.getTitle())
                 .onOff(plSaveDto.getOnOff())
+                .comment(plSaveDto.getComment())
+                .cover_img(plSaveDto.getCover_img())
                 .build());
     }
 
