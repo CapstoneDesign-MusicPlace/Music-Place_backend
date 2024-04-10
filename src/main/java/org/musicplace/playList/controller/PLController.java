@@ -2,6 +2,7 @@ package org.musicplace.playList.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.musicplace.playList.Service.PLService;
+import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.dto.PLUpdateDto;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/playList")
@@ -36,6 +39,10 @@ public class PLController {
         PLService.PLDelete(id);
     }
 
-
+    @GetMapping
+    public List<PLEntity> PLFindAll(){
+        List<PLEntity> PlayListAll = PLService.PLFindAll();
+        return PlayListAll;
+    }
 
 }

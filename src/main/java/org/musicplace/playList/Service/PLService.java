@@ -8,12 +8,16 @@ import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.dto.PLUpdateDto;
 import org.musicplace.playList.repository.PLRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PLService {
-
 
     private final PLRepository plRepository;
 
@@ -43,7 +47,18 @@ public class PLService {
         plEntity.delete();
     }
 
-    public void PLFindAll() {}
+    @Transactional
+    public List<PLEntity> PLFindAll() {
+        List<PLEntity> PlayListAll = plRepository.findAll();
+        List<PLEntity> nonDeletedPlayLists = new ArrayList<>();
+        for(PLEntity pl : PlayListAll)  {
+            if(!pl.isDelete()) {
+                nonDeletedPlayLists.add(pl);
+            }
+        }
+        return nonDeletedPlayLists;
+    }
+
 
     public PLEntity PLFindById(Long id) {
         PLEntity plEntity = plRepository.findById(id)
