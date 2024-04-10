@@ -2,8 +2,11 @@ package org.musicplace.playList.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.musicplace.global.exception.ErrorCode;
+import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
+import org.musicplace.playList.dto.PLUpdateDto;
 import org.musicplace.playList.repository.PLRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +27,24 @@ public class PLService {
                 .build());
     }
 
-    public void PLUpdate() {}
+    @Transactional
+    public void PLUpdate(Long id, PLUpdateDto plUpdateDto) {
+        PLEntity plEntity = PLFindById(id);
+        plEntity.PLUpdate(plUpdateDto.getOnOff(),
+                plUpdateDto.getCover_img(),
+                plUpdateDto.getComment());
+    }
 
     public void PLDelete() {}
 
     public void PLFindAll() {}
 
-    public void PLFind() {}
+    public PLEntity PLFindById(Long id) {
+        PLEntity plEntity = plRepository.findById(id)
+                .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
+        return plEntity;
+    }
+
 
 
 }

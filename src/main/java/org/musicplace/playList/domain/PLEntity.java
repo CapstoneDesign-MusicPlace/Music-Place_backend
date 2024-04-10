@@ -43,6 +43,9 @@ public class PLEntity {
     @Comment("플리 설명")
     private String comment;
 
+    @Column(name = "DELETE_STATE", nullable = false)
+    @Comment("삭제여부")
+    private boolean delete = false;
 
 
 /*
@@ -65,6 +68,9 @@ public class PLEntity {
         this.cover_img = cover_img;
     }
 
+    public void delete () {
+        delete = true;
+    }
 
 
 
