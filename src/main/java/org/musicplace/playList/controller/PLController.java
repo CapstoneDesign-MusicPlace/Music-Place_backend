@@ -45,4 +45,10 @@ public class PLController {
         return PlayListAll;
     }
 
+    @GetMapping("/public")
+    public List<PLEntity> PLFindPublic(){
+        List<PLEntity> PublicPlayList = PLService.PLFindPublic();
+        return PublicPlayList;
+    }
+
 }

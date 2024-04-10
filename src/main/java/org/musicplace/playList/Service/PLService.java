@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
+import org.musicplace.playList.domain.OnOff;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.dto.PLUpdateDto;
@@ -59,6 +60,17 @@ public class PLService {
         return nonDeletedPlayLists;
     }
 
+    @Transactional
+    public List<PLEntity> PLFindPublic() {
+        List<PLEntity> PlayListAll = plRepository.findAll();
+        List<PLEntity> PublicPlayLists = new ArrayList<>();
+        for(PLEntity pl : PlayListAll)  {
+            if(pl.getOnOff().equals(OnOff.Public)) {
+                PublicPlayLists.add(pl);
+            }
+        }
+        return PublicPlayLists;
+    }
 
     public PLEntity PLFindById(Long id) {
         PLEntity plEntity = plRepository.findById(id)
