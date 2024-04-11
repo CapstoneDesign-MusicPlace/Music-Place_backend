@@ -28,7 +28,7 @@ public class MusicService {
 
     @Transactional
     public void MusicDelete(Long id) {
-        MusicEntity musicEntity = PLFindById(id);
+        MusicEntity musicEntity = MusicFindById(id);
         checkDeleteStatus(musicEntity);
         musicEntity.delete();
     }
@@ -46,7 +46,7 @@ public class MusicService {
     }
 
 
-    public MusicEntity PLFindById(Long id) {
+    public MusicEntity MusicFindById(Long id) {
         MusicEntity musicEntity = musicRepository.findById(id)
                 .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
         return musicEntity;

@@ -41,4 +41,7 @@ public class CommentEntity extends AuditInformation {
         this.comment = comment;
     }
 
+    public void delete () {
+        delete = true;
+    }
 }
