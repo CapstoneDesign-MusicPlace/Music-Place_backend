@@ -10,6 +10,9 @@ import org.musicplace.playList.dto.MusicSaveDto;
 import org.musicplace.playList.repository.MusicRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MusicService {
@@ -28,6 +31,18 @@ public class MusicService {
         MusicEntity musicEntity = PLFindById(id);
         checkDeleteStatus(musicEntity);
         musicEntity.delete();
+    }
+
+    @Transactional
+    public List<MusicEntity> MusicFindAll() {
+        List<MusicEntity> AllMusic = musicRepository.findAll();
+        List<MusicEntity> nonDeletedMusic = new ArrayList<>();
+        for(MusicEntity Music : AllMusic)  {
+            if(!Music.isDelete()) {
+                nonDeletedMusic.add(Music);
+            }
+        }
+        return nonDeletedMusic;
     }
 
 
