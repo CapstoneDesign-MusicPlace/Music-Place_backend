@@ -2,9 +2,12 @@ package org.musicplace.playList.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,6 +37,10 @@ public class CommentEntity extends AuditInformation {
     @Column(name = "DELETE_STATE", nullable = false)
     @Comment("삭제여부")
     private boolean delete = false;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "playlist_id")
+    private PLEntity plEntity;
 
     @Builder
     public CommentEntity(String nickName, String comment) {

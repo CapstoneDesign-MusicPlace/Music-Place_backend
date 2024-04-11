@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.musicplace.global.jpa.AuditInformation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,12 +49,12 @@ public class PLEntity extends AuditInformation {
     @Comment("삭제여부")
     private boolean delete = false;
 
+    @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL)
+    private List<MusicEntity> musicEntities = new ArrayList<>();
 
-/*
+    @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL)
+    private List<CommentEntity> commentEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "MusicEntity", cascade = CascadeType.ALL)
-    private List<MusicEntity> musicEntities;
-*/
 
     @Builder
     public PLEntity(String title, OnOff onOff, String cover_img, String comment) {

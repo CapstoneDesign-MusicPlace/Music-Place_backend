@@ -34,6 +34,10 @@ public class MusicEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private PLEntity plEntity;*/
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "playlist_id")
+    private PLEntity plEntity;
+
     @Builder
     public MusicEntity(String singer, String title) {
         this.singer = singer;
