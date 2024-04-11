@@ -33,7 +33,6 @@ public class MusicService {
         musicEntity.delete();
     }
 
-    @Transactional
     public List<MusicEntity> MusicFindAll() {
         List<MusicEntity> AllMusic = musicRepository.findAll();
         List<MusicEntity> nonDeletedMusic = new ArrayList<>();

@@ -10,6 +10,9 @@ import org.musicplace.playList.dto.CommentSaveDto;
 import org.musicplace.playList.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -29,6 +32,17 @@ public class CommentService {
         CommentEntity commentEntity = CommentFindById(id);
         checkDeleteStatus(commentEntity);
         commentEntity.delete();
+    }
+
+    public List<CommentEntity> CommentFindAll() {
+        List<CommentEntity> AllComment = commentRepository.findAll();
+        List<CommentEntity> nonDeletedComment = new ArrayList<>();
+        for(CommentEntity Comment : AllComment)  {
+            if(!Comment.isDelete()) {
+                nonDeletedComment.add(Comment);
+            }
+        }
+        return nonDeletedComment;
     }
 
     public CommentEntity CommentFindById(Long id) {

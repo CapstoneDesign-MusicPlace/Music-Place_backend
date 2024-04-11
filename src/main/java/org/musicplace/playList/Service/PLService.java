@@ -48,7 +48,6 @@ public class PLService {
         plEntity.delete();
     }
 
-    @Transactional
     public List<PLEntity> PLFindAll() {
         List<PLEntity> PlayListAll = plRepository.findAll();
         List<PLEntity> nonDeletedPlayLists = new ArrayList<>();
@@ -60,7 +59,6 @@ public class PLService {
         return nonDeletedPlayLists;
     }
 
-    @Transactional
     public List<PLEntity> PLFindPublic() {
         List<PLEntity> PlayListAll = plRepository.findAll();
         List<PLEntity> PublicPlayLists = new ArrayList<>();
