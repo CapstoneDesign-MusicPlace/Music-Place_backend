@@ -40,5 +40,10 @@ public class MusicEntity {
         this.title = title;
     }
 
+    public void delete () {
+        delete = true;
+    }
+
+
 
 }
