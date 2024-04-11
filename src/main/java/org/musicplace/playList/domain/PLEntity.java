@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.musicplace.global.jpa.AuditInformation;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
 @Getter
 @Table(name = "PLAYLIST")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PLEntity {
+public class PLEntity extends AuditInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PLAYLIST_ID", nullable = false)
