@@ -19,16 +19,4 @@ public class MusicPlaceApplication {
 
 	}
 
-	@Component
-	public class SwaggerInformation implements ApplicationRunner {
-		@Value("${server.port}")
-		private String port;
-		Logger logger = LoggerFactory.getLogger("Main");
-		@Override
-		public void run(ApplicationArguments args) {
-			logger.info("Swagger : http://localhost:" + port  + "/swagger-ui/index.html");
-		}
-	}
-
-
 }

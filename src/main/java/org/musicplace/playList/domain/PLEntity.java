@@ -12,8 +12,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import org.musicplace.global.jpa.AuditInformation;
+import org.musicplace.playList.dto.MusicSaveDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,10 @@ public class PLEntity extends AuditInformation {
 
     public void delete () {
         delete = true;
+    }
+
+    public void saveMusic(MusicEntity music) {
+        musicEntities.add(music);
     }
 
 

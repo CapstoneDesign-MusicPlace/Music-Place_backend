@@ -30,12 +30,8 @@ public class MusicEntity {
     @Comment("삭제여부")
     private boolean delete = false;
 
-/*    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private PLEntity plEntity;*/
-
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "playlist_id")
+    @JoinColumn(name = "playlist_id",insertable = false, updatable = false)
     private PLEntity plEntity;
 
     @Builder

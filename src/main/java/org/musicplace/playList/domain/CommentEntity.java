@@ -39,7 +39,7 @@ public class CommentEntity extends AuditInformation {
     private boolean delete = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "playlist_id")
+    @JoinColumn(name = "playlist_id",insertable = false, updatable = false)
     private PLEntity plEntity;
 
     @Builder

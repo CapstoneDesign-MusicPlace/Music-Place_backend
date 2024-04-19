@@ -3,6 +3,7 @@ package org.musicplace.playList.controller;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.playList.Service.PLService;
 import org.musicplace.playList.domain.PLEntity;
+import org.musicplace.playList.dto.MusicSaveDto;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.dto.PLUpdateDto;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,6 +50,11 @@ public class PLController {
     public List<PLEntity> PLFindPublic(){
         List<PLEntity> PublicPlayList = PLService.PLFindPublic();
         return PublicPlayList;
+    }
+
+    @PostMapping("/{id}/music")
+    public void AddMusic(@PathVariable Long id, @RequestBody MusicSaveDto musicSaveDto) {
+        PLService.AddMusic(id, musicSaveDto);
     }
 
 }
