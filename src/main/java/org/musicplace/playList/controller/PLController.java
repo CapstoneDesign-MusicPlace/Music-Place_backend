@@ -3,6 +3,7 @@ package org.musicplace.playList.controller;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.playList.Service.PLService;
 import org.musicplace.playList.domain.PLEntity;
+import org.musicplace.playList.dto.CommentSaveDto;
 import org.musicplace.playList.dto.MusicSaveDto;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.dto.PLUpdateDto;
@@ -59,6 +60,12 @@ public class PLController {
     @PostMapping("/{id}/music")
     public void MusicSave(@PathVariable Long id, @RequestBody MusicSaveDto musicSaveDto) {
         PLService.MusicSave(id, musicSaveDto);
+    }
+
+
+    @PostMapping("/{id}/comment")
+    public void CommentSave(@PathVariable Long id, @RequestBody CommentSaveDto commentSaveDto) {
+        PLService.CommentSave(id, commentSaveDto);
     }
 
 }

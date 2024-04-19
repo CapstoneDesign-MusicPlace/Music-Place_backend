@@ -80,7 +80,9 @@ public class PLEntity extends AuditInformation {
         musicEntities.add(music);
     }
 
-
+    public void CommentSave(CommentEntity comment) {
+        commentEntities.add(comment);
+    }
 
 
 

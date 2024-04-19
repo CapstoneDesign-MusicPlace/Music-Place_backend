@@ -4,9 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
+import org.musicplace.playList.domain.CommentEntity;
 import org.musicplace.playList.domain.MusicEntity;
 import org.musicplace.playList.domain.OnOff;
 import org.musicplace.playList.domain.PLEntity;
+import org.musicplace.playList.dto.CommentSaveDto;
 import org.musicplace.playList.dto.MusicSaveDto;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.dto.PLUpdateDto;
@@ -57,6 +59,16 @@ public class PLService {
         plEntity.MusicSave(MusicEntity.builder()
                 .title(musicSaveDto.getTitle())
                 .singer(musicSaveDto.getSinger())
+                .build());
+    }
+
+    @Transactional
+    public void CommentSave(Long id, CommentSaveDto commentSaveDto) {
+        PLEntity plEntity = PLFindById(id);
+        checkDeleteStatus(plEntity);
+        plEntity.CommentSave(CommentEntity.builder()
+                .comment(commentSaveDto.getComment())
+                .nickName(commentSaveDto.getNickName())
                 .build());
     }
 
