@@ -52,9 +52,13 @@ public class PLController {
         return PublicPlayList;
     }
 
+
+
+
+
     @PostMapping("/{id}/music")
-    public void AddMusic(@PathVariable Long id, @RequestBody MusicSaveDto musicSaveDto) {
-        PLService.AddMusic(id, musicSaveDto);
+    public void MusicSave(@PathVariable Long id, @RequestBody MusicSaveDto musicSaveDto) {
+        PLService.MusicSave(id, musicSaveDto);
     }
 
 }

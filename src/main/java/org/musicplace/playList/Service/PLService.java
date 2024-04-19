@@ -51,10 +51,10 @@ public class PLService {
     }
 
     @Transactional
-    public void AddMusic(Long id, MusicSaveDto musicSaveDto) {
+    public void MusicSave(Long id, MusicSaveDto musicSaveDto) {
         PLEntity plEntity = PLFindById(id);
         checkDeleteStatus(plEntity);
-        plEntity.saveMusic(MusicEntity.builder()
+        plEntity.MusicSave(MusicEntity.builder()
                 .title(musicSaveDto.getTitle())
                 .singer(musicSaveDto.getSinger())
                 .build());

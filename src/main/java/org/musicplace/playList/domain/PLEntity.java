@@ -76,7 +76,7 @@ public class PLEntity extends AuditInformation {
         delete = true;
     }
 
-    public void saveMusic(MusicEntity music) {
+    public void MusicSave(MusicEntity music) {
         musicEntities.add(music);
     }
 
