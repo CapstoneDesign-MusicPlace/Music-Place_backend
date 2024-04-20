@@ -53,16 +53,6 @@ public class PLController {
         return PublicPlayList;
     }
 
-
-
-
-
-    @PostMapping("/{id}/music")
-    public void MusicSave(@PathVariable Long id, @RequestBody MusicSaveDto musicSaveDto) {
-        PLService.MusicSave(id, musicSaveDto);
-    }
-
-
     @PostMapping("/{id}/comment")
     public void CommentSave(@PathVariable Long id, @RequestBody CommentSaveDto commentSaveDto) {
         PLService.CommentSave(id, commentSaveDto);

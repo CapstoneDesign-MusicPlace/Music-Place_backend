@@ -17,23 +17,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MusicService {
     private final MusicRepository musicRepository;
+    private final PLService plService;
 
     @Transactional
-    public void MusicSave(MusicSaveDto musicSaveDto) {
-        musicRepository.save(MusicEntity.builder()
+    public void MusicSave(Long PLId, MusicSaveDto musicSaveDto) {
+        PLEntity plEntity = plService.PLFindById(PLId);
+        plService.CheckPLDeleteStatus(plEntity);
+        plEntity.MusicSave(MusicEntity.builder()
                 .title(musicSaveDto.getTitle())
                 .singer(musicSaveDto.getSinger())
                 .build());
     }
 
     @Transactional
-    public void MusicDelete(Long id) {
-        MusicEntity musicEntity = MusicFindById(id);
-        checkDeleteStatus(musicEntity);
+    public void MusicDelete(Long PLId, Long MusicId) {
+        PLEntity plEntity = plService.PLFindById(PLId);
+        plService.CheckPLDeleteStatus(plEntity);
+        MusicEntity musicEntity = MusicFindById(MusicId);
+        checkMusicDeleteStatus(musicEntity);
         musicEntity.delete();
     }
 
-    public List<MusicEntity> MusicFindAll() {
+    public List<MusicEntity> MusicFindAll(Long PLId) {
+        PLEntity plEntity = plService.PLFindById(PLId);
+        plService.CheckPLDeleteStatus(plEntity);
         List<MusicEntity> AllMusic = musicRepository.findAll();
         List<MusicEntity> nonDeletedMusic = new ArrayList<>();
         for(MusicEntity Music : AllMusic)  {
@@ -51,7 +58,7 @@ public class MusicService {
         return musicEntity;
     }
 
-    private void checkDeleteStatus(MusicEntity musicEntity) {
+    public void checkMusicDeleteStatus(MusicEntity musicEntity) {
         if (musicEntity.isDelete()) {
             throw new ExceptionHandler(ErrorCode.ID_DELETE);
         }

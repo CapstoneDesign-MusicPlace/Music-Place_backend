@@ -39,7 +39,7 @@ public class PLService {
     @Transactional
     public void PLUpdate(Long id, PLUpdateDto plUpdateDto) {
         PLEntity plEntity = PLFindById(id);
-        checkDeleteStatus(plEntity);
+        CheckPLDeleteStatus(plEntity);
         plEntity.PLUpdate(plUpdateDto.getOnOff(),
                 plUpdateDto.getCover_img(),
                 plUpdateDto.getComment());
@@ -48,24 +48,14 @@ public class PLService {
     @Transactional
     public void PLDelete(Long id) {
         PLEntity plEntity = PLFindById(id);
-        checkDeleteStatus(plEntity);
+        CheckPLDeleteStatus(plEntity);
         plEntity.delete();
-    }
-
-    @Transactional
-    public void MusicSave(Long id, MusicSaveDto musicSaveDto) {
-        PLEntity plEntity = PLFindById(id);
-        checkDeleteStatus(plEntity);
-        plEntity.MusicSave(MusicEntity.builder()
-                .title(musicSaveDto.getTitle())
-                .singer(musicSaveDto.getSinger())
-                .build());
     }
 
     @Transactional
     public void CommentSave(Long id, CommentSaveDto commentSaveDto) {
         PLEntity plEntity = PLFindById(id);
-        checkDeleteStatus(plEntity);
+        CheckPLDeleteStatus(plEntity);
         plEntity.CommentSave(CommentEntity.builder()
                 .comment(commentSaveDto.getComment())
                 .nickName(commentSaveDto.getNickName())
@@ -100,7 +90,7 @@ public class PLService {
         return plEntity;
     }
 
-    private void checkDeleteStatus(PLEntity plEntity) {
+    public void CheckPLDeleteStatus(PLEntity plEntity) {
         if (plEntity.isDelete()) {
             throw new ExceptionHandler(ErrorCode.ID_DELETE);
         }

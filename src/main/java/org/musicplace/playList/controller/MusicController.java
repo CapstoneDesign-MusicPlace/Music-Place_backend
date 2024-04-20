@@ -21,19 +21,19 @@ import java.util.List;
 public class MusicController {
     private final MusicService musicService;
 
-    @PostMapping
-    public void MusicSave(@RequestBody MusicSaveDto musicSaveDto) {
-        musicService.MusicSave(musicSaveDto);
+    @PostMapping("/{PLId}")
+    public void MusicSave(@PathVariable Long PLId, @RequestBody MusicSaveDto musicSaveDto) {
+        musicService.MusicSave(PLId, musicSaveDto);
     }
 
-    @DeleteMapping("/{id}")
-    public void MusicDelete(@PathVariable Long id) {
-        musicService.MusicDelete(id);
+    @DeleteMapping("/{PLId}/{MusicId}")
+    public void MusicDelete(@PathVariable Long PLId,@PathVariable Long MusicId) {
+        musicService.MusicDelete(PLId, MusicId);
     }
 
-    @GetMapping
-    public List<MusicEntity> MusicFindAll(){
-        List<MusicEntity> AllMusic = musicService.MusicFindAll();
+    @GetMapping("/{PLId}")
+    public List<MusicEntity> MusicFindAll(@PathVariable Long PLId){
+        List<MusicEntity> AllMusic = musicService.MusicFindAll(PLId);
         return AllMusic;
     }
 }
