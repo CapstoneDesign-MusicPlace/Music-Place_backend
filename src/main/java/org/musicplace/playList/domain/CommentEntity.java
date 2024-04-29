@@ -1,5 +1,6 @@
 package org.musicplace.playList.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,14 +39,19 @@ public class CommentEntity extends AuditInformation {
     @Comment("삭제여부")
     private boolean delete = false;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "playlist_id",insertable = false, updatable = false)
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playlist_id")
     private PLEntity plEntity;
 
     @Builder
     public CommentEntity(String nickName, String comment) {
         this.nickName = nickName;
         this.comment = comment;
+    }
+
+    public void setPlEntity(PLEntity plEntity) {
+        this.plEntity = plEntity;
     }
 
     public void delete () {

@@ -54,10 +54,11 @@ public class PLEntity extends AuditInformation {
     private boolean delete = false;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "plEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MusicEntity> musicEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntities = new ArrayList<>();
 
 
@@ -77,14 +78,6 @@ public class PLEntity extends AuditInformation {
 
     public void delete () {
         delete = true;
-    }
-
-    public void MusicSave(MusicEntity music) {
-        musicEntities.add(music);
-    }
-
-    public void CommentSave(CommentEntity comment) {
-        commentEntities.add(comment);
     }
 
 

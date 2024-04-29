@@ -24,10 +24,14 @@ public class CommentService {
     public void CommentSave(Long PLId, CommentSaveDto commentSaveDto) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        plEntity.CommentSave(CommentEntity.builder()
+        CommentEntity commentEntity = CommentEntity.builder()
                 .comment(commentSaveDto.getComment())
                 .nickName(commentSaveDto.getNickName())
-                .build());
+                .build();
+        commentEntity.setPlEntity(plEntity);
+        plEntity.getCommentEntities().add(commentEntity);
+        commentRepository.save(commentEntity);
+
     }
 
     @Transactional
