@@ -1,11 +1,11 @@
-package org.musicplace.playList.Service;
+package org.musicplace.playList.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.playList.domain.CommentEntity;
-import org.musicplace.playList.domain.MusicEntity;
+import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.CommentSaveDto;
 import org.musicplace.playList.repository.CommentRepository;
 import org.springframework.stereotype.Service;
@@ -18,23 +18,30 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final PLService plService;
 
     @Transactional
-    public void CommentSave(CommentSaveDto commentSaveDto) {
-        commentRepository.save(CommentEntity.builder()
+    public void CommentSave(Long PLId, CommentSaveDto commentSaveDto) {
+        PLEntity plEntity = plService.PLFindById(PLId);
+        plService.CheckPLDeleteStatus(plEntity);
+        plEntity.CommentSave(CommentEntity.builder()
                 .comment(commentSaveDto.getComment())
                 .nickName(commentSaveDto.getNickName())
                 .build());
     }
 
     @Transactional
-    public void CommentDelete(Long id) {
-        CommentEntity commentEntity = CommentFindById(id);
-        checkDeleteStatus(commentEntity);
+    public void CommentDelete(Long PLId,Long CommentId) {
+        PLEntity plEntity = plService.PLFindById(PLId);
+        plService.CheckPLDeleteStatus(plEntity);
+        CommentEntity commentEntity = CommentFindById(CommentId);
+        CheckCommentDeleteStatus(commentEntity);
         commentEntity.delete();
     }
 
-    public List<CommentEntity> CommentFindAll() {
+    public List<CommentEntity> CommentFindAll(Long PLId) {
+        PLEntity plEntity = plService.PLFindById(PLId);
+        plService.CheckPLDeleteStatus(plEntity);
         List<CommentEntity> AllComment = commentRepository.findAll();
         List<CommentEntity> nonDeletedComment = new ArrayList<>();
         for(CommentEntity Comment : AllComment)  {
@@ -51,7 +58,7 @@ public class CommentService {
         return commentEntity;
     }
 
-    private void checkDeleteStatus(CommentEntity commentEntity) {
+    public void CheckCommentDeleteStatus(CommentEntity commentEntity) {
         if (commentEntity.isDelete()) {
             throw new ExceptionHandler(ErrorCode.ID_DELETE);
         }

@@ -1,9 +1,8 @@
 package org.musicplace.playList.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.musicplace.playList.Service.MusicService;
+import org.musicplace.playList.service.MusicService;
 import org.musicplace.playList.domain.MusicEntity;
-import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.MusicSaveDto;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

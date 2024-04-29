@@ -1,4 +1,4 @@
-package org.musicplace.playList.Service;
+package org.musicplace.playList.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +23,17 @@ public class MusicService {
     public void MusicSave(Long PLId, MusicSaveDto musicSaveDto) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        plEntity.MusicSave(MusicEntity.builder()
+
+        MusicEntity musicEntity = MusicEntity.builder()
                 .title(musicSaveDto.getTitle())
                 .singer(musicSaveDto.getSinger())
-                .build());
+                .build();
+
+        musicEntity.setPlEntity(plEntity); // 음악 엔티티와 플레이리스트 엔티티의 연관 관계 설정
+
+        plEntity.getMusicEntities().add(musicEntity); // 플레이리스트에 음악 추가
+
+        musicRepository.save(musicEntity); // 음악 저장
     }
 
     @Transactional
@@ -41,7 +48,9 @@ public class MusicService {
     public List<MusicEntity> MusicFindAll(Long PLId) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        List<MusicEntity> AllMusic = musicRepository.findAll();
+//        List<MusicEntity> AllMusic = musicRepository.findAll();
+        List<MusicEntity> AllMusic = plEntity.getMusicEntities();
+
         List<MusicEntity> nonDeletedMusic = new ArrayList<>();
         for(MusicEntity Music : AllMusic)  {
             if(!Music.isDelete()) {
@@ -50,7 +59,6 @@ public class MusicService {
         }
         return nonDeletedMusic;
     }
-
 
     public MusicEntity MusicFindById(Long id) {
         MusicEntity musicEntity = musicRepository.findById(id)

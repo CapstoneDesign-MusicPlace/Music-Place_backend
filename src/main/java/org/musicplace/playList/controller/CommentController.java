@@ -1,9 +1,8 @@
 package org.musicplace.playList.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.musicplace.playList.Service.CommentService;
+import org.musicplace.playList.service.CommentService;
 import org.musicplace.playList.domain.CommentEntity;
-import org.musicplace.playList.domain.MusicEntity;
 import org.musicplace.playList.dto.CommentSaveDto;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,19 +21,19 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping
-    public void CommentSave(@RequestBody CommentSaveDto commentSaveDto) {
-        commentService.CommentSave(commentSaveDto);
+    @PostMapping("/{PLId}")
+    public void CommentSave(@PathVariable Long PLId, @RequestBody CommentSaveDto commentSaveDto) {
+        commentService.CommentSave(PLId,commentSaveDto);
     }
 
-    @DeleteMapping("/{id}")
-    public void CommentDelete(@PathVariable Long id) {
-        commentService.CommentDelete(id);
+    @DeleteMapping("/{PLId}/{CommentId}")
+    public void CommentDelete(@PathVariable Long PLId, @PathVariable Long CommentId) {
+        commentService.CommentDelete(PLId, CommentId);
     }
 
-    @GetMapping
-    public List<CommentEntity> CommentFindAll(){
-        List<CommentEntity> AllComment = commentService.CommentFindAll();
+    @GetMapping("/{PLId}")
+    public List<CommentEntity> CommentFindAll(@PathVariable Long PLId){
+        List<CommentEntity> AllComment = commentService.CommentFindAll(PLId);
         return AllComment;
     }
 }

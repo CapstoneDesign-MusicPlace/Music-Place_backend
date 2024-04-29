@@ -1,5 +1,6 @@
 package org.musicplace.playList.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,20 +31,24 @@ public class MusicEntity {
     @Comment("삭제여부")
     private boolean delete = false;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "playlist_id",insertable = false, updatable = false)
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playlist_id")
     private PLEntity plEntity;
 
     @Builder
-    public MusicEntity(String singer, String title) {
+    public MusicEntity(String singer, String title, PLEntity plEntity) {
         this.singer = singer;
         this.title = title;
+        this.plEntity = plEntity;
+    }
+
+    public void setPlEntity(PLEntity plEntity) {
+        this.plEntity = plEntity;
     }
 
     public void delete () {
         delete = true;
     }
-
-
 
 }
