@@ -55,5 +55,17 @@ public class SignInEntity {
         this.nickname = nickname;
         this.name = name;
     }
+
+    public void SignInUpdate(String pw, String name, String email, String nickname, String profile_img_url) {
+        this.pw = pw;
+        this.profile_img_url = profile_img_url;
+        this.email = email;
+        this.nickname = nickname;
+        this.name = name;
+    }
+
+    public void SignInDelete() {
+        this.delete_account = true;
+    }
 }
 
