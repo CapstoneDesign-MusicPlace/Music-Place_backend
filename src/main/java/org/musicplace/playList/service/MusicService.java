@@ -23,17 +23,13 @@ public class MusicService {
     public void MusicSave(Long PLId, MusicSaveDto musicSaveDto) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-
         MusicEntity musicEntity = MusicEntity.builder()
                 .title(musicSaveDto.getTitle())
                 .singer(musicSaveDto.getSinger())
                 .build();
-
-        musicEntity.setPlEntity(plEntity); // 음악 엔티티와 플레이리스트 엔티티의 연관 관계 설정
-
-        plEntity.getMusicEntities().add(musicEntity); // 플레이리스트에 음악 추가
-
-        musicRepository.save(musicEntity); // 음악 저장
+        musicEntity.setPlEntity(plEntity);
+        plEntity.getMusicEntities().add(musicEntity);
+        musicRepository.save(musicEntity);
     }
 
     @Transactional

@@ -37,10 +37,9 @@ public class MusicEntity {
     private PLEntity plEntity;
 
     @Builder
-    public MusicEntity(String singer, String title, PLEntity plEntity) {
+    public MusicEntity(String singer, String title) {
         this.singer = singer;
         this.title = title;
-        this.plEntity = plEntity;
     }
 
     public void setPlEntity(PLEntity plEntity) {
