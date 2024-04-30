@@ -26,4 +26,14 @@ public class SignInController {
     public void SignInDelete(@PathVariable String member_id) {
         signInService.SignInDelete(member_id);
     }
+
+    @GetMapping("/{member_id}/{email}/pw")
+    public String ForgetPw(@PathVariable String member_id, @PathVariable String email) {
+        return signInService.ForgetPw(member_id, email);
+    }
+
+    @GetMapping("/{pw}/{email}/id")
+    public String ForgetId(@PathVariable String pw, @PathVariable String email) {
+        return signInService.ForgetId(pw, email);
+    }
 }

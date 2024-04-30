@@ -64,7 +64,7 @@ public class SignInService {
         SignInEntity signInEntity = signInRepository.findById(member_id)
                 .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
         if(signInEntity.getEmail().equals(email)) {
-            return signInEntity.getMember_id();
+            return signInEntity.getPw();
         }
         return ErrorCode.EMAIL_NOT_FOUND.toString();
     }
@@ -79,7 +79,6 @@ public class SignInService {
         }
         return result;
     }
-
 
 
 }
