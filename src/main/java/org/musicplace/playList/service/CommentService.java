@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.playList.domain.CommentEntity;
+import org.musicplace.playList.domain.MusicEntity;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.CommentSaveDto;
 import org.musicplace.playList.repository.CommentRepository;
@@ -38,7 +39,7 @@ public class CommentService {
     public void CommentDelete(Long PLId,Long CommentId) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        CommentEntity commentEntity = CommentFindById(CommentId);
+        CommentEntity commentEntity = CommentFindById(plEntity, CommentId);
         CheckCommentDeleteStatus(commentEntity);
         commentEntity.delete();
     }
@@ -46,19 +47,22 @@ public class CommentService {
     public List<CommentEntity> CommentFindAll(Long PLId) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        List<CommentEntity> AllComment = commentRepository.findAll();
-        List<CommentEntity> nonDeletedComment = new ArrayList<>();
-        for(CommentEntity Comment : AllComment)  {
-            if(!Comment.isDelete()) {
-                nonDeletedComment.add(Comment);
-            }
-        }
+        List<CommentEntity> nonDeletedComment = plEntity.getCommentEntities()
+                .stream()
+                .filter(comment -> !comment.isDelete())
+                .toList();
         return nonDeletedComment;
     }
 
-    public CommentEntity CommentFindById(Long id) {
-        CommentEntity commentEntity = commentRepository.findById(id)
-                .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
+    public CommentEntity CommentFindById(PLEntity plEntity, Long CommentId) {
+        CommentEntity commentEntity = plEntity.getCommentEntities()
+                .stream()
+                .filter(comment -> comment.getComment_id().equals(CommentId))
+                .findFirst()
+                .orElse(null);
+        if (commentEntity == null) {
+            throw new ExceptionHandler(ErrorCode.ID_NOT_FOUND);
+        }
         return commentEntity;
     }
 
