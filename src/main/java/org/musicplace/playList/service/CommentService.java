@@ -32,7 +32,6 @@ public class CommentService {
         commentEntity.setPlEntity(plEntity);
         plEntity.getCommentEntities().add(commentEntity);
         commentRepository.save(commentEntity);
-
     }
 
     @Transactional

@@ -48,7 +48,6 @@ public class MusicService {
                 .stream()
                 .filter(music -> !music.isDelete())
                 .toList();
-
         return nonDeletedMusic;
     }
 
