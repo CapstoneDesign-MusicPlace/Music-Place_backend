@@ -36,7 +36,7 @@ public class MusicService {
     public void MusicDelete(Long PLId, Long MusicId) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        MusicEntity musicEntity = MusicFindById(MusicId);
+        MusicEntity musicEntity = MusicFindById(plEntity,MusicId);
         checkMusicDeleteStatus(musicEntity);
         musicEntity.delete();
     }
@@ -44,21 +44,23 @@ public class MusicService {
     public List<MusicEntity> MusicFindAll(Long PLId) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-//        List<MusicEntity> AllMusic = musicRepository.findAll();
-        List<MusicEntity> AllMusic = plEntity.getMusicEntities();
+        List<MusicEntity> nonDeletedMusic = plEntity.getMusicEntities()
+                .stream()
+                .filter(music -> !music.isDelete())
+                .toList();
 
-        List<MusicEntity> nonDeletedMusic = new ArrayList<>();
-        for(MusicEntity Music : AllMusic)  {
-            if(!Music.isDelete()) {
-                nonDeletedMusic.add(Music);
-            }
-        }
         return nonDeletedMusic;
     }
 
-    public MusicEntity MusicFindById(Long id) {
-        MusicEntity musicEntity = musicRepository.findById(id)
-                .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
+    public MusicEntity MusicFindById(PLEntity plEntity, Long MusicId) {
+        MusicEntity musicEntity = plEntity.getMusicEntities()
+                .stream()
+                .filter(music -> music.getMusic_id().equals(MusicId))
+                .findFirst()
+                .orElse(null);
+        if (musicEntity == null) {
+            throw new ExceptionHandler(ErrorCode.ID_NOT_FOUND);
+        }
         return musicEntity;
     }
 
