@@ -30,8 +30,6 @@ public class PLService {
                 .build());
     }
 
-
-
     @Transactional
     public void PLUpdate(Long id, PLUpdateDto plUpdateDto) {
         PLEntity plEntity = PLFindById(id);
@@ -50,23 +48,19 @@ public class PLService {
 
     public List<PLEntity> PLFindAll() {
         List<PLEntity> PlayListAll = plRepository.findAll();
-        List<PLEntity> nonDeletedPlayLists = new ArrayList<>();
-        for(PLEntity pl : PlayListAll)  {
-            if(!pl.isDelete()) {
-                nonDeletedPlayLists.add(pl);
-            }
-        }
+        List<PLEntity> nonDeletedPlayLists = PlayListAll
+                .stream()
+                .filter(plEntity -> !plEntity.isDelete())
+                .toList();
         return nonDeletedPlayLists;
     }
 
     public List<PLEntity> PLFindPublic() {
         List<PLEntity> PlayListAll = plRepository.findAll();
-        List<PLEntity> PublicPlayLists = new ArrayList<>();
-        for(PLEntity pl : PlayListAll)  {
-            if(pl.getOnOff().equals(OnOff.Public)) {
-                PublicPlayLists.add(pl);
-            }
-        }
+        List<PLEntity> PublicPlayLists = PlayListAll
+                .stream()
+                .filter(plEntity -> plEntity.getOnOff().equals(OnOff.Public))
+                .toList();
         return PublicPlayLists;
     }
 
