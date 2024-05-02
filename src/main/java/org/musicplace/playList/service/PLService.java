@@ -11,7 +11,6 @@ import org.musicplace.playList.dto.PLUpdateDto;
 import org.musicplace.playList.repository.PLRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,13 +20,14 @@ public class PLService {
     private final PLRepository plRepository;
 
     @Transactional
-    public void PLsave(PLSaveDto plSaveDto) {
-        plRepository.save(PLEntity.builder()
+    public Long PLsave(PLSaveDto plSaveDto) {
+        PLEntity plEntity = plRepository.save(PLEntity.builder()
                 .title(plSaveDto.getTitle())
                 .onOff(plSaveDto.getOnOff())
                 .comment(plSaveDto.getComment())
                 .cover_img(plSaveDto.getCover_img())
                 .build());
+        return plEntity.getPlaylist_id();
     }
 
     @Transactional
