@@ -23,9 +23,8 @@ public class PLController {
     private final PLService PLService;
 
     @PostMapping
-    public PLSaveDto PLSave(@RequestBody PLSaveDto plSaveDto) {
-        PLService.PLsave(plSaveDto);
-        return plSaveDto;
+    public Long PLSave(@RequestBody PLSaveDto plSaveDto) {
+        return PLService.PLsave(plSaveDto);
     }
 
     @PatchMapping("/{id}")
