@@ -29,7 +29,7 @@ public class MusicEntity {
 
     @Column(name = "DELETE_STATE", nullable = false)
     @Comment("삭제여부")
-    private boolean delete = false;
+    private boolean musicDelete = false;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,7 +47,7 @@ public class MusicEntity {
     }
 
     public void delete () {
-        delete = true;
+        musicDelete = true;
     }
 
 }

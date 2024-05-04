@@ -51,7 +51,7 @@ public class PLEntity extends AuditInformation {
 
     @Column(name = "DELETE_STATE", nullable = false)
     @Comment("삭제여부")
-    private boolean delete = false;
+    private boolean PLDelete = false;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -77,7 +77,7 @@ public class PLEntity extends AuditInformation {
     }
 
     public void delete () {
-        delete = true;
+        PLDelete = true;
     }
 
 

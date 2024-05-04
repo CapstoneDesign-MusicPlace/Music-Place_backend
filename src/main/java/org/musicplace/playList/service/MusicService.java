@@ -40,7 +40,7 @@ public class MusicService {
         MusicEntity musicEntity = MusicFindById(plEntity,MusicId);
         checkMusicDeleteStatus(musicEntity);
         musicEntity.delete();
-        return musicEntity.isDelete();
+        return musicEntity.isMusicDelete();
     }
 
     public List<MusicEntity> MusicFindAll(Long PLId) {
@@ -48,7 +48,7 @@ public class MusicService {
         plService.CheckPLDeleteStatus(plEntity);
         List<MusicEntity> nonDeletedMusic = plEntity.getMusicEntities()
                 .stream()
-                .filter(music -> !music.isDelete())
+                .filter(music -> !music.isMusicDelete())
                 .toList();
         return nonDeletedMusic;
     }
@@ -66,7 +66,7 @@ public class MusicService {
     }
 
     public void checkMusicDeleteStatus(MusicEntity musicEntity) {
-        if (musicEntity.isDelete()) {
+        if (musicEntity.isMusicDelete()) {
             throw new ExceptionHandler(ErrorCode.ID_DELETE);
         }
     }

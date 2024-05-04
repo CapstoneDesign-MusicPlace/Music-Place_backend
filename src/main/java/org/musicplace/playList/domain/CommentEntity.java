@@ -33,11 +33,11 @@ public class CommentEntity extends AuditInformation {
 
     @Column(name = "COMMENT", nullable = false)
     @Comment("댓글")
-    private String comment;
+    private String userComment;
 
     @Column(name = "DELETE_STATE", nullable = false)
     @Comment("삭제여부")
-    private boolean delete = false;
+    private boolean commentDelete = false;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,7 +47,7 @@ public class CommentEntity extends AuditInformation {
     @Builder
     public CommentEntity(String nickName, String comment) {
         this.nickName = nickName;
-        this.comment = comment;
+        this.userComment = comment;
     }
 
     public void setPlEntity(PLEntity plEntity) {
@@ -55,6 +55,6 @@ public class CommentEntity extends AuditInformation {
     }
 
     public void delete () {
-        delete = true;
+        commentDelete = true;
     }
 }

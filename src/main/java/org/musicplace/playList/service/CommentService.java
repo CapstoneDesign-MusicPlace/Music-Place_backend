@@ -42,7 +42,7 @@ public class CommentService {
         CommentEntity commentEntity = CommentFindById(plEntity, CommentId);
         CheckCommentDeleteStatus(commentEntity);
         commentEntity.delete();
-        return commentEntity.isDelete();
+        return commentEntity.isCommentDelete();
     }
 
     public List<CommentEntity> CommentFindAll(Long PLId) {
@@ -50,7 +50,7 @@ public class CommentService {
         plService.CheckPLDeleteStatus(plEntity);
         List<CommentEntity> nonDeletedComment = plEntity.getCommentEntities()
                 .stream()
-                .filter(comment -> !comment.isDelete())
+                .filter(comment -> !comment.isCommentDelete())
                 .toList();
         return nonDeletedComment;
     }
@@ -68,7 +68,7 @@ public class CommentService {
     }
 
     public void CheckCommentDeleteStatus(CommentEntity commentEntity) {
-        if (commentEntity.isDelete()) {
+        if (commentEntity.isCommentDelete()) {
             throw new ExceptionHandler(ErrorCode.ID_DELETE);
         }
     }

@@ -50,7 +50,7 @@ public class PLService {
         List<PLEntity> PlayListAll = plRepository.findAll();
         List<PLEntity> nonDeletedPlayLists = PlayListAll
                 .stream()
-                .filter(plEntity -> !plEntity.isDelete())
+                .filter(plEntity -> !plEntity.isPLDelete())
                 .toList();
         return nonDeletedPlayLists;
     }
@@ -71,7 +71,7 @@ public class PLService {
     }
 
     public void CheckPLDeleteStatus(PLEntity plEntity) {
-        if (plEntity.isDelete()) {
+        if (plEntity.isPLDelete()) {
             throw new ExceptionHandler(ErrorCode.ID_DELETE);
         }
     }
