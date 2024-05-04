@@ -22,7 +22,7 @@ public class CommentService {
     private final PLService plService;
 
     @Transactional
-    public void CommentSave(Long PLId, CommentSaveDto commentSaveDto) {
+    public Long CommentSave(Long PLId, CommentSaveDto commentSaveDto) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
         CommentEntity commentEntity = CommentEntity.builder()
@@ -32,15 +32,17 @@ public class CommentService {
         commentEntity.setPlEntity(plEntity);
         plEntity.getCommentEntities().add(commentEntity);
         commentRepository.save(commentEntity);
+        return commentEntity.getComment_id();
     }
 
     @Transactional
-    public void CommentDelete(Long PLId,Long CommentId) {
+    public boolean CommentDelete(Long PLId,Long CommentId) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
         CommentEntity commentEntity = CommentFindById(plEntity, CommentId);
         CheckCommentDeleteStatus(commentEntity);
         commentEntity.delete();
+        return commentEntity.isDelete();
     }
 
     public List<CommentEntity> CommentFindAll(Long PLId) {

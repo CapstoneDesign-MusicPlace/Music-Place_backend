@@ -22,13 +22,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{PLId}")
-    public void CommentSave(@PathVariable Long PLId, @RequestBody CommentSaveDto commentSaveDto) {
-        commentService.CommentSave(PLId,commentSaveDto);
+    public Long CommentSave(@PathVariable Long PLId, @RequestBody CommentSaveDto commentSaveDto) {
+        return commentService.CommentSave(PLId,commentSaveDto);
     }
 
     @DeleteMapping("/{PLId}/{CommentId}")
-    public void CommentDelete(@PathVariable Long PLId, @PathVariable Long CommentId) {
-        commentService.CommentDelete(PLId, CommentId);
+    public boolean CommentDelete(@PathVariable Long PLId, @PathVariable Long CommentId) {
+        return commentService.CommentDelete(PLId, CommentId);
     }
 
     @GetMapping("/{PLId}")
