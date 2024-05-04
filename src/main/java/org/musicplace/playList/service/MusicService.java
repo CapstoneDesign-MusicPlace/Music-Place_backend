@@ -20,7 +20,7 @@ public class MusicService {
     private final PLService plService;
 
     @Transactional
-    public void MusicSave(Long PLId, MusicSaveDto musicSaveDto) {
+    public Long MusicSave(Long PLId, MusicSaveDto musicSaveDto) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
         MusicEntity musicEntity = MusicEntity.builder()
@@ -30,15 +30,17 @@ public class MusicService {
         musicEntity.setPlEntity(plEntity);
         plEntity.getMusicEntities().add(musicEntity);
         musicRepository.save(musicEntity);
+        return musicEntity.getMusic_id();
     }
 
     @Transactional
-    public void MusicDelete(Long PLId, Long MusicId) {
+    public boolean MusicDelete(Long PLId, Long MusicId) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
         MusicEntity musicEntity = MusicFindById(plEntity,MusicId);
         checkMusicDeleteStatus(musicEntity);
         musicEntity.delete();
+        return musicEntity.isDelete();
     }
 
     public List<MusicEntity> MusicFindAll(Long PLId) {

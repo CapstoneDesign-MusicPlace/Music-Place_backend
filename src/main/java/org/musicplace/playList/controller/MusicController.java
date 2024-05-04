@@ -21,13 +21,13 @@ public class MusicController {
     private final MusicService musicService;
 
     @PostMapping("/{PLId}")
-    public void MusicSave(@PathVariable Long PLId, @RequestBody MusicSaveDto musicSaveDto) {
-        musicService.MusicSave(PLId, musicSaveDto);
+    public Long MusicSave(@PathVariable Long PLId, @RequestBody MusicSaveDto musicSaveDto) {
+        return musicService.MusicSave(PLId, musicSaveDto);
     }
 
     @DeleteMapping("/{PLId}/{MusicId}")
-    public void MusicDelete(@PathVariable Long PLId,@PathVariable Long MusicId) {
-        musicService.MusicDelete(PLId, MusicId);
+    public boolean MusicDelete(@PathVariable Long PLId,@PathVariable Long MusicId) {
+        return musicService.MusicDelete(PLId, MusicId);
     }
 
     @GetMapping("/{PLId}")
