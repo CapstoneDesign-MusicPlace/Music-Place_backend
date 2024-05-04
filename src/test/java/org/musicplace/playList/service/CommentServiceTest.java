@@ -44,25 +44,24 @@ class CommentServiceTest {
                 .comment(PLComment)
                 .build());
 
-        String nickName = "주철깡";
-        String comment = "와 좋은 노래!";
+        String nickName1 = "주철깡";
+        String comment1 = "와 좋은 노래!";
 
-        commentService.CommentSave(PLId, CommentSaveDto.builder()
-                .nickName(nickName)
-                .comment(comment)
+        Long comment_Id = commentService.CommentSave(PLId, CommentSaveDto.builder()
+                .nickName(nickName1)
+                .comment(comment1)
                 .build());
 
         // when
         PLEntity plEntity = plRepository.findById(PLId).get();
-        CommentEntity commentEntity = plEntity.getCommentEntities()
-                .stream()
-                .filter(cm -> cm.getComment_id().equals(PLId))
+        CommentEntity commentEntity = plEntity.getCommentEntities().stream()
+                .filter(comment -> comment.getComment_id().equals(comment_Id))
                 .findFirst()
                 .orElse(null);
 
         // then
-        assertEquals(comment, commentEntity.getComment());
-        assertEquals(nickName, commentEntity.getNickName());
+        assertEquals(comment1, commentEntity.getComment());
+        assertEquals(nickName1, commentEntity.getNickName());
         assertFalse(commentEntity.isDelete());
     }
 
