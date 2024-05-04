@@ -109,6 +109,7 @@ class MusicServiceTest {
 
         String singer1 = "비비";
         String musicTitle1 = "밤양갱";
+
         Long musicId1 = musicService.MusicSave(PLId, MusicSaveDto.builder()
                 .singer(singer1)
                 .title(musicTitle1)
@@ -116,12 +117,13 @@ class MusicServiceTest {
 
         String singer2 = "노라조";
         String musicTitle2 = "카래";
+
         musicService.MusicSave(PLId, MusicSaveDto.builder()
                 .singer(singer2)
                 .title(musicTitle2)
                 .build());
 
-        boolean result =  musicService.MusicDelete(PLId,musicId1);
+        musicService.MusicDelete(PLId,musicId1);
 
         // when
         List<MusicEntity> musicEntityList = musicService.MusicFindAll(PLId);
