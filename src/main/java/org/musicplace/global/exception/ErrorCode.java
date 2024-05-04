@@ -4,7 +4,13 @@ import lombok.Getter;
 
 public enum ErrorCode {
     ID_NOT_FOUND("해당 ID를 찾을 수 없습니다."),
+<<<<<<< HEAD
     ID_DELETE("삭제된 ID입니다.");
+=======
+    ID_DELETE("삭제된 ID입니다."),
+
+    EMAIL_NOT_FOUND("해당 이메일을 찾을 수 없습니다.");
+>>>>>>> 0cf28cc8ad323e34f14d33cf95730c9bbc06d630
 
     @Getter
     private String message;
