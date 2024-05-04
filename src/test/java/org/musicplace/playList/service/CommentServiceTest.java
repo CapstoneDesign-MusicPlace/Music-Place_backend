@@ -1,17 +1,17 @@
 package org.musicplace.playList.service;
 
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.musicplace.playList.domain.CommentEntity;
 import org.musicplace.playList.domain.MusicEntity;
 import org.musicplace.playList.domain.OnOff;
 import org.musicplace.playList.domain.PLEntity;
+import org.musicplace.playList.dto.CommentSaveDto;
 import org.musicplace.playList.dto.MusicSaveDto;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.repository.PLRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 
 import java.util.List;
 
@@ -19,10 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MusicServiceTest {
-
-    @Autowired
-    private MusicService musicService;
+class CommentServiceTest {
 
     @Autowired
     private PLService plService;
@@ -30,8 +27,11 @@ class MusicServiceTest {
     @Autowired
     private PLRepository plRepository;
 
+    @Autowired
+    private CommentService commentService;
+
     @Test
-    void musicSave() {
+    void commentSave() {
 
         // given
         String PLTitle = "여름에 듣기 좋은 플리 모음";
@@ -44,29 +44,30 @@ class MusicServiceTest {
                 .comment(PLComment)
                 .build());
 
-        String singer = "비비";
-        String musicTitle = "밤양갱";
-        Long musicId = musicService.MusicSave(PLId, MusicSaveDto.builder()
-                .singer(singer)
-                .title(musicTitle)
+        String nickName = "주철깡";
+        String comment = "와 좋은 노래!";
+
+        commentService.CommentSave(PLId, CommentSaveDto.builder()
+                .nickName(nickName)
+                .comment(comment)
                 .build());
 
         // when
         PLEntity plEntity = plRepository.findById(PLId).get();
-        MusicEntity musicEntity = plEntity.getMusicEntities()
+        CommentEntity commentEntity = plEntity.getCommentEntities()
                 .stream()
-                .filter(music -> music.getMusic_id().equals(musicId))
+                .filter(cm -> cm.getComment_id().equals(PLId))
                 .findFirst()
                 .orElse(null);
 
         // then
-        assertEquals(musicTitle, musicEntity.getTitle());
-        assertEquals(singer, musicEntity.getSinger());
-        assertFalse(musicEntity.isDelete());
+        assertEquals(comment, commentEntity.getComment());
+        assertEquals(nickName, commentEntity.getNickName());
+        assertFalse(commentEntity.isDelete());
     }
 
     @Test
-    void musicDelete() {
+    void commentDelete() {
 
         // given
         String PLTitle = "여름에 듣기 좋은 플리 모음";
@@ -79,22 +80,23 @@ class MusicServiceTest {
                 .comment(PLComment)
                 .build());
 
-        String singer = "비비";
-        String musicTitle = "밤양갱";
-        Long musicId = musicService.MusicSave(PLId, MusicSaveDto.builder()
-                .singer(singer)
-                .title(musicTitle)
+        String nickName = "주철깡";
+        String comment = "와 좋은 노래!";
+
+        Long commentId = commentService.CommentSave(PLId, CommentSaveDto.builder()
+                .nickName(nickName)
+                .comment(comment)
                 .build());
 
         // when
-        boolean result =  musicService.MusicDelete(PLId,musicId);
+        boolean result =  commentService.CommentDelete(PLId,commentId);
 
         // then
         assertTrue(result);
     }
 
     @Test
-    void musicFindAll() {
+    void commentFindAll() {
 
         // given
         String PLTitle = "여름에 듣기 좋은 플리 모음";
@@ -107,31 +109,32 @@ class MusicServiceTest {
                 .comment(PLComment)
                 .build());
 
-        String singer1 = "비비";
-        String musicTitle1 = "밤양갱";
-        Long musicId1 = musicService.MusicSave(PLId, MusicSaveDto.builder()
-                .singer(singer1)
-                .title(musicTitle1)
+        String nickName1 = "주철깡";
+        String comment1 = "와 좋은 노래!";
+
+        Long commentId = commentService.CommentSave(PLId, CommentSaveDto.builder()
+                .nickName(nickName1)
+                .comment(comment1)
                 .build());
 
-        String singer2 = "노라조";
-        String musicTitle2 = "카래";
-        musicService.MusicSave(PLId, MusicSaveDto.builder()
-                .singer(singer2)
-                .title(musicTitle2)
+        String nickName2 = "주철깡";
+        String comment2 = "와 좋은 노래!";
+
+        commentService.CommentSave(PLId, CommentSaveDto.builder()
+                .nickName(nickName2)
+                .comment(comment2)
                 .build());
 
-        boolean result =  musicService.MusicDelete(PLId,musicId1);
+        commentService.CommentDelete(PLId,commentId);
 
         // when
-        List<MusicEntity> musicEntityList = musicService.MusicFindAll(PLId);
+        List<CommentEntity> commentEntities = commentService.CommentFindAll(PLId);
 
         // then
-        assertEquals(1, musicEntityList.size());
+        assertEquals(1, commentEntities.size());
 
-        assertEquals(singer2, musicEntityList.get(0).getSinger());
-        assertEquals(musicTitle2, musicEntityList.get(0).getTitle());
-        assertFalse(musicEntityList.get(0).isDelete());
-
+        assertEquals(nickName2, commentEntities.get(0).getNickName());
+        assertEquals(comment2, commentEntities.get(0).getComment());
+        assertFalse(commentEntities.get(0).isDelete());
     }
 }
