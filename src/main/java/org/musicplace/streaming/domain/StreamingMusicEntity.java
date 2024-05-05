@@ -45,4 +45,8 @@ public class StreamingMusicEntity {
         this.streamingSinger = streamingSinger;
         this.streamingTitle = streamingTitle;
     }
+
+    public void setStreamingEntity(StreamingEntity streamingEntity) {
+        this.streamingEntity = streamingEntity;
+    }
 }
