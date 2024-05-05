@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
-import org.musicplace.member.domain.SignInEntity;
 import org.musicplace.streaming.domain.StreamingEntity;
 import org.musicplace.streaming.dto.StreamingSaveDto;
 import org.musicplace.streaming.dto.StreamingUpdateDto;
