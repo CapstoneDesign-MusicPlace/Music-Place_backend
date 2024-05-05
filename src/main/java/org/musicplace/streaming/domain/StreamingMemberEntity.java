@@ -39,4 +39,8 @@ public class StreamingMemberEntity {
         this.streamingUserId = streamingUserId;
         this.streamingRole = streamingRole;
     }
+
+    public void setStreamingEntity(StreamingEntity streamingEntity) {
+        this.streamingEntity = streamingEntity;
+    }
 }
