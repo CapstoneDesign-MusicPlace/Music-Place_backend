@@ -1,8 +1,12 @@
 package org.musicplace.streaming.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,6 +28,11 @@ public class StreamingMemberEntity {
     @Column(name = "STREAMING_ROLE", nullable = false)
     @Comment("스트리밍 참가자 역할")
     private StreamingRole streamingRole;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STREAMING_ID")
+    private StreamingEntity streamingEntity;
 
     @Builder
     public StreamingMemberEntity(String streamingUserId, StreamingRole streamingRole) {
