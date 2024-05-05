@@ -28,7 +28,7 @@ public class StreamingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "STREAMING_ID", nullable = false)
-    private Long streamingId;
+    private Long streaming_id;
 
     @Column(name = "STREAMER_NICKNAME", nullable = false)
     @Comment("스트리머 이름")
@@ -47,15 +47,15 @@ public class StreamingEntity {
     private String introduce;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "StreamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<StreamingChatEntity> chatEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "StreamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<StreamingMemberEntity> memberEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "StreamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<StreamingMusicEntity> musicEntities = new ArrayList<>();
 
 

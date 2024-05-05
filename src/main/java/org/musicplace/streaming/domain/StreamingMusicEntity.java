@@ -37,7 +37,7 @@ public class StreamingMusicEntity {
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STREAMING_ID")
+    @JoinColumn(name = "streaming_id")
     private StreamingEntity streamingEntity;
 
     @Builder

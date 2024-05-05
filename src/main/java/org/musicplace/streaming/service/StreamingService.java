@@ -24,7 +24,7 @@ public class StreamingService {
                 .broadcastingTitle(streamingSaveDto.getBroadcastingTitle())
                 .introduce(streamingSaveDto.getIntroduce())
                 .streamerNickname(streamingSaveDto.getStreamerNickname())
-                .build()).getStreamingId();
+                .build()).getStreaming_id();
     }
 
     @Transactional
