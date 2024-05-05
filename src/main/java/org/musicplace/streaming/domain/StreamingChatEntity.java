@@ -52,4 +52,7 @@ public class StreamingChatEntity extends AuditInformation {
         this.chat = chat;
     }
 
+    public void setStreamingEntity(StreamingEntity streamingEntity) {
+        this.streamingEntity = streamingEntity;
+    }
 }
