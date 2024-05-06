@@ -2,7 +2,6 @@ package org.musicplace.streaming.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.musicplace.streaming.domain.StreamingChatEntity;
 import org.musicplace.streaming.domain.StreamingEntity;
 import org.musicplace.streaming.domain.StreamingMusicEntity;
 import org.musicplace.streaming.dto.StreamingMusicSaveDto;
