@@ -57,7 +57,7 @@ class StreamingMemberServiceTest {
                 .build());
 
         // when
-        Long memberNum = streamingMemberService.memeberSave(streamingId, StreamingMemberSaveDto.builder()
+        Long memberNum = streamingMemberService.memberSave(streamingId, StreamingMemberSaveDto.builder()
                         .streamingRole(streamingRole)
                         .streamingUserId(streamingUserId)
                         .build());
@@ -70,8 +70,7 @@ class StreamingMemberServiceTest {
     }
 
     @Test
-    void memeberDelete() {
-
+    void memberDelete() {
         // given
         String broadcastingTitle = "Test Broadcasting Title";
         String introduce = "Test Introduce";
@@ -80,21 +79,28 @@ class StreamingMemberServiceTest {
         String streamingUserId = "Test User Id";
         StreamingRole streamingRole = StreamingRole.host;
 
+        // 스트리밍 세션 생성
         Long streamingId = streamingService.streamingSave(StreamingSaveDto.builder()
                 .broadcastingTitle(broadcastingTitle)
                 .introduce(introduce)
                 .streamerNickname(streamerNickname)
                 .build());
-        Long memberNum = streamingMemberService.memeberSave(streamingId, StreamingMemberSaveDto.builder()
+
+        // 멤버 생성 및 저장
+        Long memberNum = streamingMemberService.memberSave(streamingId, StreamingMemberSaveDto.builder()
                 .streamingRole(streamingRole)
                 .streamingUserId(streamingUserId)
                 .build());
-        // when
-        streamingMemberService.memeberDelete(streamingId, memberNum);
 
-        StreamingMemberEntity deletedEntityOptional = streamingMemberRepository.findById(memberNum).get();
+        // when
+        // 멤버 삭제
+        streamingMemberService.memberDelete(streamingId, memberNum);
+
+        // 삭제된 멤버가 더 이상 존재하지 않는지 확인
+        Optional<StreamingMemberEntity> deletedEntityOptional = streamingMemberRepository.findById(memberNum);
 
         // then
-        assertFalse(deletedEntityOptional.equals(null));
+        assertFalse(deletedEntityOptional.isPresent());
     }
+
 }
