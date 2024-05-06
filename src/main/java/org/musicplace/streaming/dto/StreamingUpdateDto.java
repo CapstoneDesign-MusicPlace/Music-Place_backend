@@ -15,7 +15,7 @@ public class StreamingUpdateDto {
     private String introduce;
 
     @Builder
-    public void StreamingUpdateDto(String broadcastingTitle, String introduce) {
+    public StreamingUpdateDto(String broadcastingTitle, String introduce) {
         this.broadcastingTitle = broadcastingTitle;
         this.introduce = introduce;
     }
