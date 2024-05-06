@@ -19,7 +19,7 @@ public class StreamingChatService {
     private final StreamingService streamingService;
 
     @Transactional
-    public void chatSave(Long streamingId, StreamingChatSaveDto streamingChatSaveDto) {
+    public Long chatSave(Long streamingId, StreamingChatSaveDto streamingChatSaveDto) {
         StreamingEntity streamingEntity = streamingService.streamingFindById(streamingId);
         StreamingChatEntity streamingChatEntity = StreamingChatEntity.builder()
                 .chat(streamingChatSaveDto.getChat())
@@ -28,7 +28,7 @@ public class StreamingChatService {
                 .build();
         streamingChatEntity.setStreamingEntity(streamingEntity);
         streamingEntity.getChatEntities().add(streamingChatEntity);
-        streamingChatRepository.save(streamingChatEntity);
+        return streamingChatRepository.save(streamingChatEntity).getChatId();
     }
 
     public List<StreamingChatEntity> chatFindAll(Long streamingId) {
