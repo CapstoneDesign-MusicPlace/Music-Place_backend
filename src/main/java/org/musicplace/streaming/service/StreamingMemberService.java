@@ -17,7 +17,7 @@ public class StreamingMemberService {
     private final StreamingService streamingService;
 
     @Transactional
-    public String memeberSave(Long streamingId, StreamingMemberSaveDto streamingMemberSaveDto) {
+    public Long memeberSave(Long streamingId, StreamingMemberSaveDto streamingMemberSaveDto) {
         StreamingEntity streamingEntity = streamingService.streamingFindById(streamingId);
         StreamingMemberEntity streamingMemberEntity = StreamingMemberEntity.builder()
                 .streamingRole(streamingMemberSaveDto.getStreamingRole())
@@ -25,15 +25,14 @@ public class StreamingMemberService {
                 .build();
         streamingMemberEntity.setStreamingEntity(streamingEntity);
         streamingEntity.getMemberEntities().add(streamingMemberEntity);
-        return streamingMemberRepository.save(streamingMemberEntity).getStreamingUserId();
-
+        return streamingMemberRepository.save(streamingMemberEntity).getMemberNum();
     }
 
     @Transactional
-    public void memeberDelete(Long streamingId, String StreamingUserId) {
+    public void memeberDelete(Long streamingId, Long memberNum) {
         StreamingEntity streamingEntity = streamingService.streamingFindById(streamingId);
         StreamingMemberEntity streamingMemberEntity = streamingEntity.getMemberEntities().stream()
-                .filter(member->member.getStreamingUserId().equals(StreamingUserId))
+                .filter(member->member.getMemberNum().equals(memberNum))
                 .findFirst()
                 .orElse(null);
         streamingMemberRepository.delete(streamingMemberEntity);

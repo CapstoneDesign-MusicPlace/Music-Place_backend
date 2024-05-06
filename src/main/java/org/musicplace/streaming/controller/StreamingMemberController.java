@@ -17,12 +17,12 @@ public class StreamingMemberController {
     private final StreamingMemberService streamingMemberService;
 
     @PostMapping("/{streamingId}")
-    public String streamingMemberSave(@PathVariable Long streamingId, @RequestBody StreamingMemberSaveDto streamingMemberSaveDto) {
+    public Long streamingMemberSave(@PathVariable Long streamingId, @RequestBody StreamingMemberSaveDto streamingMemberSaveDto) {
         return streamingMemberService.memeberSave(streamingId, streamingMemberSaveDto);
     }
 
     @PostMapping("/{streamingId}/{StreamingUserId}")
-    public void memeberDelete(@PathVariable Long streamingId, @PathVariable String StreamingUserId) {
-        streamingMemberService.memeberDelete(streamingId, StreamingUserId);
+    public void memeberDelete(@PathVariable Long streamingId, @PathVariable Long memberNum) {
+        streamingMemberService.memeberDelete(streamingId, memberNum);
     }
 }
