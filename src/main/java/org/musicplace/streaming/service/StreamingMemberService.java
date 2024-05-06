@@ -35,7 +35,7 @@ public class StreamingMemberService {
         StreamingMemberEntity streamingMemberEntity = streamingEntity.getMemberEntities().stream()
                 .filter(member->member.getStreamingUserId().equals(StreamingUserId))
                 .findFirst()
-                .orElse(null);;
+                .orElse(null);
         streamingMemberRepository.delete(streamingMemberEntity);
     }
 }
