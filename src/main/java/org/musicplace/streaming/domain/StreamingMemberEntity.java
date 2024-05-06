@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,6 +23,10 @@ import org.hibernate.annotations.Comment;
 public class StreamingMemberEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MEMBER_NUMBER", nullable = false)
+    private Long memberNum;
+
     @Column(name = "STREAMINGUSER_ID", nullable = false)
     @Comment("스트리밍 참가자 아이디")
     private String streamingUserId;
