@@ -7,7 +7,7 @@ import org.musicplace.member.service.SignInService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/SignIn")
+@RequestMapping("/sign-in")
 @RequiredArgsConstructor
 public class SignInController {
     private final SignInService signInService;
@@ -35,5 +35,10 @@ public class SignInController {
     @GetMapping("/{pw}/{email}/id")
     public String ForgetId(@PathVariable String pw, @PathVariable String email) {
         return signInService.ForgetId(pw, email);
+    }
+
+    @GetMapping("/{member_id}/sameid")
+    public Boolean SignInCheckSameId(@PathVariable String member_id) {
+        return signInService.SignInCheckSameId(member_id);
     }
 }
