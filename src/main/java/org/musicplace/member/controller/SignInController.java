@@ -7,7 +7,7 @@ import org.musicplace.member.service.SignInService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/signIn")
+@RequestMapping("/sign-in")
 @RequiredArgsConstructor
 public class SignInController {
     private final SignInService signInService;
