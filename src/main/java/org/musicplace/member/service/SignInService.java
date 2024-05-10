@@ -10,6 +10,7 @@ import org.musicplace.member.dto.SignInUpdateDto;
 import org.musicplace.member.repository.SignInRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,6 +53,16 @@ public class SignInService {
         SignInEntity signInEntity = signInRepository.findById(member_id)
                 .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
         return signInEntity;
+    }
+
+    public Boolean SignInCheckSameId(String member_id) {
+        ArrayList<SignInEntity> signInEntityArrayList = (ArrayList<SignInEntity>) signInRepository.findAll();
+        for (SignInEntity n : signInEntityArrayList) {
+            if(n.getMember_id().equals(member_id)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void CheckSignInDelete(SignInEntity signInEntity) {
