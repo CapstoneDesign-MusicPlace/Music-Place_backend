@@ -4,7 +4,10 @@ spring:
     url: jdbc:mysql://localhost:3306/MusicPlace?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
     password: root0000!
+<<<<<<< HEAD
+=======
 
+>>>>>>> aebe0cdf06e48965721624d26531386f5d849219
 
 
 
@@ -19,4 +22,7 @@ spring:
 
 server:
   port: 8080
+<<<<<<< HEAD
+=======
 
+>>>>>>> aebe0cdf06e48965721624d26531386f5d849219
