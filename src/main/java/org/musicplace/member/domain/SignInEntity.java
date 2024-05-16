@@ -1,11 +1,16 @@
 package org.musicplace.member.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.musicplace.recommend.domain.RecommendEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -44,6 +49,10 @@ public class SignInEntity {
     @Column(name = "delete_account", nullable = false)
     @Comment("탈퇴여부")
     private Boolean delete_account = false;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<RecommendEntity> recommendEntities = new ArrayList<>();
 
     @Builder
     public SignInEntity(String member_id, String pw, Gender gender, String profile_img_url, String email, String nickname, String name) {
