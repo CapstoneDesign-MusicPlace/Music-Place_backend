@@ -16,9 +16,9 @@ import org.musicplace.member.domain.SignInEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RecommendEntity {
     @Id
-    @Column(name = "recommend_id", nullable = false, length = 64)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("추천id")
-    private String recommend_id;
+    private Long recommend_id;
 
     @Column(name = "thema", nullable = false, length = 64)
     @Comment("테마")
@@ -39,14 +39,13 @@ public class RecommendEntity {
 
 
     @Builder
-    public RecommendEntity(String recommend_id, String thema, String genre, String singer) {
-        this.recommend_id = recommend_id;
+    public RecommendEntity(String thema, String genre, String singer) {
         this.thema = thema;
         this.genre = genre;
         this.singer = singer;
     }
 
-    void SignInEntity(SignInEntity signInEntity) {
+    public void SignInEntity(SignInEntity signInEntity) {
         this.signInEntity = signInEntity;
     }
 }

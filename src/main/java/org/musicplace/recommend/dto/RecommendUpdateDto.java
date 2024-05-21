@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RecommendUpdateDto {
 
-    private String recommend_name;
-
     private String thema;
 
     private String genre;
@@ -18,8 +16,8 @@ public class RecommendUpdateDto {
     private String singer;
 
     @Builder
-    public RecommendUpdateDto(String recommend_name, String thema, String genre, String singer) {
-        this.recommend_name = recommend_name;
+    public RecommendUpdateDto(String thema, String genre, String singer) {
+
         this.thema = thema;
         this.genre = genre;
         this.singer = singer;
