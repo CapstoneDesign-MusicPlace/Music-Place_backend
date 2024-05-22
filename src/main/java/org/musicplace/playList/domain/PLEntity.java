@@ -1,15 +1,7 @@
 package org.musicplace.playList.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import org.musicplace.global.jpa.AuditInformation;
+import org.musicplace.member.domain.SignInEntity;
 import org.musicplace.playList.dto.MusicSaveDto;
 
 import java.util.ArrayList;
@@ -61,6 +54,11 @@ public class PLEntity extends AuditInformation {
     @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CommentEntity> commentEntities = new ArrayList<>();
 
+    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private SignInEntity signInEntity;
+
 
     @Builder
     public PLEntity(String title, OnOff onOff, String cover_img, String comment) {
@@ -80,6 +78,5 @@ public class PLEntity extends AuditInformation {
         PLDelete = true;
     }
 
-
-
+    public void SignInEntity(SignInEntity signInEntity) {this.signInEntity = signInEntity; }
 }

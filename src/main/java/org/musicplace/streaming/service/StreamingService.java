@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
+import org.musicplace.member.domain.SignInEntity;
+import org.musicplace.member.service.SignInService;
 import org.musicplace.streaming.domain.StreamingEntity;
 import org.musicplace.streaming.dto.StreamingSaveDto;
 import org.musicplace.streaming.dto.StreamingUpdateDto;
@@ -17,14 +19,21 @@ import java.util.List;
 public class StreamingService {
 
     private final StreamingRepository streamingRepository;
+    private final SignInService signInService;
 
     @Transactional
-    public Long streamingSave(StreamingSaveDto streamingSaveDto) {
-        return streamingRepository.save(StreamingEntity.builder()
+    public Long streamingSave(StreamingSaveDto streamingSaveDto, String member_id) {
+        SignInEntity signInEntity = signInService.SignInFindById(member_id);
+        signInService.CheckSignInDelete(signInEntity);
+        StreamingEntity streamingEntity = StreamingEntity.builder()
                 .broadcastingTitle(streamingSaveDto.getBroadcastingTitle())
                 .introduce(streamingSaveDto.getIntroduce())
                 .streamerNickname(streamingSaveDto.getStreamerNickname())
-                .build()).getStreaming_id();
+                .build();
+        signInEntity.getStreamingEntities().add(streamingEntity);
+        streamingEntity.SignInEntity(signInEntity);
+        streamingRepository.save(streamingEntity);
+        return streamingEntity.getStreaming_id();
     }
 
     @Transactional
