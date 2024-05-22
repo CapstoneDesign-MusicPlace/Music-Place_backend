@@ -24,7 +24,6 @@ public class SignInService {
                 .member_id(signInSaveDto.getMember_id())
                 .pw(signInSaveDto.getPw())
                 .gender(signInSaveDto.getGender())
-                .profile_img_url(signInSaveDto.getProfile_img_url())
                 .email(signInSaveDto.getEmail())
                 .nickname(signInSaveDto.getNickname())
                 .name(signInSaveDto.getName())

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RecommendService {
     private final RecommendRepository recommendRepository;
-    private final SignInRepository signInRepository;
     private final SignInService signInService;
 
     @Transactional
