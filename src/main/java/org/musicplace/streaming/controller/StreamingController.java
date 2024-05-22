@@ -23,8 +23,8 @@ public class StreamingController {
     private final StreamingService streamingService;
 
     @PostMapping
-    public Long streamingSave(@RequestBody StreamingSaveDto streamingSaveDto) {
-        return streamingService.streamingSave(streamingSaveDto);
+    public Long streamingSave(@RequestBody StreamingSaveDto streamingSaveDto, @PathVariable String member_id) {
+        return streamingService.streamingSave(streamingSaveDto, member_id);
     }
 
     @PatchMapping("/{streamingId}")

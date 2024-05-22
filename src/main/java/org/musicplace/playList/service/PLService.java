@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
+import org.musicplace.member.domain.SignInEntity;
+import org.musicplace.member.service.SignInService;
 import org.musicplace.playList.domain.OnOff;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
@@ -18,15 +20,21 @@ import java.util.List;
 public class PLService {
 
     private final PLRepository plRepository;
+    private final SignInService signInService;
 
     @Transactional
-    public Long PLsave(PLSaveDto plSaveDto) {
+    public Long PLsave(PLSaveDto plSaveDto, String member_id) {
+        SignInEntity signInEntity = signInService.SignInFindById(member_id);
+        signInService.CheckSignInDelete(signInEntity);
         PLEntity plEntity = plRepository.save(PLEntity.builder()
                 .title(plSaveDto.getTitle())
                 .onOff(plSaveDto.getOnOff())
                 .comment(plSaveDto.getComment())
                 .cover_img(plSaveDto.getCover_img())
                 .build());
+        signInEntity.getPlaylistEntities().add(plEntity);
+        plEntity.SignInEntity(signInEntity);
+        plRepository.save(plEntity);
         return plEntity.getPlaylist_id();
     }
 

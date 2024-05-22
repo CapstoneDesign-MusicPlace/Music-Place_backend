@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.musicplace.follow.domain.FollowEntity;
+import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.recommend.domain.RecommendEntity;
+import org.musicplace.streaming.domain.StreamingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,14 @@ public class SignInEntity {
     @JsonManagedReference
     @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<FollowEntity> followEntities = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<StreamingEntity> streamingEntities = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PLEntity> playlistEntities = new ArrayList<>();
 
     @Builder
     public SignInEntity(String member_id, String pw, Gender gender, String email, String nickname, String name) {
