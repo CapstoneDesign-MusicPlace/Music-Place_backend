@@ -17,8 +17,6 @@ public class SignInSaveDto {
 
     private String name;
 
-    private String profile_img_url;
-
     private String email;
 
     private String nickname;
@@ -26,11 +24,10 @@ public class SignInSaveDto {
     private Gender gender;
 
     @Builder
-    public SignInSaveDto(String member_id, String pw, String name, String email, String nickname, Gender gender, String profile_img_url){
+    public SignInSaveDto(String member_id, String pw, String name, String email, String nickname, Gender gender){
         this.member_id = member_id;
         this.pw = pw;
         this.gender = gender;
-        this.profile_img_url = profile_img_url;
         this.email = email;
         this.nickname = nickname;
         this.name = name;
