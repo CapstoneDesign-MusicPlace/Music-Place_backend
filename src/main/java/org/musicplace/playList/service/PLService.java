@@ -54,9 +54,9 @@ public class PLService {
         plEntity.delete();
     }
 
-    public List<PLEntity> PLFindAll() {
-        List<PLEntity> PlayListAll = plRepository.findAll();
-        List<PLEntity> nonDeletedPlayLists = PlayListAll
+    public List<PLEntity> PLFindAll(String member_id) {
+        SignInEntity signInEntity = signInService.SignInFindById(member_id);
+        List<PLEntity> nonDeletedPlayLists = signInEntity.getPlaylistEntities()
                 .stream()
                 .filter(plEntity -> !plEntity.isPLDelete())
                 .toList();

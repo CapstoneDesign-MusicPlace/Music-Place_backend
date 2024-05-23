@@ -56,8 +56,8 @@ public class SignInService {
 
     public Boolean SignInCheckSameId(String member_id) {
         ArrayList<SignInEntity> signInEntityArrayList = (ArrayList<SignInEntity>) signInRepository.findAll();
-        for (SignInEntity n : signInEntityArrayList) {
-            if(n.getMember_id().equals(member_id)) {
+        for (SignInEntity getListUser : signInEntityArrayList) {
+            if(getListUser.getMember_id().equals(member_id)) {
                 return false;
             }
         }
