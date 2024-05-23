@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.follow.dto.FollowSaveDto;
 import org.musicplace.follow.service.FollowService;
-import org.musicplace.member.service.SignInService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,11 +12,10 @@ import java.util.List;
 @RequestMapping("/follow")
 @RequiredArgsConstructor
 public class FollowController {
-    private final SignInService signInService;
     private final FollowService followService;
 
     @PostMapping("/{member_id}")
-    public Long FollowSave(@RequestBody FollowSaveDto followSaveDto, String member_id) {
+    public Long FollowSave(@RequestBody FollowSaveDto followSaveDto, @PathVariable String member_id) {
         return followService.FollowSave(followSaveDto, member_id);
     }
 
