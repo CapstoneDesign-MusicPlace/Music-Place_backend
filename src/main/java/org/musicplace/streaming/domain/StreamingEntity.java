@@ -45,15 +45,15 @@ public class StreamingEntity {
     private SignInEntity signInEntity;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StreamingChatEntity> chatEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StreamingMemberEntity> memberEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StreamingMusicEntity> musicEntities = new ArrayList<>();
 
 

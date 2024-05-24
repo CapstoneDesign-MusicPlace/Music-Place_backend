@@ -18,22 +18,23 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FollowService {
+
     private final FollowRepository followRepository;
     private final SignInService signInService;
+
     @Transactional
     public Long FollowSave(FollowSaveDto followSaveDto, String member_id) {
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
         signInService.CheckSignInDelete(signInEntity);
-        if (FollowSameCheck(member_id, signInEntity)) {
-            FollowEntity followEntity = FollowEntity.builder()
-                    .target_id(followSaveDto.getTarget_id())
-                    .build();
-            signInEntity.getFollowEntities().add(followEntity);
-            followEntity.SignInEntity(signInEntity);
-            followRepository.save(followEntity);
-            return followEntity.getFollow_id();
-        }
-        return 0L;
+        FollowSameCheck(followSaveDto.getTarget_id(), signInEntity);
+        FollowEntity followEntity = FollowEntity.builder()
+                .target_id(followSaveDto.getTarget_id())
+                .build();
+        signInEntity.getFollowEntities().add(followEntity);
+        followEntity.SignInEntity(signInEntity);
+        followRepository.save(followEntity);
+        return followEntity.getFollow_id();
+
     }
 
     @Transactional
@@ -53,13 +54,14 @@ public class FollowService {
         return followEntity;
     }
 
-    public Boolean FollowSameCheck(String member_id, SignInEntity signInEntity) {
+    public void FollowSameCheck(String tartgetId, SignInEntity signInEntity) {
         List<FollowEntity> followEntities = signInEntity.getFollowEntities();
-        for (FollowEntity getListFollow : followEntities) {
-            if (!getListFollow.getTarget_id().equals(member_id)) {
-                return false;
+        for(FollowEntity target : followEntities) {
+            if(target.getTarget_id().equals(tartgetId)) {
+                new ExceptionHandler(ErrorCode.FOLLOW_SAME_ID);
             }
         }
-        return true;
     }
+
+
 }

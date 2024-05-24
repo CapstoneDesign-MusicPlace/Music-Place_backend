@@ -47,11 +47,11 @@ public class PLEntity extends AuditInformation {
     private boolean PLDelete = false;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MusicEntity> musicEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "plEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntities = new ArrayList<>();
 
     @JsonManagedReference
