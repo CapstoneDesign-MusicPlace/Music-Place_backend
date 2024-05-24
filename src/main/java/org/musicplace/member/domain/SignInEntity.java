@@ -54,19 +54,19 @@ public class SignInEntity {
     private Boolean delete_account = false;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RecommendEntity> recommendEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FollowEntity> followEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StreamingEntity> streamingEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PLEntity> playlistEntities = new ArrayList<>();
 
     @Builder
