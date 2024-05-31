@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Table(name = "USERS")
@@ -44,6 +46,7 @@ public class SignInEntity {
     @Column(name = "delete_account", nullable = false)
     @Comment("탈퇴여부")
     private Boolean delete_account = false;
+
 
     @Builder
     public SignInEntity(String member_id, String pw, Gender gender, String profile_img_url, String email, String nickname, String name) {
