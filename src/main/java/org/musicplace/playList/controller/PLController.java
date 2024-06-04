@@ -1,6 +1,7 @@
 package org.musicplace.playList.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.playList.dto.ResponsePLDto;
 import org.musicplace.playList.service.PLService;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
@@ -38,14 +39,14 @@ public class PLController {
     }
 
     @GetMapping("/{member_id}")
-    public List<PLEntity> PLFindAll(@PathVariable String member_id) {
-        List<PLEntity> PlayListAll = PLService.PLFindAll(member_id);
+    public List<ResponsePLDto> PLFindAll(@PathVariable String member_id) {
+        List<ResponsePLDto> PlayListAll = PLService.PLFindAll(member_id);
         return PlayListAll;
     }
 
     @GetMapping("/public")
-    public List<PLEntity> PLFindPublic(){
-        List<PLEntity> PublicPlayList = PLService.PLFindPublic();
+    public List<ResponsePLDto> PLFindPublic(){
+        List<ResponsePLDto> PublicPlayList = PLService.PLFindPublic();
         return PublicPlayList;
     }
 

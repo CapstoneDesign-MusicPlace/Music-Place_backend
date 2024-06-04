@@ -7,11 +7,13 @@ import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.playList.domain.MusicEntity;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.MusicSaveDto;
+import org.musicplace.playList.dto.ResponseMusicDto;
 import org.musicplace.playList.repository.MusicRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,13 +45,20 @@ public class MusicService {
         return musicEntity.isMusicDelete();
     }
 
-    public List<MusicEntity> MusicFindAll(Long PLId) {
+    public List<ResponseMusicDto> MusicFindAll(Long PLId) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        List<MusicEntity> nonDeletedMusic = plEntity.getMusicEntities()
+
+        List<ResponseMusicDto> nonDeletedMusic = plEntity.getMusicEntities()
                 .stream()
                 .filter(music -> !music.isMusicDelete())
-                .toList();
+                .map(music -> ResponseMusicDto.builder()
+                        .music_id(music.getMusic_id())
+                        .singer(music.getSinger())
+                        .title(music.getTitle())
+                        .build())
+                .collect(Collectors.toList()); // collect로 리스트로 변환
+
         return nonDeletedMusic;
     }
 

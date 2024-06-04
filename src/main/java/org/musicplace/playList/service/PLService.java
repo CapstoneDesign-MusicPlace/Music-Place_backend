@@ -10,10 +10,12 @@ import org.musicplace.playList.domain.OnOff;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.dto.PLUpdateDto;
+import org.musicplace.playList.dto.ResponsePLDto;
 import org.musicplace.playList.repository.PLRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,22 +56,37 @@ public class PLService {
         plEntity.delete();
     }
 
-    public List<PLEntity> PLFindAll(String member_id) {
+    public List<ResponsePLDto> PLFindAll(String member_id) {
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
-        List<PLEntity> nonDeletedPlayLists = signInEntity.getPlaylistEntities()
+        List<ResponsePLDto> nonDeletedPlayLists = signInEntity.getPlaylistEntities()
                 .stream()
                 .filter(plEntity -> !plEntity.isPLDelete())
-                .toList();
+                .map(plEntity -> ResponsePLDto.builder()
+                        .playlist_id(plEntity.getPlaylist_id())
+                        .PLTitle(plEntity.getPLTitle())
+                        .cover_img(plEntity.getCover_img())
+                        .onOff(plEntity.getOnOff())
+                        .comment(plEntity.getComment())
+                        .build())
+                .collect(Collectors.toList());
         return nonDeletedPlayLists;
     }
 
-    public List<PLEntity> PLFindPublic() {
-        List<PLEntity> PlayListAll = plRepository.findAll();
-        List<PLEntity> PublicPlayLists = PlayListAll
-                .stream()
+    public List<ResponsePLDto> PLFindPublic() {
+        List<PLEntity> playListAll = plRepository.findAll();
+
+        List<ResponsePLDto> publicPlayLists = playListAll.stream()
                 .filter(plEntity -> plEntity.getOnOff().equals(OnOff.Public))
-                .toList();
-        return PublicPlayLists;
+                .map(plEntity -> ResponsePLDto.builder()
+                        .playlist_id(plEntity.getPlaylist_id())
+                        .PLTitle(plEntity.getPLTitle())
+                        .cover_img(plEntity.getCover_img())
+                        .onOff(plEntity.getOnOff())
+                        .comment(plEntity.getComment())
+                        .build())
+                .collect(Collectors.toList());
+
+        return publicPlayLists;
     }
 
     public PLEntity PLFindById(Long id) {

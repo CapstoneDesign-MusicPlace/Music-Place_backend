@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.follow.dto.FollowSaveDto;
+import org.musicplace.follow.dto.ResponseDto;
 import org.musicplace.follow.repository.FollowRepository;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,9 +45,16 @@ public class FollowService {
         followRepository.delete(followEntity);
     }
 
-    public List<FollowEntity> followFindAll(String member_id) {
+    public List<ResponseDto> followFindAll(String member_id) {
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
-        return signInEntity.getFollowEntities();
+        List<FollowEntity> followEntities = signInEntity.getFollowEntities();
+        List<ResponseDto> responseDtos = followEntities.stream()
+                .map(followEntity -> ResponseDto.builder()
+                        .follow_id(followEntity.getFollow_id())
+                        .target_id(followEntity.getTarget_id())
+                        .build())
+                .collect(Collectors.toList());
+        return responseDtos;
     }
 
     public FollowEntity followFindById(Long target_id) {

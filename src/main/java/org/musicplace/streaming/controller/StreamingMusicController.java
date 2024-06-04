@@ -2,6 +2,7 @@ package org.musicplace.streaming.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.musicplace.streaming.domain.StreamingMusicEntity;
+import org.musicplace.streaming.dto.ResponseStreamingMusicDto;
 import org.musicplace.streaming.dto.StreamingMusicSaveDto;
 import org.musicplace.streaming.service.StreamingMusicService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class StreamingMusicController {
     }
 
     @GetMapping("/{streamingId}")
-    public List<StreamingMusicEntity> musicFindAll(@PathVariable Long streamingId) {
+    public List<ResponseStreamingMusicDto> musicFindAll(@PathVariable Long streamingId) {
         return streamingMusicService.musicFindAll(streamingId);
     }
 }

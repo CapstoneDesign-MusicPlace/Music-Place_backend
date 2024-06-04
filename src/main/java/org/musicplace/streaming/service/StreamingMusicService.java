@@ -4,11 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.streaming.domain.StreamingEntity;
 import org.musicplace.streaming.domain.StreamingMusicEntity;
+import org.musicplace.streaming.dto.ResponseStreamingMusicDto;
 import org.musicplace.streaming.dto.StreamingMusicSaveDto;
 import org.musicplace.streaming.repository.StreamingMusicRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +32,16 @@ public class StreamingMusicService {
         return streamingMusicRepository.save(musicEntity).getStreamingMusicId();
     }
 
-    public List<StreamingMusicEntity> musicFindAll(Long streamingId) {
+    public List<ResponseStreamingMusicDto> musicFindAll(Long streamingId) {
         StreamingEntity streamingEntity = streamingService.streamingFindById(streamingId);
-        return streamingEntity.getMusicEntities();
+
+        return streamingEntity.getMusicEntities().stream()
+                .map(musicEntity -> ResponseStreamingMusicDto.builder()
+                        .streamingMusicId(musicEntity.getStreamingMusicId())
+                        .streamingTitle(musicEntity.getStreamingTitle())
+                        .streamingSinger(musicEntity.getStreamingSinger())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }
