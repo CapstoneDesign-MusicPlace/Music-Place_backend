@@ -1,6 +1,7 @@
 package org.musicplace.playList.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.playList.dto.ResponsePLDto;
 import org.musicplace.playList.service.PLService;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
@@ -22,30 +23,30 @@ import java.util.List;
 public class PLController {
     private final PLService PLService;
 
-    @PostMapping
-    public Long PLSave(@RequestBody PLSaveDto plSaveDto) {
-        return PLService.PLsave(plSaveDto);
+    @PostMapping("/{member_id}")
+    public Long PLSave(@RequestBody PLSaveDto plSaveDto, @PathVariable String member_id) {
+        return PLService.PLsave(plSaveDto, member_id);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{pl_id}")
     public void PLUpdate(@PathVariable Long id, @RequestBody PLUpdateDto plUpdateDto) {
         PLService.PLUpdate(id, plUpdateDto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{pl_id}")
     public void PLDelete(@PathVariable Long id) {
         PLService.PLDelete(id);
     }
 
-    @GetMapping
-    public List<PLEntity> PLFindAll(){
-        List<PLEntity> PlayListAll = PLService.PLFindAll();
+    @GetMapping("/{member_id}")
+    public List<ResponsePLDto> PLFindAll(@PathVariable String member_id) {
+        List<ResponsePLDto> PlayListAll = PLService.PLFindAll(member_id);
         return PlayListAll;
     }
 
     @GetMapping("/public")
-    public List<PLEntity> PLFindPublic(){
-        List<PLEntity> PublicPlayList = PLService.PLFindPublic();
+    public List<ResponsePLDto> PLFindPublic(){
+        List<ResponsePLDto> PublicPlayList = PLService.PLFindPublic();
         return PublicPlayList;
     }
 

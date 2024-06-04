@@ -1,6 +1,7 @@
 package org.musicplace.playList.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.playList.dto.ResponseCommentDto;
 import org.musicplace.playList.service.CommentService;
 import org.musicplace.playList.domain.CommentEntity;
 import org.musicplace.playList.dto.CommentSaveDto;
@@ -32,8 +33,8 @@ public class CommentController {
     }
 
     @GetMapping("/{PLId}")
-    public List<CommentEntity> CommentFindAll(@PathVariable Long PLId){
-        List<CommentEntity> AllComment = commentService.CommentFindAll(PLId);
+    public List<ResponseCommentDto> CommentFindAll(@PathVariable Long PLId){
+        List<ResponseCommentDto> AllComment = commentService.CommentFindAll(PLId);
         return AllComment;
     }
 }

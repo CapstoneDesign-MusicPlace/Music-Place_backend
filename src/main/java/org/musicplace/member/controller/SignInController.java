@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.musicplace.member.dto.SignInSaveDto;
 import org.musicplace.member.dto.SignInUpdateDto;
 import org.musicplace.member.service.SignInService;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/sign-in")
+@RequestMapping("/sign_in")
 @RequiredArgsConstructor
 public class SignInController {
     private final SignInService signInService;

@@ -1,6 +1,7 @@
 package org.musicplace.playList.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.playList.dto.ResponseMusicDto;
 import org.musicplace.playList.service.MusicService;
 import org.musicplace.playList.domain.MusicEntity;
 import org.musicplace.playList.dto.MusicSaveDto;
@@ -31,8 +32,8 @@ public class MusicController {
     }
 
     @GetMapping("/{PLId}")
-    public List<MusicEntity> MusicFindAll(@PathVariable Long PLId){
-        List<MusicEntity> AllMusic = musicService.MusicFindAll(PLId);
+    public List<ResponseMusicDto> MusicFindAll(@PathVariable Long PLId){
+        List<ResponseMusicDto> AllMusic = musicService.MusicFindAll(PLId);
         return AllMusic;
     }
 }

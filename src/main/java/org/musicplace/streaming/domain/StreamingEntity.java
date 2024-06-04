@@ -1,20 +1,13 @@
 package org.musicplace.streaming.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.musicplace.member.domain.SignInEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,15 +40,20 @@ public class StreamingEntity {
     private String introduce;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private SignInEntity signInEntity;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StreamingChatEntity> chatEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StreamingMemberEntity> memberEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "streamingEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StreamingMusicEntity> musicEntities = new ArrayList<>();
 
 
@@ -69,6 +67,10 @@ public class StreamingEntity {
     public void StreamingUpdate(String broadcastingTitle, String introduce) {
         this.broadcastingTitle = broadcastingTitle;
         this.introduce = introduce;
+    }
+
+    public void SignInEntity(SignInEntity signInEntity) {
+        this.signInEntity = signInEntity;
     }
 
 }
