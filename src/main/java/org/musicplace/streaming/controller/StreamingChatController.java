@@ -2,6 +2,7 @@ package org.musicplace.streaming.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.musicplace.streaming.domain.StreamingChatEntity;
+import org.musicplace.streaming.dto.ResponseStreamingChatDto;
 import org.musicplace.streaming.dto.StreamingChatSaveDto;
 import org.musicplace.streaming.service.StreamingChatService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class StreamingChatController {
     }
 
     @GetMapping("/{streamingId}")
-    public List<StreamingChatEntity> streamingChatFindAll(@PathVariable Long streamingId) {
+    public List<ResponseStreamingChatDto> streamingChatFindAll(@PathVariable Long streamingId) {
         return streamingChatService.chatFindAll(streamingId);
     }
 }

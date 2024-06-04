@@ -8,7 +8,9 @@ public enum ErrorCode {
     ID_DELETE("삭제된 ID입니다."),
 
 
-    EMAIL_NOT_FOUND("해당 이메일을 찾을 수 없습니다.");
+    EMAIL_NOT_FOUND("해당 이메일을 찾을 수 없습니다."),
+
+    FOLLOW_SAME_ID("동일한 팔로우 ID가 있습니다");
 
 
     @Getter

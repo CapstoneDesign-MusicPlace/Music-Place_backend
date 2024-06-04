@@ -24,7 +24,6 @@ public class SignInService {
                 .member_id(signInSaveDto.getMember_id())
                 .pw(signInSaveDto.getPw())
                 .gender(signInSaveDto.getGender())
-                .profile_img_url(signInSaveDto.getProfile_img_url())
                 .email(signInSaveDto.getEmail())
                 .nickname(signInSaveDto.getNickname())
                 .name(signInSaveDto.getName())
@@ -57,8 +56,8 @@ public class SignInService {
 
     public Boolean SignInCheckSameId(String member_id) {
         ArrayList<SignInEntity> signInEntityArrayList = (ArrayList<SignInEntity>) signInRepository.findAll();
-        for (SignInEntity n : signInEntityArrayList) {
-            if(n.getMember_id().equals(member_id)) {
+        for (SignInEntity getListUser : signInEntityArrayList) {
+            if(getListUser.getMember_id().equals(member_id)) {
                 return false;
             }
         }

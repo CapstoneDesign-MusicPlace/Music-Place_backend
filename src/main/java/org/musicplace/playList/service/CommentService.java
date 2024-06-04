@@ -8,11 +8,13 @@ import org.musicplace.playList.domain.CommentEntity;
 import org.musicplace.playList.domain.MusicEntity;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.CommentSaveDto;
+import org.musicplace.playList.dto.ResponseCommentDto;
 import org.musicplace.playList.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,13 +47,20 @@ public class CommentService {
         return commentEntity.isCommentDelete();
     }
 
-    public List<CommentEntity> CommentFindAll(Long PLId) {
+    public List<ResponseCommentDto> CommentFindAll(Long PLId) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        List<CommentEntity> nonDeletedComment = plEntity.getCommentEntities()
+
+        List<ResponseCommentDto> nonDeletedComment = plEntity.getCommentEntities()
                 .stream()
                 .filter(comment -> !comment.isCommentDelete())
-                .toList();
+                .map(comment -> ResponseCommentDto.builder()
+                        .comment_id(comment.getComment_id())
+                        .nickName(comment.getNickName())
+                        .userComment(comment.getUserComment())
+                        .build())
+                .collect(Collectors.toList());
+
         return nonDeletedComment;
     }
 

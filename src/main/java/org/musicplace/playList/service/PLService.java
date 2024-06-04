@@ -4,29 +4,39 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
+import org.musicplace.member.domain.SignInEntity;
+import org.musicplace.member.service.SignInService;
 import org.musicplace.playList.domain.OnOff;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.dto.PLUpdateDto;
+import org.musicplace.playList.dto.ResponsePLDto;
 import org.musicplace.playList.repository.PLRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PLService {
 
     private final PLRepository plRepository;
+    private final SignInService signInService;
 
     @Transactional
-    public Long PLsave(PLSaveDto plSaveDto) {
+    public Long PLsave(PLSaveDto plSaveDto, String member_id) {
+        SignInEntity signInEntity = signInService.SignInFindById(member_id);
+        signInService.CheckSignInDelete(signInEntity);
         PLEntity plEntity = plRepository.save(PLEntity.builder()
                 .title(plSaveDto.getTitle())
                 .onOff(plSaveDto.getOnOff())
                 .comment(plSaveDto.getComment())
                 .cover_img(plSaveDto.getCover_img())
                 .build());
+        signInEntity.getPlaylistEntities().add(plEntity);
+        plEntity.SignInEntity(signInEntity);
+        plRepository.save(plEntity);
         return plEntity.getPlaylist_id();
     }
 
@@ -46,22 +56,37 @@ public class PLService {
         plEntity.delete();
     }
 
-    public List<PLEntity> PLFindAll() {
-        List<PLEntity> PlayListAll = plRepository.findAll();
-        List<PLEntity> nonDeletedPlayLists = PlayListAll
+    public List<ResponsePLDto> PLFindAll(String member_id) {
+        SignInEntity signInEntity = signInService.SignInFindById(member_id);
+        List<ResponsePLDto> nonDeletedPlayLists = signInEntity.getPlaylistEntities()
                 .stream()
                 .filter(plEntity -> !plEntity.isPLDelete())
-                .toList();
+                .map(plEntity -> ResponsePLDto.builder()
+                        .playlist_id(plEntity.getPlaylist_id())
+                        .PLTitle(plEntity.getPLTitle())
+                        .cover_img(plEntity.getCover_img())
+                        .onOff(plEntity.getOnOff())
+                        .comment(plEntity.getComment())
+                        .build())
+                .collect(Collectors.toList());
         return nonDeletedPlayLists;
     }
 
-    public List<PLEntity> PLFindPublic() {
-        List<PLEntity> PlayListAll = plRepository.findAll();
-        List<PLEntity> PublicPlayLists = PlayListAll
-                .stream()
+    public List<ResponsePLDto> PLFindPublic() {
+        List<PLEntity> playListAll = plRepository.findAll();
+
+        List<ResponsePLDto> publicPlayLists = playListAll.stream()
                 .filter(plEntity -> plEntity.getOnOff().equals(OnOff.Public))
-                .toList();
-        return PublicPlayLists;
+                .map(plEntity -> ResponsePLDto.builder()
+                        .playlist_id(plEntity.getPlaylist_id())
+                        .PLTitle(plEntity.getPLTitle())
+                        .cover_img(plEntity.getCover_img())
+                        .onOff(plEntity.getOnOff())
+                        .comment(plEntity.getComment())
+                        .build())
+                .collect(Collectors.toList());
+
+        return publicPlayLists;
     }
 
     public PLEntity PLFindById(Long id) {

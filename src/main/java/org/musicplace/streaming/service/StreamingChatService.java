@@ -4,11 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.streaming.domain.StreamingChatEntity;
 import org.musicplace.streaming.domain.StreamingEntity;
+import org.musicplace.streaming.dto.ResponseStreamingChatDto;
 import org.musicplace.streaming.dto.StreamingChatSaveDto;
 import org.musicplace.streaming.repository.StreamingChatRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +33,16 @@ public class StreamingChatService {
         return streamingChatRepository.save(streamingChatEntity).getChatId();
     }
 
-    public List<StreamingChatEntity> chatFindAll(Long streamingId) {
+    public List<ResponseStreamingChatDto> chatFindAll(Long streamingId) {
         StreamingEntity streamingEntity = streamingService.streamingFindById(streamingId);
-        return streamingEntity.getChatEntities();
+        return streamingEntity.getChatEntities().stream()
+                .map(chatEntity -> ResponseStreamingChatDto.builder()
+                        .chatId(chatEntity.getChatId())
+                        .writeUserId(chatEntity.getWriteUserId())
+                        .writeUserNickname(chatEntity.getWriteUserNickname())
+                        .chat(chatEntity.getChat())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }
