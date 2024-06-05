@@ -11,15 +11,20 @@ import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.recommend.domain.RecommendEntity;
 import org.musicplace.streaming.domain.StreamingEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Getter
 @Table(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SignInEntity {
+public class SignInEntity implements UserDetails {
     @Id
     @Column(name = "member_id", nullable = false, length = 64)
     @Comment("아이디")
@@ -53,6 +58,11 @@ public class SignInEntity {
     @Comment("탈퇴여부")
     private Boolean delete_account = false;
 
+    @Column(name = "roles", nullable = false)
+    @Comment("권한")
+    private String role;
+
+
     @JsonManagedReference
     @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RecommendEntity> recommendEntities = new ArrayList<>();
@@ -70,13 +80,14 @@ public class SignInEntity {
     private List<PLEntity> playlistEntities = new ArrayList<>();
 
     @Builder
-    public SignInEntity(String member_id, String pw, Gender gender, String email, String nickname, String name) {
+    public SignInEntity(String member_id, String pw, Gender gender, String email, String nickname, String name, String role) {
         this.member_id = member_id;
         this.pw = pw;
         this.gender = gender;
         this.email = email;
         this.nickname = nickname;
         this.name = name;
+        this.role = role;
     }
 
     public void SignInUpdate(String pw, String name, String email, String nickname, String profile_img_url) {
@@ -89,6 +100,45 @@ public class SignInEntity {
 
     public void SignInDelete() {
         this.delete_account = true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(role));
+
+        return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return pw;
+    }
+
+    @Override
+    public String getUsername() {
+        return name;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
 
