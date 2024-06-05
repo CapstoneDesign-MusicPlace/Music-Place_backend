@@ -2,12 +2,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/MusicPlace?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: root0000!
-<<<<<<< HEAD
-=======
-
->>>>>>> aebe0cdf06e48965721624d26531386f5d849219
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
 
 
@@ -20,9 +16,10 @@ spring:
       hibernate.format_sql: true
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
 
+jwt:
+  header: Authorization
+  secret: dfklWWHObhUWHEJKHhkjHWKXEHWUIEHXWUIWjhkjHJKWHEJWKeKEhjhKJHEWlhjkjklewkjkljkljewqnnjkbctjkwbtek
+  token-validity-in-seconds: 86400
+
 server:
   port: 8080
-<<<<<<< HEAD
-=======
-
->>>>>>> aebe0cdf06e48965721624d26531386f5d849219

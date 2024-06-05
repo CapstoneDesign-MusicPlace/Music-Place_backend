@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.musicplace.member.dto.SignInSaveDto;
 import org.musicplace.member.dto.SignInUpdateDto;
 import org.musicplace.member.service.SignInService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,5 +41,15 @@ public class SignInController {
     @GetMapping("/{member_id}/sameid")
     public Boolean SignInCheckSameId(@PathVariable String member_id) {
         return signInService.SignInCheckSameId(member_id);
+    }
+
+    @PostMapping("/user")
+    public ResponseEntity<String> getMyUserInfo() {
+        return ResponseEntity.ok("user");
+    }
+
+    @PostMapping("/user/{member_id}")
+    public ResponseEntity<String> getUserInfo(@PathVariable String mamber_id) {
+        return ResponseEntity.ok("admin");
     }
 }

@@ -4,11 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
+import org.musicplace.member.domain.AuthorityEntity;
 import org.musicplace.member.domain.SignInEntity;
 import org.musicplace.member.dto.SignInSaveDto;
 import org.musicplace.member.dto.SignInUpdateDto;
 import org.musicplace.member.repository.SignInRepository;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,11 +20,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SignInService {
     private final SignInRepository signInRepository;
-    private final AuthenticationManager authenticationManager;
 
 
     @Transactional
     public void SignInSave(SignInSaveDto signInSaveDto) {
+
+        AuthorityEntity authority = AuthorityEntity.builder()
+                .authorityName("USER")
+                .build();
+
         signInRepository.save(SignInEntity.builder()
                 .member_id(signInSaveDto.getMember_id())
                 .pw(signInSaveDto.getPw())
@@ -93,6 +99,7 @@ public class SignInService {
         }
         return result;
     }
+
 
 
 }
