@@ -44,10 +44,9 @@ public class SecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/sign_in/**").permitAll())
-/*
-                        .requestMatchers("/**").authenticated()
-                        .anyRequest().permitAll())*/
+                        .requestMatchers("/sign_in/**").permitAll()
+
+                        .requestMatchers("/**").authenticated())
                 .addFilterBefore(ajaxAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(config -> config
                         .authenticationEntryPoint(authenticationEntryPoint)

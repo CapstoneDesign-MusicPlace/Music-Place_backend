@@ -64,19 +64,19 @@ public class SignInEntity implements UserDetails {
 
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<RecommendEntity> recommendEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<FollowEntity> followEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<StreamingEntity> streamingEntities = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PLEntity> playlistEntities = new ArrayList<>();
 
     @Builder
