@@ -16,5 +16,9 @@ spring:
       hibernate.format_sql: true
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
 
+  youtube:
+    api:
+      key: {AIzaSyB5oncqMnIU93ZqgiT2Za0La7OwasZjxqM}
+
 server:
   port: 8080
