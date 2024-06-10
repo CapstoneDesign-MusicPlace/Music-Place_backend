@@ -1,11 +1,11 @@
-package org.musicplace.global.config;
+package org.musicplace.global.security.config;
 
 import lombok.RequiredArgsConstructor;
-import org.musicplace.jwt.CustomAuthenticationFilter;
-import org.musicplace.jwt.CustomLoginAuthenticationEntryPoint;
-import org.musicplace.jwt.handler.CustomAccessDeniedHandler;
-import org.musicplace.jwt.handler.CustomAuthenticationFailureHandler;
-import org.musicplace.jwt.handler.CustomAuthenticationSuccessHandler;
+import org.musicplace.global.security.CustomAuthenticationFilter;
+import org.musicplace.global.security.CustomLoginAuthenticationEntryPoint;
+import org.musicplace.global.security.handler.CustomAccessDeniedHandler;
+import org.musicplace.global.security.handler.CustomAuthenticationFailureHandler;
+import org.musicplace.global.security.handler.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

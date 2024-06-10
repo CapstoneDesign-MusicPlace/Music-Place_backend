@@ -1,4 +1,4 @@
-package org.musicplace.jwt.handler;
+package org.musicplace.global.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

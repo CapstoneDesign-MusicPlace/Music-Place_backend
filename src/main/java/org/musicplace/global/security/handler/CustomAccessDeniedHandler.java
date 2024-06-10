@@ -1,4 +1,4 @@
-package org.musicplace.jwt.handler;
+package org.musicplace.global.security.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
