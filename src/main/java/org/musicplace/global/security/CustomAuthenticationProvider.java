@@ -1,4 +1,4 @@
-package org.musicplace.jwt;
+package org.musicplace.global.security;
 
 import lombok.RequiredArgsConstructor;
 import org.musicplace.member.domain.SignInEntity;

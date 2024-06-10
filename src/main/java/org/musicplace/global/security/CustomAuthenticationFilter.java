@@ -1,4 +1,4 @@
-package org.musicplace.jwt;
+package org.musicplace.global.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
