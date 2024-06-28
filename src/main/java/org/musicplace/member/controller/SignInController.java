@@ -1,6 +1,7 @@
 package org.musicplace.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.member.dto.LoginRequestDto;
 import org.musicplace.member.dto.SignInSaveDto;
 import org.musicplace.member.dto.SignInUpdateDto;
 import org.musicplace.member.service.SignInService;
@@ -42,4 +43,10 @@ public class SignInController {
     public Boolean SignInCheckSameId(@PathVariable String member_id) {
         return signInService.SignInCheckSameId(member_id);
     }
+
+    @PostMapping("/login") // 로그인 엔드포인트 추가
+    public void login(@RequestBody LoginRequestDto loginRequestDto) {
+        // 로그인 처리는 CustomAuthenticationFilter에서 수행
+    }
+
 }
