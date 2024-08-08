@@ -8,6 +8,7 @@ import org.musicplace.member.domain.SignInEntity;
 import org.musicplace.member.dto.SignInSaveDto;
 import org.musicplace.member.dto.SignInUpdateDto;
 import org.musicplace.member.repository.SignInRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,16 +18,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SignInService {
     private final SignInRepository signInRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void SignInSave(SignInSaveDto signInSaveDto) {
         signInRepository.save(SignInEntity.builder()
                 .member_id(signInSaveDto.getMember_id())
-                .pw(signInSaveDto.getPw())
+                .pw(passwordEncoder.encode(signInSaveDto.getPw()))
                 .gender(signInSaveDto.getGender())
                 .email(signInSaveDto.getEmail())
                 .nickname(signInSaveDto.getNickname())
                 .name(signInSaveDto.getName())
+                .role("ROLE_USER")
                 .build());
     }
 
@@ -90,5 +93,13 @@ public class SignInService {
         return result;
     }
 
+    public SignInEntity authenticate(String username, String password) {
+        SignInEntity user = signInRepository.findById(username)
+                .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
+        if (passwordEncoder.matches(password, user.getPw())) {
+            return user;
+        }
+        throw new ExceptionHandler(ErrorCode.INVALID_CREDENTIALS);
+    }
 
 }
