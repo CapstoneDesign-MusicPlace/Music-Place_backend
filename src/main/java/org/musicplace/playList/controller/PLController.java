@@ -29,13 +29,13 @@ public class PLController {
     }
 
     @PatchMapping("/{pl_id}")
-    public void PLUpdate(@PathVariable Long id, @RequestBody PLUpdateDto plUpdateDto) {
-        PLService.PLUpdate(id, plUpdateDto);
+    public void PLUpdate(@PathVariable Long pl_id, @RequestBody PLUpdateDto plUpdateDto) {
+        PLService.PLUpdate(pl_id, plUpdateDto);
     }
 
     @DeleteMapping("/{pl_id}")
-    public void PLDelete(@PathVariable Long id) {
-        PLService.PLDelete(id);
+    public void PLDelete(@PathVariable Long pl_id) {
+        PLService.PLDelete(pl_id);
     }
 
     @GetMapping("/{member_id}")
