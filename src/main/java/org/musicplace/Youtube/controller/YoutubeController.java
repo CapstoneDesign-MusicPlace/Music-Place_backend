@@ -1,11 +1,13 @@
-package org.musicplace.Youtube.Controller;
+package org.musicplace.Youtube.controller;
 
-import org.musicplace.Youtube.Service.*;
+import org.musicplace.Youtube.dto.YoutubeVidioDto;
+import org.musicplace.Youtube.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,9 +17,9 @@ public class YoutubeController {
     private final YoutubeService youtubeService;
 
     @GetMapping
-    public ResponseEntity<String> searchVideo(@RequestParam String keyword) throws IOException {
+    public ResponseEntity<List<YoutubeVidioDto>> searchVideo(@RequestParam String keyword) throws IOException {
         // YoutubeService를 통해 동영상 검색한 결과를 받아옴
-        String result = youtubeService.searchVideo(keyword);
+        List<YoutubeVidioDto> result = youtubeService.searchVideo(keyword);
         return ResponseEntity.ok(result);
 
     }

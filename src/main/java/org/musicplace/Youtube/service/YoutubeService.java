@@ -1,16 +1,20 @@
-package org.musicplace.Youtube.Service;
+package org.musicplace.Youtube.service;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
+import org.musicplace.Youtube.dto.YoutubeVidioDto;
+import org.musicplace.global.exception.ErrorCode;
+import org.musicplace.global.exception.ExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class YoutubeService {
@@ -19,7 +23,7 @@ public class YoutubeService {
     @Value("${youtube.api.key}")
     private String apiKey;
 
-    public String searchVideo(String query) throws IOException {
+    public List<YoutubeVidioDto> searchVideo(String query) throws IOException {
         // JSON 데이터를 처리하기 위한 JsonFactory 객체 생성
         JsonFactory jsonFactory = new JacksonFactory();
 
@@ -45,16 +49,19 @@ public class YoutubeService {
         // 검색 결과에서 동영상 목록 가져오기
         List<SearchResult> searchResultList = searchResponse.getItems();
 
-        if (searchResultList != null && searchResultList.size() > 0) {
+        if (searchResultList != null) {
             //검색 결과 중 첫 번째 동영상 정보 가져오기
-            SearchResult searchResult = searchResultList.get(0);
+            List<YoutubeVidioDto> filteringResultList = searchResultList
+                    .stream()
+                    .map(searchResult -> YoutubeVidioDto.builder()
+                                    .vidioId(searchResult.getId().getVideoId())
+                                    .vidioTitle(searchResult.getSnippet().getTitle())
+                                    .build()
+                            )
+                    .collect(Collectors.toList());
 
-            // 동영상의 ID와 제목 가져오기
-            String videoId = searchResult.getId().getVideoId();
-            String videoTitle = searchResult.getSnippet().getTitle();
-
-            return "Title: " + videoTitle + "\nURL: https://www.youtube.com/watch?v=" + videoId;
+            return filteringResultList;
         }
-        return "검색 결과가 없습니다";
+        throw new ExceptionHandler(ErrorCode.ID_NOT_FOUND);
     }
 }
