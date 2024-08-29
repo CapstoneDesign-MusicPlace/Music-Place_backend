@@ -11,7 +11,6 @@ import org.musicplace.playList.dto.ResponseMusicDto;
 import org.musicplace.playList.repository.MusicRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +25,8 @@ public class MusicService {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
         MusicEntity musicEntity = MusicEntity.builder()
-                .title(musicSaveDto.getTitle())
-                .singer(musicSaveDto.getSinger())
+                .vidioTitle(musicSaveDto.getVidioTitle())
+                .vidioId(musicSaveDto.getVidioId())
                 .build();
         musicEntity.setPlEntity(plEntity);
         plEntity.getMusicEntities().add(musicEntity);
@@ -54,8 +53,7 @@ public class MusicService {
                 .filter(music -> !music.isMusicDelete())
                 .map(music -> ResponseMusicDto.builder()
                         .music_id(music.getMusic_id())
-                        .singer(music.getSinger())
-                        .title(music.getTitle())
+                        .title(music.getVidioTitle())
                         .build())
                 .collect(Collectors.toList()); // collect로 리스트로 변환
 
