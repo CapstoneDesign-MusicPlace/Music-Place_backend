@@ -62,6 +62,6 @@ public class YoutubeService {
 
             return filteringResultList;
         }
-        throw new ExceptionHandler(ErrorCode.ID_NOT_FOUND);
+        throw new ExceptionHandler(ErrorCode.NOT_FOUND_RESULT);
     }
 }

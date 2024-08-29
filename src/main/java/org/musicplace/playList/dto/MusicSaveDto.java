@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 public class MusicSaveDto {
     private Long music_id;
 
-    private String singer;
+    private String vidioId;
 
-    private String title;
+    private String vidioTitle;
 
     @Builder
-    public MusicSaveDto(String singer, String title) {
-        this.singer = singer;
-        this.title = title;
+    public MusicSaveDto(String vidioId, String vidioTitle) {
+        this.vidioId = vidioId;
+        this.vidioTitle = vidioTitle;
     }
 }
