@@ -1,4 +1,4 @@
-package org.musicplace.playList.dto;
+package org.musicplace.Youtube.dto;
 
 
 import lombok.AccessLevel;
@@ -8,15 +8,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MusicSaveDto {
-    private Long music_id;
+public class YoutubeVidioDto {
 
     private String vidioId;
 
     private String vidioTitle;
 
     @Builder
-    public MusicSaveDto(String vidioId, String vidioTitle) {
+    public YoutubeVidioDto(String vidioId, String vidioTitle) {
         this.vidioId = vidioId;
         this.vidioTitle = vidioTitle;
     }

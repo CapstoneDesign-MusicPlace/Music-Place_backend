@@ -60,7 +60,7 @@ class MusicServiceTest {
                 .orElse(null);
 
         // then
-        assertEquals(musicTitle, musicEntity.getTitle());
+        assertEquals(musicTitle, musicEntity.getVidioTitle());
         assertEquals(singer, musicEntity.getSinger());
         assertFalse(musicEntity.isDelete());
     }
@@ -132,7 +132,7 @@ class MusicServiceTest {
         assertEquals(1, musicEntityList.size());
 
         assertEquals(singer2, musicEntityList.get(0).getSinger());
-        assertEquals(musicTitle2, musicEntityList.get(0).getTitle());
+        assertEquals(musicTitle2, musicEntityList.get(0).getVidioTitle());
         assertFalse(musicEntityList.get(0).isDelete());
 
     }
