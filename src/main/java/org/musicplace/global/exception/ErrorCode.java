@@ -7,6 +7,8 @@ public enum ErrorCode {
 
     ID_DELETE("삭제된 ID입니다."),
 
+    NOT_FOUND_RESULT("결과를 찾을 수 없습니다."),
+
 
     EMAIL_NOT_FOUND("해당 이메일을 찾을 수 없습니다."),
 
