@@ -43,7 +43,13 @@ public class YoutubeService {
         // 검색어 설정
         search.setQ(query);
 
-        // 검색 요청 실행 및 응답 받아오기
+        // 검색 결과 최대 50개로 설정
+        search.setMaxResults(50L);
+
+        // 동영상 유형으로 필터 설정 (음악 카테고리 ID는 10)
+        search.setType(Collections.singletonList("video"));
+        search.setVideoCategoryId("10");
+
         SearchListResponse searchResponse = search.execute();
 
         // 검색 결과에서 동영상 목록 가져오기
@@ -56,6 +62,7 @@ public class YoutubeService {
                     .map(searchResult -> YoutubeVidioDto.builder()
                                     .vidioId(searchResult.getId().getVideoId())
                                     .vidioTitle(searchResult.getSnippet().getTitle())
+                                    .vidioImage(String.valueOf(searchResult.getSnippet().getThumbnails()))
                                     .build()
                             )
                     .collect(Collectors.toList());
