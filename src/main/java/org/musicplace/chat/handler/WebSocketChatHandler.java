@@ -1,5 +1,10 @@
 package org.musicplace.chat.handler;
 
+import org.musicplace.chat.dto.ChatDto;
+import org.musicplace.chat.chatRoom.ChatRoom;
+import org.musicplace.chat.websocket.WebSocketMessage;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -11,18 +16,35 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Log4j2
 @RequiredArgsConstructor
 public class WebSocketChatHandler extends TextWebSocketHandler {
+    private final ChatRoom chatRoom;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws JsonProcessingException {
+        String username = (String) session.getAttributes().get("username");
+        WebSocketMessage webSocketMessage = (WebSocketMessage) objectMapper.readValue(message.getPayload(), WebSocketMessage.class);
+        switch (webSocketMessage.getType().getValue()) {
+            case "ENTER" -> enterChatRoom(webSocketMessage.getPayload(), session);
+            case "TALK" -> sendMessage(username, webSocketMessage.getPayload());
+        }
+    }
 
     /**
-     * 웹소켓 연결 성공시
-     * @param session
+     * 메시지 전송
+     * @param chatDto ChatDto
      */
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session){
-        try  {
-            session.sendMessage(
-                    new TextMessage("웹소켓 연결 성공"));
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+    private void sendMessage(String username, ChatDto chatDto) {
+        log.info("send chatDto : " + chatDto.toString());
+        chatRoom.sendMessage(chatDto);
+    }
+
+    /**
+     * 채팅방 입장
+     * @param chatDto ChatDto
+     * @param session 웹소켓 세션
+     */
+    private void enterChatRoom(ChatDto chatDto, WebSocketSession session) {
+        log.info("enter chatDto : " + chatDto.toString());
+        chatRoom.enter(chatDto, session);
     }
 }
