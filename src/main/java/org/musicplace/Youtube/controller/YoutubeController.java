@@ -16,8 +16,8 @@ public class YoutubeController {
 
     private final YoutubeService youtubeService;
 
-    @GetMapping
-    public ResponseEntity<List<YoutubeVidioDto>> searchVideo(@RequestParam String keyword) throws IOException {
+    @GetMapping("/{keyword}")
+    public ResponseEntity<List<YoutubeVidioDto>> searchVideo(@PathVariable String keyword) throws IOException {
         // YoutubeService를 통해 동영상 검색한 결과를 받아옴
         List<YoutubeVidioDto> result = youtubeService.searchVideo(keyword);
         return ResponseEntity.ok(result);
