@@ -9,7 +9,6 @@ import org.musicplace.follow.repository.FollowRepository;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.member.domain.SignInEntity;
-import org.musicplace.member.repository.SignInRepository;
 import org.musicplace.member.service.SignInService;
 import org.springframework.stereotype.Service;
 
