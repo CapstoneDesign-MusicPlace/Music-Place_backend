@@ -46,12 +46,12 @@ public class SecurityConfig{
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**", "/youtube/**", "/youtube")
                         .permitAll()
-                        .requestMatchers("/sign_in/**").permitAll()
-                        .requestMatchers("/**").authenticated())
+                        .requestMatchers("/sign_in/**","/**").permitAll());
+                        /*.requestMatchers("/**").authenticated())
                 .addFilterBefore(ajaxAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(config -> config
                         .authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler));
+                        .accessDeniedHandler(accessDeniedHandler));*/
 
         return http.build();
     }
