@@ -19,14 +19,14 @@ public class SignInController {
         signInService.SignInSave(signInSaveDto);
     }
 
-    @PatchMapping("/{member_id}")
-    public void SignInUpdate(@PathVariable String member_id, @RequestBody SignInUpdateDto signInUpdateDto) {
-        signInService.SignInUpdate(member_id, signInUpdateDto);
+    @PatchMapping()
+    public void SignInUpdate(@RequestBody SignInUpdateDto signInUpdateDto) {
+        signInService.SignInUpdate(signInUpdateDto);
     }
 
-    @DeleteMapping("/{member_id}")
-    public void SignInDelete(@PathVariable String member_id) {
-        signInService.SignInDelete(member_id);
+    @DeleteMapping()
+    public void SignInDelete() {
+        signInService.SignInDelete();
     }
 
     @GetMapping("/{member_id}/{email}/pw")
@@ -42,11 +42,6 @@ public class SignInController {
     @GetMapping("/{member_id}/sameid")
     public Boolean SignInCheckSameId(@PathVariable String member_id) {
         return signInService.SignInCheckSameId(member_id);
-    }
-
-    @PostMapping("/login") // 로그인 엔드포인트 추가
-    public void login(@RequestBody LoginRequestDto loginRequestDto) {
-        // 로그인 처리는 CustomAuthenticationFilter에서 수행
     }
 
 }

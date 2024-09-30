@@ -23,9 +23,9 @@ import java.util.List;
 public class PLController {
     private final PLService PLService;
 
-    @PostMapping("/{member_id}")
-    public Long PLSave(@RequestBody PLSaveDto plSaveDto, @PathVariable String member_id) {
-        return PLService.PLsave(plSaveDto, member_id);
+    @PostMapping()
+    public Long PLSave(@RequestBody PLSaveDto plSaveDto) {
+        return PLService.PLsave(plSaveDto);
     }
 
     @PatchMapping("/{pl_id}")
@@ -38,9 +38,9 @@ public class PLController {
         PLService.PLDelete(pl_id);
     }
 
-    @GetMapping("/{member_id}")
-    public List<ResponsePLDto> PLFindAll(@PathVariable String member_id) {
-        List<ResponsePLDto> PlayListAll = PLService.PLFindAll(member_id);
+    @GetMapping()
+    public List<ResponsePLDto> PLFindAll() {
+        List<ResponsePLDto> PlayListAll = PLService.PLFindAll();
         return PlayListAll;
     }
 

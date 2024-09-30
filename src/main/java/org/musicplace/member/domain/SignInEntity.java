@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.playList.domain.PLEntity;
-import org.musicplace.recommend.domain.RecommendEntity;
 import org.musicplace.streaming.domain.StreamingEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -66,11 +65,6 @@ public class SignInEntity implements UserDetails {
 
     @Column(name = "oauth_provider_id")
     private String oauthProviderId; // OAuth2 사용자 식별 ID
-
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<RecommendEntity> recommendEntities = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

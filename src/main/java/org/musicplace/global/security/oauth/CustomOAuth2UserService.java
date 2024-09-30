@@ -1,6 +1,7 @@
 package org.musicplace.global.security.oauth;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.global.security.jwt.JwtTokenUtil;
 import org.musicplace.member.domain.SignInEntity;
 import org.musicplace.member.repository.SignInRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,38 +22,52 @@ import java.util.Optional;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final SignInRepository signInRepository;
+    private final JwtTokenUtil jwtTokenUtil;  // JWT 토큰 유틸리티 추가
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // OAuth2 공급자에서 받은 사용자 정보
-        Map<String, Object> attributes = userRequest.getAdditionalParameters(); // 수정된 부분
-        String provider = userRequest.getClientRegistration().getRegistrationId(); // google, facebook 등
-        String providerId = attributes.get("sub").toString(); // 사용자의 고유 ID
+        Map<String, Object> attributes = userRequest.getAdditionalParameters();
+        String provider = userRequest.getClientRegistration().getRegistrationId();
 
-        String email = attributes.get("email").toString();
-        String name = attributes.get("name").toString();
+        // 'sub' 및 'email' 필드가 존재하는지 확인하고, 예외 처리
+        Object providerIdObj = attributes.get("sub");
+        Object emailObj = attributes.get("email");
 
-        // 이미 존재하는 사용자면 로그인 처리, 아니면 새로 저장
+        if (providerIdObj == null || emailObj == null) {
+            throw new OAuth2AuthenticationException("필수 사용자 정보가 제공되지 않았습니다.");
+        }
+
+        String providerId = providerIdObj.toString();
+        String email = emailObj.toString();
+        String name = attributes.get("name") != null ? attributes.get("name").toString() : "Unknown";
+
         Optional<SignInEntity> userOptional = signInRepository.findByEmail(email);
         SignInEntity user;
+
         if (userOptional.isPresent()) {
             user = userOptional.get();
         } else {
-            // 새로운 OAuth 사용자 등록
+            // 새로운 사용자 저장
             user = SignInEntity.builder()
-                    .member_id(providerId) // OAuth2 provider에서의 고유 ID
+                    .member_id(providerId)
                     .email(email)
                     .name(name)
-                    .nickname(name) // 초기에는 이름을 닉네임으로 설정
-                    .role("ROLE_USER") // 기본 권한
+                    .nickname(name)
+                    .role("ROLE_USER")
                     .oauthProvider(provider)
                     .oauthProviderId(providerId)
                     .build();
             signInRepository.save(user);
         }
 
-        // DefaultOAuth2User 생성 시 권한 정보도 포함
+        // JWT 토큰 발급
+        String jwtToken = jwtTokenUtil.generateToken(user.getUsername());
+
+        // 사용자 정보와 JWT 토큰 반환
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-        return new DefaultOAuth2User(authorities, attributes, "name");
+        Map<String, Object> extendedAttributes = new HashMap<>(attributes);
+        extendedAttributes.put("jwtToken", jwtToken);  // JWT 토큰 추가
+
+        return new DefaultOAuth2User(authorities, extendedAttributes, "name");
     }
 }
