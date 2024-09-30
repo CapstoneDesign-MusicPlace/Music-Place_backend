@@ -2,6 +2,7 @@ package org.musicplace.playList.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.musicplace.global.authorizaion.MemberAuthorizationUtil;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.member.domain.SignInEntity;
@@ -25,7 +26,8 @@ public class PLService {
     private final SignInService signInService;
 
     @Transactional
-    public Long PLsave(PLSaveDto plSaveDto, String member_id) {
+    public Long PLsave(PLSaveDto plSaveDto) {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
         signInService.CheckSignInDelete(signInEntity);
         PLEntity plEntity = plRepository.save(PLEntity.builder()
@@ -56,7 +58,8 @@ public class PLService {
         plEntity.delete();
     }
 
-    public List<ResponsePLDto> PLFindAll(String member_id) {
+    public List<ResponsePLDto> PLFindAll() {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
         List<ResponsePLDto> nonDeletedPlayLists = signInEntity.getPlaylistEntities()
                 .stream()

@@ -18,24 +18,28 @@ public class AuthController {
     private final JwtTokenUtil jwtTokenUtil;
     private final SignInService signInService;
 
-    // 로그인 기능
+    // JWT 로그인
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         SignInEntity user = signInService.authenticate(loginRequestDto.getMember_id(), loginRequestDto.getPw());
         String token = jwtTokenUtil.generateToken(user.getUsername());
         return ResponseEntity.ok(new LoginResponseDto(token));
+
+    }
+
+    // OAuth 로그인 후 JWT 반환
+    @GetMapping("/google")
+    public ResponseEntity<LoginResponseDto> getOAuth2Jwt(@RequestParam String jwtToken) {
+        return ResponseEntity.ok(new LoginResponseDto(jwtToken));
     }
 
     // 로그아웃 기능
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader(value = "Authorization") String token) {
-        String actualToken = token.substring(7);  // "Bearer " 제거
+        String actualToken = token.substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(actualToken);
 
-        // 토큰 무효화 로직 호출
         jwtTokenUtil.invalidateToken(username, actualToken);
-
-        // 현재 보안 컨텍스트 제거
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok().build();
     }
