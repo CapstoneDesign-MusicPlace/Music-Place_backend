@@ -35,6 +35,7 @@ public class PLService {
                 .onOff(plSaveDto.getOnOff())
                 .comment(plSaveDto.getComment())
                 .cover_img(plSaveDto.getCover_img())
+                .nickname(signInEntity.getNickname())
                 .build());
         signInEntity.getPlaylistEntities().add(plEntity);
         plEntity.SignInEntity(signInEntity);
@@ -46,7 +47,9 @@ public class PLService {
     public void PLUpdate(Long id, PLUpdateDto plUpdateDto) {
         PLEntity plEntity = PLFindById(id);
         CheckPLDeleteStatus(plEntity);
-        plEntity.PLUpdate(plUpdateDto.getOnOff(),
+        plEntity.PLUpdate(
+                plUpdateDto.getTitle(),
+                plUpdateDto.getOnOff(),
                 plUpdateDto.getCover_img(),
                 plUpdateDto.getComment());
     }
@@ -66,6 +69,7 @@ public class PLService {
                 .filter(plEntity -> !plEntity.isPLDelete())
                 .map(plEntity -> ResponsePLDto.builder()
                         .playlist_id(plEntity.getPlaylist_id())
+                        .nickname(plEntity.getNickname())
                         .PLTitle(plEntity.getPLTitle())
                         .cover_img(plEntity.getCover_img())
                         .onOff(plEntity.getOnOff())
