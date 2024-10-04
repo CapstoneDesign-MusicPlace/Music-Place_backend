@@ -27,6 +27,7 @@ public class MusicService {
         MusicEntity musicEntity = MusicEntity.builder()
                 .vidioTitle(musicSaveDto.getVidioTitle())
                 .vidioId(musicSaveDto.getVidioId())
+                .vidioImage(musicSaveDto.getVidioImage())
                 .build();
         musicEntity.setPlEntity(plEntity);
         plEntity.getMusicEntities().add(musicEntity);
@@ -53,7 +54,9 @@ public class MusicService {
                 .filter(music -> !music.isMusicDelete())
                 .map(music -> ResponseMusicDto.builder()
                         .music_id(music.getMusic_id())
-                        .title(music.getVidioTitle())
+                        .vidioId(music.getVidioId())
+                        .vidioImage(music.getVidioImage())
+                        .vidioTitle(music.getVidioTitle())
                         .build())
                 .collect(Collectors.toList()); // collect로 리스트로 변환
 
@@ -77,4 +80,6 @@ public class MusicService {
             throw new ExceptionHandler(ErrorCode.ID_DELETE);
         }
     }
+
+
 }

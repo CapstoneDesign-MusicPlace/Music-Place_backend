@@ -60,11 +60,12 @@ public class YoutubeService {
             List<YoutubeVidioDto> filteringResultList = searchResultList
                     .stream()
                     .map(searchResult -> YoutubeVidioDto.builder()
-                                    .vidioId(searchResult.getId().getVideoId())
-                                    .vidioTitle(searchResult.getSnippet().getTitle())
-                                    .vidioImage(String.valueOf(searchResult.getSnippet().getThumbnails()))
-                                    .build()
-                            )
+                            .vidioId(searchResult.getId().getVideoId())
+                            .vidioTitle(searchResult.getSnippet().getTitle())
+                            .vidioImage(String.valueOf(searchResult.getSnippet().getThumbnails()))
+                            .build()
+                    )
+
                     .collect(Collectors.toList());
 
             return filteringResultList;

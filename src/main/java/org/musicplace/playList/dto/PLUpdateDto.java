@@ -9,6 +9,8 @@ import org.musicplace.playList.domain.OnOff;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PLUpdateDto {
+    private String title;
+
     private OnOff onOff;
 
     private String cover_img;
@@ -16,7 +18,7 @@ public class PLUpdateDto {
     private String comment;
 
     @Builder
-    public PLUpdateDto(OnOff onOff, String cover_img, String comment){
+    public PLUpdateDto(String title, OnOff onOff, String cover_img, String comment){
         this.onOff = onOff;
         this.comment = comment;
         this.cover_img = cover_img;

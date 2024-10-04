@@ -9,14 +9,12 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.playList.domain.PLEntity;
-import org.musicplace.recommend.domain.RecommendEntity;
 import org.musicplace.streaming.domain.StreamingEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,10 +60,11 @@ public class SignInEntity implements UserDetails {
     @Comment("권한")
     private String role;
 
+    @Column(name = "oauth_provider")
+    private String oauthProvider;  // OAuth2 Provider 정보
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<RecommendEntity> recommendEntities = new ArrayList<>();
+    @Column(name = "oauth_provider_id")
+    private String oauthProviderId; // OAuth2 사용자 식별 ID
 
     @JsonManagedReference
     @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -80,7 +79,7 @@ public class SignInEntity implements UserDetails {
     private List<PLEntity> playlistEntities = new ArrayList<>();
 
     @Builder
-    public SignInEntity(String member_id, String pw, Gender gender, String email, String nickname, String name, String role) {
+    public SignInEntity(String member_id, String pw, Gender gender, String email, String nickname, String name, String role, String oauthProvider, String oauthProviderId) {
         this.member_id = member_id;
         this.pw = pw;
         this.gender = gender;
@@ -88,6 +87,9 @@ public class SignInEntity implements UserDetails {
         this.nickname = nickname;
         this.name = name;
         this.role = role;
+        this.oauthProvider = oauthProvider;
+        this.oauthProviderId = oauthProviderId;
+
     }
 
     public void SignInUpdate(String pw, String name, String email, String nickname, String profile_img_url) {
@@ -141,4 +143,3 @@ public class SignInEntity implements UserDetails {
         return true;
     }
 }
-
