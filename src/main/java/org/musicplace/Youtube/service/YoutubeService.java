@@ -65,6 +65,7 @@ public class YoutubeService {
                             .vidioImage(String.valueOf(searchResult.getSnippet().getThumbnails()))
                             .build()
                     )
+
                     .collect(Collectors.toList());
 
             return filteringResultList;
