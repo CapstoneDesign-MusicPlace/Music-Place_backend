@@ -3,7 +3,6 @@ package org.musicplace.playList.controller;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.playList.dto.ResponseMusicDto;
 import org.musicplace.playList.service.MusicService;
-import org.musicplace.playList.domain.MusicEntity;
 import org.musicplace.playList.dto.MusicSaveDto;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +21,12 @@ public class MusicController {
     private final MusicService musicService;
 
     @PostMapping("/{PLId}")
-    public Long MusicSave(@PathVariable Long PLId, @RequestBody MusicSaveDto musicSaveDto) {
+    public Long musicSave(@PathVariable Long PLId, @RequestBody MusicSaveDto musicSaveDto) {
         return musicService.MusicSave(PLId, musicSaveDto);
     }
 
     @DeleteMapping("/{PLId}/{MusicId}")
-    public boolean MusicDelete(@PathVariable Long PLId,@PathVariable Long MusicId) {
+    public boolean musicDelete(@PathVariable Long PLId, @PathVariable Long MusicId) {
         return musicService.MusicDelete(PLId, MusicId);
     }
 
