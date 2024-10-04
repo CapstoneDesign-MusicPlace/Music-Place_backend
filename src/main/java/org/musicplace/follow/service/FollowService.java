@@ -6,6 +6,7 @@ import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.follow.dto.FollowSaveDto;
 import org.musicplace.follow.dto.ResponseDto;
 import org.musicplace.follow.repository.FollowRepository;
+import org.musicplace.global.authorizaion.MemberAuthorizationUtil;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.member.domain.SignInEntity;
@@ -22,9 +23,11 @@ public class FollowService {
 
     private final FollowRepository followRepository;
     private final SignInService signInService;
+    private String member_id = MemberAuthorizationUtil.getLoginMemberId();
+
 
     @Transactional
-    public Long FollowSave(FollowSaveDto followSaveDto, String member_id) {
+    public Long FollowSave(FollowSaveDto followSaveDto) {
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
         signInService.CheckSignInDelete(signInEntity);
         FollowSameCheck(followSaveDto.getTarget_id(), signInEntity);
@@ -40,11 +43,17 @@ public class FollowService {
 
     @Transactional
     public void followDelete(Long follow_id) {
+        SignInEntity signInEntity = signInService.SignInFindById(member_id);
         FollowEntity followEntity = followFindById(follow_id);
-        followRepository.delete(followEntity);
+        if (signInEntity.getFollowEntities().contains(followEntity)) {
+            signInEntity.getFollowEntities().remove(followEntity);
+            followRepository.delete(followEntity);
+        } else {
+            throw new ExceptionHandler(ErrorCode.FOLLOW_NO_ID);
+        }
     }
 
-    public List<ResponseDto> followFindAll(String member_id) {
+    public List<ResponseDto> followFindAll() {
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
         List<FollowEntity> followEntities = signInEntity.getFollowEntities();
         List<ResponseDto> responseDtos = followEntities.stream()
@@ -58,7 +67,7 @@ public class FollowService {
 
     public FollowEntity followFindById(Long target_id) {
         FollowEntity followEntity = followRepository.findById(target_id)
-                .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
+                .orElseThrow(() -> new ExceptionHandler(ErrorCode.FOLLOW_NOT_FOUND));
         return followEntity;
     }
 
