@@ -7,6 +7,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Objects;
 
+import static org.springframework.boot.availability.AvailabilityChangeEvent.publish;
+
 @Service
 @RequiredArgsConstructor
 public class RedisServiceImpl {
@@ -41,6 +43,8 @@ public class RedisServiceImpl {
                     .subscribe(getMessageHandler(session), c.getBytes());
         }
     }
+
+
     /**
      * 메세지 핸들러 생성
      * @param session WebSocketSession
@@ -49,5 +53,3 @@ public class RedisServiceImpl {
         return new RedisMessageHandler(session);
     }
 }
-
-
