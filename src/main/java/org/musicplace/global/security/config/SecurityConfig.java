@@ -1,7 +1,6 @@
 package org.musicplace.global.security.config;
 
 import lombok.RequiredArgsConstructor;
-import org.musicplace.global.security.oauth.CustomOAuth2UserService;
 import org.musicplace.global.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
