@@ -3,7 +3,6 @@ package org.musicplace.playList.controller;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.playList.dto.ResponsePLDto;
 import org.musicplace.playList.service.PLService;
-import org.musicplace.playList.domain.PLEntity;
 import org.musicplace.playList.dto.PLSaveDto;
 import org.musicplace.playList.dto.PLUpdateDto;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,24 +22,24 @@ import java.util.List;
 public class PLController {
     private final PLService PLService;
 
-    @PostMapping("/{member_id}")
-    public Long PLSave(@RequestBody PLSaveDto plSaveDto, @PathVariable String member_id) {
-        return PLService.PLsave(plSaveDto, member_id);
+    @PostMapping()
+    public Long plsave(@RequestBody PLSaveDto plSaveDto) {
+        return PLService.PLsave(plSaveDto);
     }
 
     @PatchMapping("/{pl_id}")
-    public void PLUpdate(@PathVariable Long pl_id, @RequestBody PLUpdateDto plUpdateDto) {
+    public void plupdate(@PathVariable Long pl_id, @RequestBody PLUpdateDto plUpdateDto) {
         PLService.PLUpdate(pl_id, plUpdateDto);
     }
 
     @DeleteMapping("/{pl_id}")
-    public void PLDelete(@PathVariable Long pl_id) {
+    public void pldelete(@PathVariable Long pl_id) {
         PLService.PLDelete(pl_id);
     }
 
-    @GetMapping("/{member_id}")
-    public List<ResponsePLDto> PLFindAll(@PathVariable String member_id) {
-        List<ResponsePLDto> PlayListAll = PLService.PLFindAll(member_id);
+    @GetMapping()
+    public List<ResponsePLDto> plfindall() {
+        List<ResponsePLDto> PlayListAll = PLService.PLFindAll();
         return PlayListAll;
     }
 

@@ -30,6 +30,10 @@ public class PLEntity extends AuditInformation {
     @Comment("플리 제목")
     private String PLTitle;
 
+    @Column(name = "nickname", nullable = false, length = 50)
+    @Comment("닉네임")
+    private String nickname;
+
     @Column(name = "COVER_IMG", nullable = true)
     @Comment("커버 이미지")
     private String cover_img;
@@ -61,14 +65,16 @@ public class PLEntity extends AuditInformation {
 
 
     @Builder
-    public PLEntity(String title, OnOff onOff, String cover_img, String comment) {
+    public PLEntity(String title, String nickname, OnOff onOff, String cover_img, String comment) {
         this.PLTitle = title;
+        this.nickname = nickname;
         this.onOff = onOff;
         this.comment = comment;
         this.cover_img = cover_img;
     }
 
-    public void PLUpdate(OnOff onOff, String cover_img, String comment) {
+    public void PLUpdate(String title, OnOff onOff, String cover_img, String comment) {
+        this.PLTitle = title;
         this.onOff = onOff;
         this.comment = comment;
         this.cover_img = cover_img;

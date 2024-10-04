@@ -12,6 +12,8 @@ public class ResponsePLDto {
 
     private Long playlist_id;
 
+    private String nickname;
+
     private String PLTitle;
 
     private String cover_img;
@@ -21,8 +23,9 @@ public class ResponsePLDto {
     private String comment;
 
     @Builder
-    public ResponsePLDto(Long playlist_id, String PLTitle, String cover_img, OnOff onOff, String comment) {
+    public ResponsePLDto(Long playlist_id, String PLTitle, String nickname,String cover_img, OnOff onOff, String comment) {
         this.playlist_id = playlist_id;
+        this.nickname = nickname;
         this.PLTitle = PLTitle;
         this.cover_img = cover_img;
         this.onOff = onOff;

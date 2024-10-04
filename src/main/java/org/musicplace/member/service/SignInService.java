@@ -2,6 +2,7 @@ package org.musicplace.member.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.musicplace.global.authorizaion.MemberAuthorizationUtil;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.member.domain.SignInEntity;
@@ -20,6 +21,8 @@ public class SignInService {
     private final SignInRepository signInRepository;
     private final PasswordEncoder passwordEncoder;
 
+
+
     @Transactional
     public void SignInSave(SignInSaveDto signInSaveDto) {
         signInRepository.save(SignInEntity.builder()
@@ -34,7 +37,8 @@ public class SignInService {
     }
 
     @Transactional
-    public void SignInUpdate(String member_id, SignInUpdateDto signInUpdateDto) {
+    public void SignInUpdate(SignInUpdateDto signInUpdateDto) {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = SignInFindById(member_id);
         CheckSignInDelete(signInEntity);
         signInEntity.SignInUpdate(signInUpdateDto.getPw(),
@@ -45,7 +49,8 @@ public class SignInService {
     }
 
     @Transactional
-    public void SignInDelete(String member_id) {
+    public void SignInDelete() {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = SignInFindById(member_id);
         CheckSignInDelete(signInEntity);
         signInEntity.SignInDelete();
@@ -93,8 +98,8 @@ public class SignInService {
         return result;
     }
 
-    public SignInEntity authenticate(String username, String password) {
-        SignInEntity user = signInRepository.findById(username)
+    public SignInEntity authenticate(String id, String password) {
+        SignInEntity user = signInRepository.findById(id)
                 .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
         if (passwordEncoder.matches(password, user.getPw())) {
             return user;
