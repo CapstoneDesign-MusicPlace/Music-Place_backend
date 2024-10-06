@@ -24,10 +24,10 @@ public class PLService {
 
     private final PLRepository plRepository;
     private final SignInService signInService;
-    private String member_id = MemberAuthorizationUtil.getLoginMemberId();
 
     @Transactional
     public Long PLsave(PLSaveDto plSaveDto) {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
         signInService.CheckSignInDelete(signInEntity);
         PLEntity plEntity = plRepository.save(PLEntity.builder()
@@ -62,6 +62,7 @@ public class PLService {
     }
 
     public List<ResponsePLDto> PLFindAll() {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
         List<ResponsePLDto> nonDeletedPlayLists = signInEntity.getPlaylistEntities()
                 .stream()
@@ -84,9 +85,10 @@ public class PLService {
                 .filter(plEntity -> plEntity.getOnOff().equals(OnOff.Public))
                 .map(plEntity -> ResponsePLDto.builder()
                         .playlist_id(plEntity.getPlaylist_id())
+                        .member_id(plEntity.getSignInEntity().getMember_id())
                         .PLTitle(plEntity.getPLTitle())
+                        .nickname(plEntity.getNickname())
                         .cover_img(plEntity.getCover_img())
-                        .onOff(plEntity.getOnOff())
                         .comment(plEntity.getComment())
                         .build())
                 .collect(Collectors.toList());

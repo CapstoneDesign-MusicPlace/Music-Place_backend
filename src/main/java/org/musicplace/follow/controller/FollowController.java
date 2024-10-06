@@ -1,9 +1,8 @@
 package org.musicplace.follow.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.follow.dto.FollowSaveDto;
-import org.musicplace.follow.dto.ResponseDto;
+import org.musicplace.follow.dto.FollowResponseDto;
 import org.musicplace.follow.service.FollowService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,12 @@ public class FollowController {
     }
 
     @GetMapping()
-    public List<ResponseDto> followFindAll() {
+    public List<FollowResponseDto> FollowFindAll() {
         return followService.followFindAll();
+    }
+
+    @GetMapping("/count")
+    public Long followCount() {
+        return followService.followCount();
     }
 }
