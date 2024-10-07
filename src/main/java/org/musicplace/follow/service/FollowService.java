@@ -6,7 +6,7 @@ import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.follow.dto.FollowSaveDto;
 import org.musicplace.follow.dto.FollowResponseDto;
 import org.musicplace.follow.repository.FollowRepository;
-import org.musicplace.global.authorizaion.MemberAuthorizationUtil;
+import org.musicplace.global.security.authorizaion.MemberAuthorizationUtil;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.member.domain.SignInEntity;
@@ -68,8 +68,7 @@ public class FollowService {
     public Long followCount() {
         String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
-        List<FollowEntity> followEntities = signInEntity.getFollowEntities();
-        return followEntities.stream().count();
+        return signInEntity.getFollowEntities().stream().count();
     }
 
     public FollowEntity followFindById(Long target_id) {

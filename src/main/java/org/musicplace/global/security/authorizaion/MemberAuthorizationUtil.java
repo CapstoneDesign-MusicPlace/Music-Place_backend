@@ -1,6 +1,6 @@
-package org.musicplace.global.authorizaion;
+package org.musicplace.global.security.authorizaion;
 
-import org.musicplace.member.domain.SignInEntity;
+import org.musicplace.global.security.config.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -11,8 +11,7 @@ public class MemberAuthorizationUtil {
     }
     public static String getLoginMemberId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SignInEntity userDetails = (SignInEntity) authentication.getPrincipal();
-
-        return userDetails.getMember_id();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails.getSignInEntity().getMemberId(); // SignInEntity의 member_id 반환
     }
 }

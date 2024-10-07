@@ -2,7 +2,7 @@ package org.musicplace.playList.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.musicplace.global.authorizaion.MemberAuthorizationUtil;
+import org.musicplace.global.security.authorizaion.MemberAuthorizationUtil;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.member.domain.SignInEntity;
@@ -61,6 +61,12 @@ public class PLService {
         plEntity.delete();
     }
 
+    public Long PLCount() {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
+        SignInEntity signInEntity = signInService.SignInFindById(member_id);
+        return signInEntity.getPlaylistEntities().stream().count();
+    }
+
     public List<ResponsePLDto> PLFindAll() {
         String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
@@ -85,7 +91,7 @@ public class PLService {
                 .filter(plEntity -> plEntity.getOnOff().equals(OnOff.Public))
                 .map(plEntity -> ResponsePLDto.builder()
                         .playlist_id(plEntity.getPlaylist_id())
-                        .member_id(plEntity.getSignInEntity().getMember_id())
+                        .member_id(plEntity.getSignInEntity().getMemberId())
                         .PLTitle(plEntity.getPLTitle())
                         .nickname(plEntity.getNickname())
                         .cover_img(plEntity.getCover_img())

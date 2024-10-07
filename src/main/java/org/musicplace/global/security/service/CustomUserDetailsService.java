@@ -1,6 +1,7 @@
 package org.musicplace.global.security.service;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.global.security.config.CustomUserDetails;
 import org.musicplace.member.domain.SignInEntity;
 import org.musicplace.member.repository.SignInRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,15 +13,20 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    // JPA 사용, Mybatis 사용시 mapper를 등록하셔서 user 정보를 받아오시면 됩니다.
-    private final SignInRepository userRepository;
+    private final SignInRepository signInRepository;
+
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+        // member_id를 사용하여 사용자 조회
+        SignInEntity signInEntity = signInRepository.findByMemberId(memberId);
 
-        SignInEntity entity = userRepository.findByName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
+        // 사용자가 존재하지 않을 경우 예외 발생
+        if (signInEntity == null) {
+            throw new UsernameNotFoundException("User not found with member_id: " + memberId);
+        }
 
-        return entity;
+        // CustomUserDetails 객체 반환
+        return new CustomUserDetails(signInEntity);
     }
 }
