@@ -49,4 +49,9 @@ public class PLController {
         return PublicPlayList;
     }
 
+    @GetMapping("/count")
+    public Long PLCount() {
+        return PLService.PLCount();
+    }
+
 }
