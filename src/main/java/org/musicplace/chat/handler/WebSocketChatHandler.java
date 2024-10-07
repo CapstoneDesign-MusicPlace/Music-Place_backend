@@ -22,12 +22,17 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws JsonProcessingException {
         String username = (String) session.getAttributes().get("username");
-        WebSocketMessage webSocketMessage = (WebSocketMessage) objectMapper.readValue(message.getPayload(), WebSocketMessage.class);
+        WebSocketMessage webSocketMessage = objectMapper.readValue(message.getPayload(), WebSocketMessage.class);
+
+        // Debug 로그 추가
+        log.info("Received message: {}", message.getPayload()); // 받은 메시지 로그
+
         switch (webSocketMessage.getType().getValue()) {
             case "ENTER" -> enterChatRoom(webSocketMessage.getPayload(), session);
             case "TALK" -> sendMessage(username, webSocketMessage.getPayload());
         }
     }
+
 
     /**
      * 메시지 전송

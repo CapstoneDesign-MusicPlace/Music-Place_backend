@@ -35,6 +35,9 @@ public class ChatRoom {
     public ChatDto createChatRoom(String username) {
         String roomId = UUID.randomUUID().toString(); // UUID로 랜덤한 roomId 생성
 
+        // 로그로 생성된 roomId 확인
+        log.info("Generated roomId: {}", roomId);
+
         // Builder를 사용하여 ChatDto를 Build
         ChatDto newRoom = ChatDto.builder()
                 .chatRoomId(roomId) // roomId 설정
@@ -46,10 +49,13 @@ public class ChatRoom {
         return newRoom;
     }
 
+
+
     // 채팅방 목록 조회
     public Collection<ChatDto> getChatRooms() {
         return chatRooms.values();
     }
+
 
     public void enter(ChatDto chatDto, WebSocketSession session) {
         String username = (String) session.getAttributes().get("username");
@@ -74,34 +80,21 @@ public class ChatRoom {
         String message = username + "님이 입장하셨습니다."; // 입장 메시지
         log.info("Publishing enter message: {}", message); // 메시지 로그 추가
 
-        // ChatDto 생성: chatRoomId와 username이 올바르게 설정되었는지 확인
+        // ChatDto 생성: chatRoomId, username, message가 올바르게 설정되었는지 확인
         ChatDto payload = ChatDto.builder()
                 .chatRoomId(chatDto.getChatRoomId()) // 방 ID 설정
                 .username(username) // 사용자 이름 설정
                 .message(message) // 입장 메시지 설정
                 .build();
 
-        redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload));
+        // 로그 추가로 발행 메시지 확인
+        log.info("Payload for publish: {}", payload);
 
-        // 추가: redisService.publish 호출 후 로그 추가
+        // 여기서 message를 chatDto.getMessage()로 설정하여 정확한 값을 사용
+        redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload));
         log.info("Published enter message for user {} in chat room {}", username, chatDto.getChatRoomId());
     }
 
-    public void leave(ChatDto chatDto, WebSocketSession session) {
-        String username = (String) session.getAttributes().get("username");
-        if (username == null) {
-            // 예외 처리: username이 없을 경우
-            log.error("Username not found in session attributes.");
-            return;
-        }
-
-        String channel = "chatRoom:" + chatDto.getChatRoomId();
-        chatDto.setMessage(username + "님이 퇴장하셨습니다.");
-        redisService.publish(channel, getTextMessage(WebSocketMessageType.EXIT, chatDto));
-
-        // 추가: chatDto를 chatRooms에서 제거하는 로직을 추가할 수 있음
-        log.info("User {} left chat room {}", username, chatDto.getChatRoomId());
-    }
 
     /**
      * 메시지 전송
@@ -120,10 +113,14 @@ public class ChatRoom {
      */
     private String getTextMessage(WebSocketMessageType type, ChatDto chatDto) {
         try {
-            return objectMapper.writeValueAsString(new WebSocketMessage(type, chatDto));
-        }catch (JsonProcessingException e) {
+            String message = objectMapper.writeValueAsString(new WebSocketMessage(type, chatDto));
+            // 로그로 실제 발행되는 메시지 확인
+            log.info("Generated text message: {}", message);
+            return message;
+        } catch (JsonProcessingException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
+
 }
