@@ -30,6 +30,7 @@ public class CommentService {
         CommentEntity commentEntity = CommentEntity.builder()
                 .comment(commentSaveDto.getComment())
                 .nickName(commentSaveDto.getNickName())
+                .profile_img_url(commentSaveDto.getProfile_img_url())
                 .build();
         commentEntity.setPlEntity(plEntity);
         plEntity.getCommentEntities().add(commentEntity);
@@ -58,6 +59,7 @@ public class CommentService {
                         .comment_id(comment.getComment_id())
                         .nickName(comment.getNickName())
                         .userComment(comment.getUserComment())
+                        .profile_img_url(comment.getProfile_img_url())
                         .build())
                 .collect(Collectors.toList());
 
