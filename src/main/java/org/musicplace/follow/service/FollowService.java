@@ -31,6 +31,8 @@ public class FollowService {
         FollowCheck(followSaveDto.getTarget_id(), signInEntity);
         FollowEntity followEntity = FollowEntity.builder()
                 .target_id(followSaveDto.getTarget_id())
+                .nickname(followSaveDto.getNickname())
+                .profile_img_url(followSaveDto.getProfile_img_url())
                 .build();
         signInEntity.getFollowEntities().add(followEntity);
         followEntity.SignInEntity(signInEntity);
@@ -59,6 +61,8 @@ public class FollowService {
                 .map(followEntity -> FollowResponseDto.builder()
                         .follow_id(followEntity.getFollow_id())
                         .target_id(followEntity.getTarget_id())
+                        .nickname(followEntity.getNickname())
+                        .profile_img_url(followEntity.getProfile_img_url())
                         .build())
                 .collect(Collectors.toList());
         return followResponseDtos;
@@ -67,6 +71,11 @@ public class FollowService {
     public Long followCount() {
         String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
+        return signInEntity.getFollowEntities().stream().count();
+    }
+
+    public Long otherFollowCount(String otherMemberId) {
+        SignInEntity signInEntity = signInService.SignInFindById(otherMemberId);
         return signInEntity.getFollowEntities().stream().count();
     }
 

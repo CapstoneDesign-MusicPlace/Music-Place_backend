@@ -11,10 +11,14 @@ public class FollowResponseDto {
 
     private Long follow_id;
     private String target_id;
+    private String profile_img_url;
+    private String nickname;
 
     @Builder
-    public FollowResponseDto(Long follow_id, String target_id) {
+    public FollowResponseDto(Long follow_id, String target_id, String nickname, String profile_img_url) {
         this.follow_id = follow_id;
         this.target_id = target_id;
+        this.nickname = nickname;
+        this.profile_img_url = profile_img_url;
     }
 }
