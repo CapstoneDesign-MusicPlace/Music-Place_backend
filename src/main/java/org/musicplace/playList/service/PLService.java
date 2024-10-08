@@ -85,6 +85,24 @@ public class PLService {
         return nonDeletedPlayLists;
     }
 
+    public List<ResponsePLDto> getOtherUserPL(String memberId) {
+        SignInEntity signInEntity = signInService.SignInFindById(memberId);
+        List<ResponsePLDto> publicPlaylist = signInEntity.getPlaylistEntities()
+                .stream()
+                .filter(plEntity -> plEntity.getOnOff().equals(OnOff.Public))
+                .map(plEntity -> ResponsePLDto.builder()
+                        .playlist_id(plEntity.getPlaylist_id())
+                        .nickname(plEntity.getNickname())
+                        .PLTitle(plEntity.getPLTitle())
+                        .cover_img(plEntity.getCover_img())
+                        .onOff(plEntity.getOnOff())
+                        .comment(plEntity.getComment())
+                        .build())
+                .collect(Collectors.toList());
+        return publicPlaylist;
+    }
+
+
     public List<ResponsePLDto> PLFindPublic() {
         List<PLEntity> playListAll = plRepository.findAll();
         List<ResponsePLDto> publicPlayLists = playListAll.stream()

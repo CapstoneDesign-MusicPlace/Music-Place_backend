@@ -54,4 +54,9 @@ public class PLController {
         return PLService.PLCount();
     }
 
+    @GetMapping("/other/{otherMemberId}")
+    public List<ResponsePLDto> getOtherUserPL(@PathVariable String otherMemberId) {
+        return PLService.getOtherUserPL(otherMemberId);
+    }
+
 }
