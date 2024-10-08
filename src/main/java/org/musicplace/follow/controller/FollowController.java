@@ -33,4 +33,9 @@ public class FollowController {
     public Long followCount() {
         return followService.followCount();
     }
+
+    @GetMapping("/otherCount/{otherMemberId}")
+    public Long otherFollowCount(@PathVariable String otherMemberId) {
+        return followService.otherFollowCount(otherMemberId);
+    }
 }

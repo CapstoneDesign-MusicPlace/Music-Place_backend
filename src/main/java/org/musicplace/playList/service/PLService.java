@@ -67,6 +67,13 @@ public class PLService {
         return signInEntity.getPlaylistEntities().stream().count();
     }
 
+    public Long otherPLCount(String otherMemberId) {
+        SignInEntity signInEntity = signInService.SignInFindById(otherMemberId);
+        return signInEntity.getPlaylistEntities().stream()
+                .filter(plEntity -> plEntity.getOnOff().equals(OnOff.Public))
+                .count();
+    }
+
     public List<ResponsePLDto> PLFindAll() {
         String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = signInService.SignInFindById(member_id);

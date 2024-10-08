@@ -67,6 +67,8 @@ public class SignInService {
                 .build();
     }
 
+
+
     public SignInEntity SignInFindById(String member_id) {
         return signInRepository.findById(member_id)
                 .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
