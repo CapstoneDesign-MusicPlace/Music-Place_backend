@@ -40,7 +40,7 @@ public class SignInService {
         String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = SignInFindById(member_id);
         CheckSignInDelete(signInEntity);
-        signInEntity.SignInUpdate(signInUpdateDto.getPw(),
+        signInEntity.SignInUpdate(
                 signInUpdateDto.getName(),
                 signInUpdateDto.getEmail(),
                 signInUpdateDto.getNickname(),
@@ -53,14 +53,12 @@ public class SignInService {
         SignInEntity signInEntity = SignInFindById(member_id);
         CheckSignInDelete(signInEntity);
         signInEntity.SignInDelete();
-        System.out.println("=========================================================");
     }
 
     public SignInGetUserDataDto SignInGetUserData() {
         String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = SignInFindById(member_id);
         CheckSignInDelete(signInEntity);
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=");
         return SignInGetUserDataDto.builder()
                 .email(signInEntity.getEmail())
                 .profile_img_url(signInEntity.getProfile_img_url())
@@ -115,6 +113,9 @@ public class SignInService {
     public SignInEntity authenticate(String id, String password) {
         SignInEntity user = signInRepository.findById(id)
                 .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
+        if (user.getDelete_account()) {
+            throw new ExceptionHandler(ErrorCode.ID_DELETE);
+        }
         if (passwordEncoder.matches(password, user.getPw())) {
             return user;
         }

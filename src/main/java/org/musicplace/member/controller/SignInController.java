@@ -28,7 +28,6 @@ public class SignInController {
 
     @DeleteMapping("/delete")
     public void SignInDelete() {
-        System.out.println("SignInDelete ================================== 동작");
         signInService.SignInDelete();
     }
 
@@ -49,8 +48,6 @@ public class SignInController {
 
     @GetMapping("/getuser")
     public SignInGetUserDataDto SignInGetUserData() {
-        System.out.println("SignInGetUserData ======================================================================== 동작");
-
         return signInService.SignInGetUserData();
     }
 

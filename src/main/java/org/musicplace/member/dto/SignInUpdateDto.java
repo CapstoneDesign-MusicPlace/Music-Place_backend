@@ -10,8 +10,6 @@ import org.musicplace.member.domain.Gender;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignInUpdateDto {
 
-    private String pw;
-
     private String name;
 
     private String profile_img_url;
@@ -21,9 +19,7 @@ public class SignInUpdateDto {
     private String nickname;
 
     @Builder
-    public SignInUpdateDto(String pw, String name, String email, String nickname, String profile_img_url){
-
-        this.pw = pw;
+    public SignInUpdateDto(String name, String email, String nickname, String profile_img_url){
         this.profile_img_url = profile_img_url;
         this.email = email;
         this.nickname = nickname;
