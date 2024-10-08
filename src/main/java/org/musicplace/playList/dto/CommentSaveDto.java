@@ -15,10 +15,13 @@ public class CommentSaveDto {
 
     private String comment;
 
+    private String profile_img_url;
+
     @Builder
-    public CommentSaveDto(String nickName, String comment) {
+    public CommentSaveDto(String nickName, String comment, String profile_img_url) {
         this.nickName = nickName;
         this.comment = comment;
+        this.profile_img_url = profile_img_url;
     }
 
 }

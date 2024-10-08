@@ -35,6 +35,10 @@ public class CommentEntity extends AuditInformation {
     @Comment("댓글")
     private String userComment;
 
+    @Column(name = "profile_img_url", nullable = true)
+    @Comment("프로필 이미지")
+    private String profile_img_url;
+
     @Column(name = "DELETE_STATE", nullable = false)
     @Comment("삭제여부")
     private boolean commentDelete = false;
@@ -45,9 +49,10 @@ public class CommentEntity extends AuditInformation {
     private PLEntity plEntity;
 
     @Builder
-    public CommentEntity(String nickName, String comment) {
+    public CommentEntity(String nickName, String comment, String profile_img_url) {
         this.nickName = nickName;
         this.userComment = comment;
+        this.profile_img_url = profile_img_url;
     }
 
     public void setPlEntity(PLEntity plEntity) {
