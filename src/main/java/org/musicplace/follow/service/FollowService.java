@@ -28,7 +28,7 @@ public class FollowService {
         String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = signInService.SignInFindById(member_id);
         signInService.CheckSignInDelete(signInEntity);
-        FollowSameCheck(followSaveDto.getTarget_id(), signInEntity);
+        FollowCheck(followSaveDto.getTarget_id(), signInEntity);
         FollowEntity followEntity = FollowEntity.builder()
                 .target_id(followSaveDto.getTarget_id())
                 .build();
@@ -36,7 +36,6 @@ public class FollowService {
         followEntity.SignInEntity(signInEntity);
         followRepository.save(followEntity);
         return followEntity.getFollow_id();
-
     }
 
     @Transactional
@@ -77,12 +76,15 @@ public class FollowService {
         return followEntity;
     }
 
-    public void FollowSameCheck(String tartgetId, SignInEntity signInEntity) {
+    public void FollowCheck(String tartgetId, SignInEntity signInEntity) {
         List<FollowEntity> followEntities = signInEntity.getFollowEntities();
         for(FollowEntity target : followEntities) {
-            if(target.getTarget_id().equals(tartgetId)) {
+            if(!target.getTarget_id().equals(tartgetId)) {
                 new ExceptionHandler(ErrorCode.FOLLOW_SAME_ID);
             }
+        }
+        if(!signInEntity.getMemberId().equals(tartgetId)) {
+            new ExceptionHandler(ErrorCode.NOT_FOLLOW_SELF);
         }
     }
 

@@ -92,8 +92,7 @@ public class SignInEntity implements UserDetails {
 
     }
 
-    public void SignInUpdate(String pw, String name, String email, String nickname, String profile_img_url) {
-        this.pw = pw;
+    public void SignInUpdate(String name, String email, String nickname, String profile_img_url) {
         this.profile_img_url = profile_img_url;
         this.email = email;
         this.nickname = nickname;

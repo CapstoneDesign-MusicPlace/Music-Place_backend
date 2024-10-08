@@ -19,6 +19,7 @@ public enum ErrorCode {
     INVALID_CREDENTIALS("잘못된 자격 증명입니다."),
 
     SAME_MUSIC("동일한 비디오ID가 있습니다"),
+    NOT_FOLLOW_SELF("스스로를 팔로우 할 수 없습니다")
     ;
 
 
