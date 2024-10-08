@@ -85,15 +85,17 @@ public class FollowService {
         return followEntity;
     }
 
-    public void FollowCheck(String tartgetId, SignInEntity signInEntity) {
+    public void FollowCheck(String targetId, SignInEntity signInEntity) {
         List<FollowEntity> followEntities = signInEntity.getFollowEntities();
-        for(FollowEntity target : followEntities) {
-            if(!target.getTarget_id().equals(tartgetId)) {
-                new ExceptionHandler(ErrorCode.FOLLOW_SAME_ID);
+
+        for (FollowEntity target : followEntities) {
+            if (target.getTarget_id().equals(targetId)) {
+                throw new ExceptionHandler(ErrorCode.FOLLOW_SAME_ID);
             }
         }
-        if(!signInEntity.getMemberId().equals(tartgetId)) {
-            new ExceptionHandler(ErrorCode.NOT_FOLLOW_SELF);
+
+        if (signInEntity.getMemberId().equals(targetId)) {
+            throw new ExceptionHandler(ErrorCode.NOT_FOLLOW_SELF);
         }
     }
 
