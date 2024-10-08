@@ -3,6 +3,8 @@ package org.musicplace.Youtube.service;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.PlaylistItem;
+import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import org.musicplace.Youtube.dto.YoutubeVidioDto;
@@ -72,4 +74,50 @@ public class YoutubeService {
         }
         throw new ExceptionHandler(ErrorCode.NOT_FOUND_RESULT);
     }
+
+
+    public List<YoutubeVidioDto> getPlaylistVideos() throws IOException {
+        JsonFactory jsonFactory = new JacksonFactory();
+
+        YouTube youtube = new YouTube.Builder(
+                new com.google.api.client.http.javanet.NetHttpTransport(),
+                jsonFactory,
+                request -> {})
+                .build();
+
+        // YouTube PlaylistItems API를 사용하여 재생목록의 동영상 정보를 가져오기 위한 요청 객체 생성
+        YouTube.PlaylistItems.List playlistItemsList = youtube.playlistItems().list(Collections.singletonList("id,snippet"));
+
+        // API 키 설정
+        playlistItemsList.setKey(apiKey);
+
+        // 재생목록 ID 설정
+        playlistItemsList.setPlaylistId("OLNY56MxFrczc5CoAvnTCDO_3bAdOLExkJQ");
+
+        // 결과 수 제한 설정 (최대 50개)
+        playlistItemsList.setMaxResults(50L);
+
+        PlaylistItemListResponse playlistItemResponse = playlistItemsList.execute();
+
+        // 재생목록에서 동영상 목록 가져오기
+        List<PlaylistItem> playlistItems = playlistItemResponse.getItems();
+
+        if (playlistItems != null && !playlistItems.isEmpty()) {
+            List<YoutubeVidioDto> videoList = playlistItems
+                    .stream()
+                    .map(playlistItem -> YoutubeVidioDto.builder()
+                            .vidioId(playlistItem.getSnippet().getResourceId().getVideoId())
+                            .vidioTitle(playlistItem.getSnippet().getTitle())
+                            .vidioImage(playlistItem.getSnippet().getThumbnails().getDefault().getUrl())
+                            .build()
+                    )
+                    .collect(Collectors.toList());
+
+            return videoList;
+        }
+
+        throw new ExceptionHandler(ErrorCode.NOT_FOUND_RESULT);
+    }
+
+
 }

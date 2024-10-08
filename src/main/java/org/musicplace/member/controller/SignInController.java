@@ -1,7 +1,9 @@
 package org.musicplace.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.member.domain.SignInEntity;
 import org.musicplace.member.dto.LoginRequestDto;
+import org.musicplace.member.dto.SignInGetUserDataDto;
 import org.musicplace.member.dto.SignInSaveDto;
 import org.musicplace.member.dto.SignInUpdateDto;
 import org.musicplace.member.service.SignInService;
@@ -14,17 +16,17 @@ import org.springframework.web.bind.annotation.*;
 public class SignInController {
     private final SignInService signInService;
 
-    @PostMapping
+    @PostMapping("/save")
     public void SignInSave(@RequestBody SignInSaveDto signInSaveDto) {
         signInService.SignInSave(signInSaveDto);
     }
 
-    @PatchMapping()
+    @PatchMapping("/update")
     public void SignInUpdate(@RequestBody SignInUpdateDto signInUpdateDto) {
         signInService.SignInUpdate(signInUpdateDto);
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/delete")
     public void SignInDelete() {
         signInService.SignInDelete();
     }
@@ -42,6 +44,11 @@ public class SignInController {
     @GetMapping("/{member_id}/sameid")
     public Boolean SignInCheckSameId(@PathVariable String member_id) {
         return signInService.SignInCheckSameId(member_id);
+    }
+
+    @GetMapping("/getuser")
+    public SignInGetUserDataDto SignInGetUserData() {
+        return signInService.SignInGetUserData();
     }
 
 }

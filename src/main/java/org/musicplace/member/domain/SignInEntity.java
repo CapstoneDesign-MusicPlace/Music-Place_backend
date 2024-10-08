@@ -26,7 +26,7 @@ public class SignInEntity implements UserDetails {
     @Id
     @Column(name = "member_id", nullable = false, length = 64)
     @Comment("아이디")
-    private String member_id;
+    private String memberId;
 
     @Column(name = "pw", nullable = false, length = 64)
     @Comment("비밀번호")
@@ -79,8 +79,8 @@ public class SignInEntity implements UserDetails {
     private List<PLEntity> playlistEntities = new ArrayList<>();
 
     @Builder
-    public SignInEntity(String member_id, String pw, Gender gender, String email, String nickname, String name, String role, String oauthProvider, String oauthProviderId) {
-        this.member_id = member_id;
+    public SignInEntity(String memberId, String pw, Gender gender, String email, String nickname, String name, String role, String oauthProvider, String oauthProviderId) {
+        this.memberId = memberId;
         this.pw = pw;
         this.gender = gender;
         this.email = email;
@@ -92,8 +92,7 @@ public class SignInEntity implements UserDetails {
 
     }
 
-    public void SignInUpdate(String pw, String name, String email, String nickname, String profile_img_url) {
-        this.pw = pw;
+    public void SignInUpdate(String name, String email, String nickname, String profile_img_url) {
         this.profile_img_url = profile_img_url;
         this.email = email;
         this.nickname = nickname;

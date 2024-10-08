@@ -49,4 +49,19 @@ public class PLController {
         return PublicPlayList;
     }
 
+    @GetMapping("/count")
+    public Long PLCount() {
+        return PLService.PLCount();
+    }
+
+    @GetMapping("/otherCount/{otherMemberId}")
+    public Long otherPLCount(@PathVariable String otherMemberId) {
+        return PLService.otherPLCount(otherMemberId);
+    }
+
+    @GetMapping("/other/{otherMemberId}")
+    public List<ResponsePLDto> getOtherUserPL(@PathVariable String otherMemberId) {
+        return PLService.getOtherUserPL(otherMemberId);
+    }
+
 }

@@ -1,9 +1,8 @@
 package org.musicplace.follow.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.follow.dto.FollowSaveDto;
-import org.musicplace.follow.dto.ResponseDto;
+import org.musicplace.follow.dto.FollowResponseDto;
 import org.musicplace.follow.service.FollowService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,18 +14,28 @@ import java.util.List;
 public class FollowController {
     private final FollowService followService;
 
-    @PostMapping("/{member_id}")
-    public Long FollowSave(@RequestBody FollowSaveDto followSaveDto, @PathVariable String member_id) {
-        return followService.FollowSave(followSaveDto, member_id);
+    @PostMapping()
+    public Long FollowSave(@RequestBody FollowSaveDto followSaveDto) {
+        return followService.FollowSave(followSaveDto);
     }
 
-    @DeleteMapping("/{member_id}/{follow_id}")
+    @DeleteMapping("/{follow_id}")
     public void FollowDelete(@PathVariable Long follow_id) {
         followService.followDelete(follow_id);
     }
 
-    @GetMapping("/{member_id}")
-    public List<ResponseDto> followFindAll(@PathVariable String member_id) {
-        return followService.followFindAll(member_id);
+    @GetMapping()
+    public List<FollowResponseDto> FollowFindAll() {
+        return followService.followFindAll();
+    }
+
+    @GetMapping("/count")
+    public Long followCount() {
+        return followService.followCount();
+    }
+
+    @GetMapping("/otherCount/{otherMemberId}")
+    public Long otherFollowCount(@PathVariable String otherMemberId) {
+        return followService.otherFollowCount(otherMemberId);
     }
 }

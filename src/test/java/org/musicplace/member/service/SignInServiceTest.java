@@ -91,7 +91,6 @@ class SignInServiceTest {
 
         //when
         signInService.SignInUpdate(SignInUpdateDto.builder()
-                .pw(pw2)
                 .name(name2)
                 .nickname(nickname2)
                 .email(email2)

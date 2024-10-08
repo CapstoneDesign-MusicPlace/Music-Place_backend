@@ -14,10 +14,14 @@ public class ResponseCommentDto {
     private String nickName;
 
     private String userComment;
+
+    private String profile_img_url;
+
     @Builder
-    public ResponseCommentDto(Long comment_id, String nickName, String userComment) {
+    public ResponseCommentDto(Long comment_id, String nickName, String userComment, String profile_img_url) {
         this.comment_id = comment_id;
         this.userComment = userComment;
         this.nickName = nickName;
+        this.profile_img_url = profile_img_url;
     }
 }
