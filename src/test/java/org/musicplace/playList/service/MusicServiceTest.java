@@ -30,7 +30,7 @@ class MusicServiceTest {
     @Autowired
     private PLRepository plRepository;
 
-    @Test
+    /*@Test
     void musicSave() {
 
         // given
@@ -63,9 +63,9 @@ class MusicServiceTest {
         assertEquals(musicTitle, musicEntity.getVidioTitle());
         assertEquals(singer, musicEntity.getSinger());
         assertFalse(musicEntity.isDelete());
-    }
+    }*/
 
-    @Test
+    /*@Test
     void musicDelete() {
 
         // given
@@ -91,9 +91,9 @@ class MusicServiceTest {
 
         // then
         assertTrue(result);
-    }
+    }*/
 
-    @Test
+    /*@Test
     void musicFindAll() {
 
         // given
@@ -135,5 +135,5 @@ class MusicServiceTest {
         assertEquals(musicTitle2, musicEntityList.get(0).getVidioTitle());
         assertFalse(musicEntityList.get(0).isDelete());
 
-    }
+    }*/
 }

@@ -25,9 +25,9 @@ public class MusicController {
         return musicService.MusicSave(PLId, musicSaveDto);
     }
 
-    @DeleteMapping("/{PLId}/{MusicId}")
-    public boolean musicDelete(@PathVariable Long PLId, @PathVariable Long MusicId) {
-        return musicService.MusicDelete(PLId, MusicId);
+    @PostMapping("/{PLId}/delete")
+    public boolean musicDelete(@PathVariable Long PLId, @RequestBody List<Long> MusicIds) {
+        return musicService.MusicDelete(PLId, MusicIds);
     }
 
     @GetMapping("/{PLId}")
