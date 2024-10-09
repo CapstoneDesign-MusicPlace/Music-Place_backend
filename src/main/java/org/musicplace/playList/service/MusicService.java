@@ -36,13 +36,18 @@ public class MusicService {
     }
 
     @Transactional
-    public boolean MusicDelete(Long PLId, Long MusicId) {
+    public boolean MusicDelete(Long PLId, List<Long> MusicIds) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        MusicEntity musicEntity = MusicFindById(plEntity,MusicId);
-        checkMusicDeleteStatus(musicEntity);
-        musicEntity.delete();
-        return musicEntity.isMusicDelete();
+        boolean allDeleted = true;
+        for (Long musicId : MusicIds) {
+            MusicEntity musicEntity = MusicFindById(plEntity, musicId);
+            checkMusicDeleteStatus(musicEntity);
+            musicEntity.delete();
+            allDeleted &= musicEntity.isMusicDelete();
+        }
+
+        return allDeleted;
     }
 
     public List<ResponseMusicDto> MusicFindAll(Long PLId) {

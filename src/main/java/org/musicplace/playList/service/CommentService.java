@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
+import org.musicplace.global.security.authorizaion.MemberAuthorizationUtil;
 import org.musicplace.playList.domain.CommentEntity;
 import org.musicplace.playList.domain.MusicEntity;
 import org.musicplace.playList.domain.PLEntity;
@@ -25,9 +26,11 @@ public class CommentService {
 
     @Transactional
     public Long CommentSave(Long PLId, CommentSaveDto commentSaveDto) {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
         CommentEntity commentEntity = CommentEntity.builder()
+                .memberId(member_id)
                 .comment(commentSaveDto.getComment())
                 .nickName(commentSaveDto.getNickName())
                 .profile_img_url(commentSaveDto.getProfile_img_url())
@@ -56,7 +59,7 @@ public class CommentService {
                 .stream()
                 .filter(comment -> !comment.isCommentDelete())
                 .map(comment -> ResponseCommentDto.builder()
-                        .comment_id(comment.getComment_id())
+                        .memberId(comment.getMemberId())
                         .nickName(comment.getNickName())
                         .userComment(comment.getUserComment())
                         .profile_img_url(comment.getProfile_img_url())
