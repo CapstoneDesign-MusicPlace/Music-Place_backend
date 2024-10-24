@@ -13,7 +13,7 @@ import org.springframework.web.socket.WebSocketSession;
 @RequiredArgsConstructor
 class RedisMessageHandler implements MessageListener {
     private final WebSocketSession session;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     /**
      * Redis 메시지 수신
@@ -24,11 +24,11 @@ class RedisMessageHandler implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             WebSocketMessage webSocketMessage = objectMapper.readValue(message.getBody(), WebSocketMessage.class);
-            if(session.isOpen() && !webSocketMessage.getPayload().getUsername().equals(session.getAttributes().get("username"))){
+            if (session.isOpen() && !webSocketMessage.getPayload().getUsername().equals(session.getAttributes().get("username"))) {
                 session.sendMessage(new TextMessage(new String(message.getBody())));
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Error while handling Redis message: {}, Session ID: {}", e.getMessage(), session.getId());
         }
     }
 }

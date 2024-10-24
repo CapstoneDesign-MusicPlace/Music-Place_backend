@@ -22,7 +22,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws JsonProcessingException {
         String username = (String) session.getAttributes().get("username");
-        WebSocketMessage webSocketMessage = objectMapper.readValue(message.getPayload(), WebSocketMessage.class);
+        WebSocketMessage webSocketMessage = parseWebSocketMessage(message.getPayload());
 
         // Debug 로그 추가
         log.info("Received message: {}", message.getPayload()); // 받은 메시지 로그
@@ -30,9 +30,9 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         switch (webSocketMessage.getType().getValue()) {
             case "ENTER" -> enterChatRoom(webSocketMessage.getPayload(), session);
             case "TALK" -> sendMessage(username, webSocketMessage.getPayload());
+            default -> log.warn("Unexpected message type: {}", webSocketMessage.getType());
         }
     }
-
 
     /**
      * 메시지 전송
@@ -51,5 +51,15 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     private void enterChatRoom(ChatDto chatDto, WebSocketSession session) {
         log.info("enter chatDto : " + chatDto.toString());
         chatRoom.enter(chatDto, session);
+    }
+
+    /**
+     * WebSocketMessage 파싱
+     * @param payload JSON 형태의 메시지
+     * @return WebSocketMessage 객체
+     */
+    private WebSocketMessage parseWebSocketMessage(String payload) throws JsonProcessingException {
+        // JSON payload를 WebSocketMessage 객체로 변환하는 로직
+        return objectMapper.readValue(payload, WebSocketMessage.class);
     }
 }

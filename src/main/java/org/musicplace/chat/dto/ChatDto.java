@@ -11,7 +11,7 @@ import lombok.ToString;
 @Builder
 public class ChatDto {
     private String message;
-    private final String chatRoomId;
+    private final String chatRoomId; // 스트리밍 방과 채팅 방 모두 같은 roomId 사용
     private final String username;
 
     @JsonCreator

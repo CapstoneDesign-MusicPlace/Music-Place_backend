@@ -1,7 +1,7 @@
 package org.musicplace.chat.websocket;
 
 /**
- * 웹소켓 메시지 타입
+ * 웹소켓 메시지 타입 (채팅 + 스트리밍)
  */
 public enum WebSocketMessageType {
     ENTER("ENTER"),
@@ -9,7 +9,8 @@ public enum WebSocketMessageType {
     TALK("TALK"),
     EXIT("EXIT"),
     SUB("SUBSCRIBE"),
-    PUB("PUBLISH");
+    PUB("PUBLISH"),
+    STREAM("STREAM"); // 스트리밍을 위한 메시지 타입 추가
 
     private final String type;
 
