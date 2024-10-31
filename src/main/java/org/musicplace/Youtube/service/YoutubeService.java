@@ -64,4 +64,9 @@ public class YoutubeService {
         }
         throw new ExceptionHandler(ErrorCode.NOT_FOUND_RESULT);
     }
+
+    // 비디오 ID를 받아 YouTube URL을 생성하는 메서드 추가
+    public String getVideoUrl(String videoId) {
+        return "https://www.youtube.com/watch?v=" + videoId;
+    }
 }

@@ -3,6 +3,7 @@ package org.musicplace.chat.redis;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.musicplace.chat.dto.ChatDto;
 import org.musicplace.chat.websocket.WebSocketMessage;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -24,8 +25,11 @@ class RedisMessageHandler implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             WebSocketMessage webSocketMessage = objectMapper.readValue(message.getBody(), WebSocketMessage.class);
-            if(session.isOpen() && !webSocketMessage.getPayload().getUsername().equals(session.getAttributes().get("username"))){
-                session.sendMessage(new TextMessage(new String(message.getBody())));
+            if (session.isOpen() && webSocketMessage.getPayload() instanceof ChatDto) {
+                ChatDto chatPayload = (ChatDto) webSocketMessage.getPayload();
+                if (!chatPayload.getUsername().equals(session.getAttributes().get("username"))) {
+                    session.sendMessage(new TextMessage(new String(message.getBody())));
+                }
             }
         } catch (Exception e) {
             log.error(e.getMessage());

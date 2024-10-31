@@ -9,7 +9,8 @@ public enum WebSocketMessageType {
     TALK("TALK"),
     EXIT("EXIT"),
     SUB("SUBSCRIBE"),
-    PUB("PUBLISH");
+    PUB("PUBLISH"),
+    STREAM("STREAM"); // 추가한 STREAM 타입
 
     private final String type;
 

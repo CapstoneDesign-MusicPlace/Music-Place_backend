@@ -1,5 +1,6 @@
 package org.musicplace.chat.config;
 
+import org.musicplace.streaming.handler.StreamingWebSocketHandler;
 import org.musicplace.chat.handler.WebSocketChatHandler;
 import org.musicplace.chat.interceptor.WebSocketAuthInterceptor;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfig implements WebSocketConfigurer {
     private final WebSocketChatHandler webSocketChatHandler;
     private final WebSocketAuthInterceptor webSocketAuthInterceptor;
+    private final StreamingWebSocketHandler streamingWebSocketHandler;
 
     /**
      * 웹소켓 연결을 위한 설정
@@ -23,7 +25,13 @@ public class WebSocketConfig implements WebSocketConfigurer {
      */
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        // 채팅 핸들러 설정
         registry.addHandler(webSocketChatHandler, "/chats")
+                .addInterceptors(webSocketAuthInterceptor)
+                .setAllowedOrigins("*");
+
+        // 스트리밍 핸들러 설정
+        registry.addHandler(streamingWebSocketHandler, "/streaming")
                 .addInterceptors(webSocketAuthInterceptor)
                 .setAllowedOrigins("*");
     }

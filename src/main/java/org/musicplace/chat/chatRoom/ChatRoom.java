@@ -9,6 +9,7 @@ import org.musicplace.chat.dto.ChatDto;
 import org.musicplace.chat.redis.RedisServiceImpl;
 import org.musicplace.chat.websocket.WebSocketMessage;
 import org.musicplace.chat.websocket.WebSocketMessageType;
+import org.musicplace.streaming.dto.StreamingDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -25,22 +26,17 @@ public class ChatRoom {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RedisServiceImpl redisService;
     private Map<String, ChatDto> chatRooms = new ConcurrentHashMap<>();
-
-
-    /**
-     * 채팅방 입장
-     */
+    private Map<String, StreamingDto> streamingRooms = new ConcurrentHashMap<>();
 
     // 채팅방 생성
     public ChatDto createChatRoom(String username) {
         String roomId = UUID.randomUUID().toString(); // UUID로 랜덤한 roomId 생성
 
-        // 로그로 생성된 roomId 확인
         log.info("Generated roomId: {}", roomId);
 
-        // Builder를 사용하여 ChatDto를 Build
+        // ChatDto를 Build
         ChatDto newRoom = ChatDto.builder()
-                .chatRoomId(roomId) // roomId 설정
+                .roomId(roomId) // roomId 설정
                 .username(username)  // username 설정
                 .message("채팅방이 생성되었습니다.") // 기본 메시지 설정
                 .build();
@@ -49,72 +45,84 @@ public class ChatRoom {
         return newRoom;
     }
 
+    // 스트리밍 방 생성
+    public StreamingDto createStreamingRoom(String videoUrl) {
+        String roomId = UUID.randomUUID().toString(); // UUID로 랜덤한 roomId 생성
+        StreamingDto newStreamingRoom = StreamingDto.builder()
+                .roomId(roomId)
+                .videoUrl(videoUrl)
+                .build();
 
+        streamingRooms.put(roomId, newStreamingRoom);
+        log.info("Streaming room created with ID: {}", roomId);
+        return newStreamingRoom;
+    }
 
     // 채팅방 목록 조회
     public Collection<ChatDto> getChatRooms() {
         return chatRooms.values();
     }
 
-
     public void enter(ChatDto chatDto, WebSocketSession session) {
         String username = (String) session.getAttributes().get("username");
 
-        // 클라이언트에서 보낸 chatRoomId를 확인
-        if (chatDto.getChatRoomId() == null || chatDto.getChatRoomId().isEmpty()) {
-            // chatDto의 chatRoomId가 null이거나 빈 문자열인 경우 새로운 채팅방 생성
+        if (chatDto.getRoomId() == null || chatDto.getRoomId().isEmpty()) {
             chatDto = createChatRoom(username); // 새로운 채팅방 생성
-            log.info("New chat room created with ID: {}", chatDto.getChatRoomId()); // 생성된 방 ID 확인
+            log.info("New chat room created with ID: {}", chatDto.getRoomId());
         } else {
-            // 이미 존재하는 채팅방에 입장
-            if (!chatRooms.containsKey(chatDto.getChatRoomId())) {
-                log.error("Chat room ID {} does not exist.", chatDto.getChatRoomId());
+            if (!chatRooms.containsKey(chatDto.getRoomId())) {
+                log.error("Chat room ID {} does not exist.", chatDto.getRoomId());
                 return; // 채팅방이 존재하지 않으면 종료
             }
         }
 
-        String channel = "chatRoom:" + chatDto.getChatRoomId();
+        String channel = "chatRoom:" + chatDto.getRoomId();
         redisService.subscribe(channel, session);
 
-        // 입장 메시지 생성
         String message = username + "님이 입장하셨습니다."; // 입장 메시지
-        log.info("Publishing enter message: {}", message); // 메시지 로그 추가
+        log.info("Publishing enter message: {}", message);
 
-        // ChatDto 생성: chatRoomId, username, message가 올바르게 설정되었는지 확인
+        // ChatDto 생성
         ChatDto payload = ChatDto.builder()
-                .chatRoomId(chatDto.getChatRoomId()) // 방 ID 설정
+                .roomId(chatDto.getRoomId()) // 방 ID 설정
                 .username(username) // 사용자 이름 설정
                 .message(message) // 입장 메시지 설정
                 .build();
 
-        // 로그 추가로 발행 메시지 확인
         log.info("Payload for publish: {}", payload);
 
-        // 여기서 message를 chatDto.getMessage()로 설정하여 정확한 값을 사용
         redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload));
-        log.info("Published enter message for user {} in chat room {}", username, chatDto.getChatRoomId());
+        log.info("Published enter message for user {} in chat room {}", username, chatDto.getRoomId());
     }
 
-
-    /**
-     * 메시지 전송
-     * @param chatDto ChatDto
-     */
     public void sendMessage(ChatDto chatDto) {
-        String channel = "chatRoom:"+chatDto.getChatRoomId();
-        redisService.publish(channel, getTextMessage(WebSocketMessageType.TALK, chatDto));
+        String channel = "chatRoom:" + chatDto.getRoomId();
+
+        // WebSocket 메시지 생성
+        WebSocketMessage message = new WebSocketMessage(
+                WebSocketMessageType.TALK,
+                chatDto.getRoomId(), // roomId를 따로 가져와서 전달
+                chatDto // payload에 ChatDto 사용
+        );
+
+        try {
+            // 메시지를 JSON으로 변환하여 Redis에 전송
+            String jsonMessage = objectMapper.writeValueAsString(message);
+            redisService.publish(channel, jsonMessage);
+            log.info("Published message for room {}: {}", chatDto.getRoomId(), jsonMessage);
+        } catch (JsonProcessingException e) {
+            log.error("Error converting ChatDto to JSON: {}", e.getMessage());
+        }
     }
 
-    /**
-     * 메시지 전송
-     * @param type 메시지 타입
-     * @param chatDto ChatDto
-     * @return String
-     */
+
+    public void handleChatInput(ChatDto chatDto, WebSocketSession session) {
+        sendMessage(chatDto); // 메시지 전송 메서드 호출
+    }
+
     private String getTextMessage(WebSocketMessageType type, ChatDto chatDto) {
         try {
             String message = objectMapper.writeValueAsString(new WebSocketMessage(type, chatDto));
-            // 로그로 실제 발행되는 메시지 확인
             log.info("Generated text message: {}", message);
             return message;
         } catch (JsonProcessingException e) {
@@ -123,4 +131,14 @@ public class ChatRoom {
         }
     }
 
+    public void sendStreamingMessage(StreamingDto streamingDto) {
+        String channel = "streamingRoom:" + streamingDto.getRoomId();
+        try {
+            String message = objectMapper.writeValueAsString(streamingDto);
+            redisService.publish(channel, message);
+            log.info("Published streaming message for room {}: {}", streamingDto.getRoomId(), message);
+        } catch (JsonProcessingException e) {
+            log.error("Error converting StreamingDto to JSON: {}", e.getMessage());
+        }
+    }
 }
