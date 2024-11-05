@@ -44,7 +44,6 @@ public class ChatRoom {
                 .username(username)  // username 설정
                 .message("채팅방이 생성되었습니다.") // 기본 메시지 설정
                 .build();
-
         chatRooms.put(roomId, newRoom); // roomId를 키로 사용하여 ChatDto 저장
         return newRoom;
     }
@@ -59,12 +58,12 @@ public class ChatRoom {
 
     public void enter(ChatDto chatDto, WebSocketSession session) {
         String username = (String) session.getAttributes().get("username");
-
         // 클라이언트에서 보낸 chatRoomId를 확인
         if (chatDto.getChatRoomId() == null || chatDto.getChatRoomId().isEmpty()) {
             // chatDto의 chatRoomId가 null이거나 빈 문자열인 경우 새로운 채팅방 생성
             chatDto = createChatRoom(username); // 새로운 채팅방 생성
             log.info("New chat room created with ID: {}", chatDto.getChatRoomId()); // 생성된 방 ID 확인
+
         } else {
             // 이미 존재하는 채팅방에 입장
             if (!chatRooms.containsKey(chatDto.getChatRoomId())) {
