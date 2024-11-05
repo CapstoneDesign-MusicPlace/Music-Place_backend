@@ -8,12 +8,12 @@ import lombok.ToString;
 
 @Getter
 @ToString
-@Builder
 public class ChatDto {
     private String message;
     private final String chatRoomId;
     private final String username;
 
+    @Builder
     @JsonCreator
     public ChatDto(@JsonProperty("chatRoomId") String chatRoomId,
                    @JsonProperty("username") String username,
