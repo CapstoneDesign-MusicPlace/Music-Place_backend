@@ -9,7 +9,8 @@ public enum WebSocketMessageType {
     TALK("TALK"),
     EXIT("EXIT"),
     SUB("SUBSCRIBE"),
-    PUB("PUBLISH");
+    PUB("PUBLISH"),
+    YOUTUBE("YOUTUBE");
 
     private final String type;
 
