@@ -16,11 +16,16 @@ public class YoutubeController {
 
     private final YoutubeService youtubeService;
 
-    @GetMapping
-    public ResponseEntity<List<YoutubeVidioDto>> searchVideo(@RequestParam String keyword) throws IOException {
-        // YoutubeService를 통해 동영상 검색한 결과를 받아옴
+    @GetMapping("/{keyword}")
+    public ResponseEntity<List<YoutubeVidioDto>> searchVideo(@PathVariable String keyword) throws IOException {
         List<YoutubeVidioDto> result = youtubeService.searchVideo(keyword);
         return ResponseEntity.ok(result);
 
+    }
+
+    @GetMapping("/playlist")
+    public ResponseEntity<List<YoutubeVidioDto>> getPlaylistVideos() throws IOException {
+        List<YoutubeVidioDto> result = youtubeService.getPlaylistVideos();
+        return ResponseEntity.ok(result);
     }
 }

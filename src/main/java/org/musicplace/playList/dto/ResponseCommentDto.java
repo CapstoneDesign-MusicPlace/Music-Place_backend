@@ -9,15 +9,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResponseCommentDto {
 
-    private Long comment_id;
+    private String memberId;
 
     private String nickName;
 
     private String userComment;
+
+    private String profile_img_url;
+
     @Builder
-    public ResponseCommentDto(Long comment_id, String nickName, String userComment) {
-        this.comment_id = comment_id;
+    public ResponseCommentDto( String memberId, String nickName, String userComment, String profile_img_url) {
+        this.memberId = memberId;
         this.userComment = userComment;
         this.nickName = nickName;
+        this.profile_img_url = profile_img_url;
     }
 }

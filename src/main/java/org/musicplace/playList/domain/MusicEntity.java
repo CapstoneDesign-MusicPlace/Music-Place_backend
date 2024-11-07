@@ -30,15 +30,20 @@ public class MusicEntity {
     @Comment("비디오 아이디")
     private String vidioId;
 
+    @Column(name = "VIDIO_IMGE", nullable = true)
+    @Comment("비디오 이미지")
+    private String vidioImage;
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playlist_id")
     private PLEntity plEntity;
 
     @Builder
-    public MusicEntity(String vidioTitle, String vidioId) {
+    public MusicEntity(String vidioTitle, String vidioId, String vidioImage) {
         this.vidioTitle = vidioTitle;
         this.vidioId = vidioId;
+        this.vidioImage = vidioImage;
     }
 
     public void setPlEntity(PLEntity plEntity) {

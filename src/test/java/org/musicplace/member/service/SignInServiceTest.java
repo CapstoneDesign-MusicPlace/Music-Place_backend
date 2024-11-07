@@ -90,8 +90,7 @@ class SignInServiceTest {
                 .build());
 
         //when
-        signInService.SignInUpdate(member_id, SignInUpdateDto.builder()
-                .pw(pw2)
+        signInService.SignInUpdate(SignInUpdateDto.builder()
                 .name(name2)
                 .nickname(nickname2)
                 .email(email2)
@@ -127,7 +126,7 @@ class SignInServiceTest {
                 .build());
 
         //when
-        signInService.SignInDelete(member_id);
+        signInService.SignInDelete();
         Optional<SignInEntity> signInEntity = signInRepository.findById(member_id);
 
         //then

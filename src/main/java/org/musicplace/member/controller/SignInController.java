@@ -1,7 +1,9 @@
 package org.musicplace.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.member.domain.SignInEntity;
 import org.musicplace.member.dto.LoginRequestDto;
+import org.musicplace.member.dto.SignInGetUserDataDto;
 import org.musicplace.member.dto.SignInSaveDto;
 import org.musicplace.member.dto.SignInUpdateDto;
 import org.musicplace.member.service.SignInService;
@@ -14,19 +16,19 @@ import org.springframework.web.bind.annotation.*;
 public class SignInController {
     private final SignInService signInService;
 
-    @PostMapping
+    @PostMapping("/save")
     public void SignInSave(@RequestBody SignInSaveDto signInSaveDto) {
         signInService.SignInSave(signInSaveDto);
     }
 
-    @PatchMapping("/{member_id}")
-    public void SignInUpdate(@PathVariable String member_id, @RequestBody SignInUpdateDto signInUpdateDto) {
-        signInService.SignInUpdate(member_id, signInUpdateDto);
+    @PatchMapping("/update")
+    public void SignInUpdate(@RequestBody SignInUpdateDto signInUpdateDto) {
+        signInService.SignInUpdate(signInUpdateDto);
     }
 
-    @DeleteMapping("/{member_id}")
-    public void SignInDelete(@PathVariable String member_id) {
-        signInService.SignInDelete(member_id);
+    @DeleteMapping("/delete")
+    public void SignInDelete() {
+        signInService.SignInDelete();
     }
 
     @GetMapping("/{member_id}/{email}/pw")
@@ -44,9 +46,9 @@ public class SignInController {
         return signInService.SignInCheckSameId(member_id);
     }
 
-    @PostMapping("/login") // 로그인 엔드포인트 추가
-    public void login(@RequestBody LoginRequestDto loginRequestDto) {
-        // 로그인 처리는 CustomAuthenticationFilter에서 수행
+    @GetMapping("/getuser")
+    public SignInGetUserDataDto SignInGetUserData() {
+        return signInService.SignInGetUserData();
     }
 
 }
