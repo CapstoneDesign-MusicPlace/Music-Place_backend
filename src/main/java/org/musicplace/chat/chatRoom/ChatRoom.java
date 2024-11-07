@@ -51,6 +51,20 @@ public class ChatRoom {
         return newRoom;
     }
 
+    public RoomDto patchChatRoom(String roomId, RoomDto roomDto) {
+        RoomDto changeRoom = RoomDto.builder()
+                .chatRoomId(roomId)
+                .roomComment(roomDto.getRoomComment())
+                .roomTitle(roomDto.getRoomTitle())
+                .username(roomDto.getUsername())
+                .build();
+        chatRooms.replace(roomId, changeRoom);
+        return changeRoom;
+    }
+
+    public RoomDto deleteCahtRoom(String roomId) {
+        return chatRooms.remove(roomId);
+    }
 
 
     // 채팅방 목록 조회
