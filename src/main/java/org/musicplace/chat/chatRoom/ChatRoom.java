@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.musicplace.Youtube.dto.YoutubeVidioDto;
 import org.musicplace.chat.dto.ChatDto;
 import org.musicplace.chat.dto.RoomDto;
 import org.musicplace.chat.redis.RedisServiceImpl;
@@ -34,12 +35,9 @@ public class ChatRoom {
 
     // 채팅방 생성
     public RoomDto createChatRoom(RoomDto roomDto) {
-        String roomId = UUID.randomUUID().toString(); // UUID로 랜덤한 roomId 생성
-
-        // 로그로 생성된 roomId 확인
+        String roomId = UUID.randomUUID().toString();
         log.info("Generated roomId: {}", roomId);
 
-        // Builder를 사용하여 ChatDto를 Build
         RoomDto newRoom = RoomDto.builder()
                 .chatRoomId(roomId)
                 .roomComment(roomDto.getRoomComment())
@@ -47,7 +45,7 @@ public class ChatRoom {
                 .username(roomDto.getUsername())
                 .build();
 
-        chatRooms.put(roomId, newRoom); // roomId를 키로 사용하여 ChatDto 저장
+        chatRooms.put(roomId, newRoom);
         return newRoom;
     }
 
@@ -66,8 +64,6 @@ public class ChatRoom {
         return chatRooms.remove(roomId);
     }
 
-
-    // 채팅방 목록 조회
     public Collection<RoomDto> getChatRooms() {
         return chatRooms.values();
     }
@@ -76,22 +72,19 @@ public class ChatRoom {
     public void enter(ChatDto chatDto, WebSocketSession session) {
         String username = (String) session.getAttributes().get("username");
 
-        // 클라이언트에서 보낸 chatRoomId가 존재하는지 확인
         if (chatDto.getChatRoomId() == null || chatDto.getChatRoomId().isEmpty()) {
             log.error("No chat room ID provided for user {}.", username);
-            return; // 채팅방 ID가 없으면 종료
+            return;
         }
 
-        // 이미 존재하는 채팅방에 입장
         if (!chatRooms.containsKey(chatDto.getChatRoomId())) {
             log.error("Chat room ID {} does not exist.", chatDto.getChatRoomId());
-            return; // 채팅방이 존재하지 않으면 종료
+            return;
         }
 
         String channel = "chatRoom:" + chatDto.getChatRoomId();
         redisService.subscribe(channel, session);
 
-        // 입장 메시지 생성
         String message = username + "님이 입장하셨습니다.";
         log.info("Publishing enter message: {}", message);
 
@@ -101,9 +94,19 @@ public class ChatRoom {
                 .message(message)
                 .build();
 
-        log.info("Payload for publish: {}", payload);
-        redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload));
-        log.info("Published enter message for user {} in chat room {}", username, chatDto.getChatRoomId());
+        redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload, null));
+    }
+
+
+    public void sendYoutubeMessage(YoutubeVidioDto youtubeDto) {
+        String channel = "chatRoom:" + youtubeDto.getVidioId();
+        try {
+            String message = objectMapper.writeValueAsString(new WebSocketMessage(WebSocketMessageType.YOUTUBE, null, youtubeDto));
+            log.info("Publishing youtube message: {}", message);
+            redisService.publish(channel, message);
+        } catch (JsonProcessingException e) {
+            log.error("Error sending youtube message: {}", e.getMessage());
+        }
     }
 
 
@@ -113,8 +116,8 @@ public class ChatRoom {
      * @param chatDto ChatDto
      */
     public void sendMessage(ChatDto chatDto) {
-        String channel = "chatRoom:"+chatDto.getChatRoomId();
-        redisService.publish(channel, getTextMessage(WebSocketMessageType.TALK, chatDto));
+        String channel = "chatRoom:" + chatDto.getChatRoomId();
+        redisService.publish(channel, getTextMessage(WebSocketMessageType.TALK, chatDto, null));
     }
 
     /**
@@ -123,10 +126,10 @@ public class ChatRoom {
      * @param chatDto ChatDto
      * @return String
      */
-    private String getTextMessage(WebSocketMessageType type, ChatDto chatDto) {
+    private String getTextMessage(WebSocketMessageType type, ChatDto chatDto, YoutubeVidioDto youtubeDto) {
         try {
-            String message = objectMapper.writeValueAsString(new WebSocketMessage(type, chatDto));
-            // 로그로 실제 발행되는 메시지 확인
+            WebSocketMessage webSocketMessage = new WebSocketMessage(type, chatDto, youtubeDto);
+            String message = objectMapper.writeValueAsString(webSocketMessage);
             log.info("Generated text message: {}", message);
             return message;
         } catch (JsonProcessingException e) {

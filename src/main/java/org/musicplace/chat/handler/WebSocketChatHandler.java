@@ -1,5 +1,6 @@
 package org.musicplace.chat.handler;
 
+import org.musicplace.Youtube.dto.YoutubeVidioDto;
 import org.musicplace.chat.dto.ChatDto;
 import org.musicplace.chat.chatRoom.ChatRoom;
 import org.musicplace.chat.websocket.WebSocketMessage;
@@ -30,8 +31,18 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         switch (webSocketMessage.getType().getValue()) {
             case "ENTER" -> enterChatRoom(webSocketMessage.getPayload(), session);
             case "TALK" -> sendMessage(username, webSocketMessage.getPayload());
+            case "YOUTUBE" -> sendYoutubeMessage(webSocketMessage.getYoutubePayload()); // 유튜브 메시지 전송 메서드 호출
         }
     }
+
+    /**
+     * 유튜브 메시지 전송
+     * @param youtubeDto YoutubeVidioDto
+     */
+    private void sendYoutubeMessage(YoutubeVidioDto youtubeDto) {
+        chatRoom.sendYoutubeMessage(youtubeDto); // 채팅방에 유튜브 메시지 전송
+    }
+
 
 
     /**
