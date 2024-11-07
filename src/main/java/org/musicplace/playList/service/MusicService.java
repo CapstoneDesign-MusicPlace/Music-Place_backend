@@ -27,6 +27,7 @@ public class MusicService {
         MusicEntity musicEntity = MusicEntity.builder()
                 .vidioTitle(musicSaveDto.getVidioTitle())
                 .vidioId(musicSaveDto.getVidioId())
+                .vidioImage(musicSaveDto.getVidioImage())
                 .build();
         musicEntity.setPlEntity(plEntity);
         plEntity.getMusicEntities().add(musicEntity);
@@ -35,13 +36,18 @@ public class MusicService {
     }
 
     @Transactional
-    public boolean MusicDelete(Long PLId, Long MusicId) {
+    public boolean MusicDelete(Long PLId, List<Long> MusicIds) {
         PLEntity plEntity = plService.PLFindById(PLId);
         plService.CheckPLDeleteStatus(plEntity);
-        MusicEntity musicEntity = MusicFindById(plEntity,MusicId);
-        checkMusicDeleteStatus(musicEntity);
-        musicEntity.delete();
-        return musicEntity.isMusicDelete();
+        boolean allDeleted = true;
+        for (Long musicId : MusicIds) {
+            MusicEntity musicEntity = MusicFindById(plEntity, musicId);
+            checkMusicDeleteStatus(musicEntity);
+            musicEntity.delete();
+            allDeleted &= musicEntity.isMusicDelete();
+        }
+
+        return allDeleted;
     }
 
     public List<ResponseMusicDto> MusicFindAll(Long PLId) {
@@ -53,7 +59,9 @@ public class MusicService {
                 .filter(music -> !music.isMusicDelete())
                 .map(music -> ResponseMusicDto.builder()
                         .music_id(music.getMusic_id())
-                        .title(music.getVidioTitle())
+                        .vidioId(music.getVidioId())
+                        .vidioImage(music.getVidioImage())
+                        .vidioTitle(music.getVidioTitle())
                         .build())
                 .collect(Collectors.toList()); // collect로 리스트로 변환
 
@@ -77,4 +85,6 @@ public class MusicService {
             throw new ExceptionHandler(ErrorCode.ID_DELETE);
         }
     }
+
+
 }

@@ -23,14 +23,24 @@ public class FollowEntity {
     @Comment("대상id")
     private String target_id;
 
+    @Column(name = "nickname", nullable = false, length = 50)
+    @Comment("닉네임")
+    private String nickname;
+
+    @Column(name = "profile_img_url", nullable = true)
+    @Comment("프로필 이미지")
+    private String profile_img_url;
+
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private SignInEntity signInEntity;
 
     @Builder
-    public FollowEntity(String target_id, String target_nick) {
+    public FollowEntity(String target_id, String nickname, String profile_img_url) {
         this.target_id = target_id;
+        this.nickname = nickname;
+        this.profile_img_url = profile_img_url;
     }
 
     public void SignInEntity(SignInEntity signInEntity) {this.signInEntity = signInEntity; }

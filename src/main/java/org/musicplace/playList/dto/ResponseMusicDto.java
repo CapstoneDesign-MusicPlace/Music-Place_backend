@@ -11,15 +11,18 @@ public class ResponseMusicDto {
 
     private Long music_id;
 
-    private String singer;
+    private String vidioId;
 
-    private String title;
+    private String vidioTitle;
+
+    private String vidioImage;
 
     @Builder
-    public ResponseMusicDto(Long music_id, String singer, String title) {
+    public ResponseMusicDto(Long music_id, String vidioId, String vidioTitle, String vidioImage) {
         this.music_id = music_id;
-        this.singer = singer;
-        this.title = title;
+        this.vidioId = vidioId;
+        this.vidioTitle = vidioTitle;
+        this.vidioImage = vidioImage;
     }
 
 }

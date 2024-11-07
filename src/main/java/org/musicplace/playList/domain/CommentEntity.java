@@ -27,6 +27,10 @@ public class CommentEntity extends AuditInformation {
     @Column(name = "COMMENT_ID", nullable = false)
     private Long comment_id;
 
+    @Column(name = "member_id", nullable = false, length = 64)
+    @Comment("아이디")
+    private String memberId;
+
     @Column(name = "NICKNAME", nullable = false)
     @Comment("유저 닉네임")
     private String nickName;
@@ -34,6 +38,10 @@ public class CommentEntity extends AuditInformation {
     @Column(name = "COMMENT", nullable = false)
     @Comment("댓글")
     private String userComment;
+
+    @Column(name = "profile_img_url", nullable = true)
+    @Comment("프로필 이미지")
+    private String profile_img_url;
 
     @Column(name = "DELETE_STATE", nullable = false)
     @Comment("삭제여부")
@@ -45,9 +53,11 @@ public class CommentEntity extends AuditInformation {
     private PLEntity plEntity;
 
     @Builder
-    public CommentEntity(String nickName, String comment) {
+    public CommentEntity(String memberId, String nickName, String comment, String profile_img_url) {
+        this.memberId = memberId;
         this.nickName = nickName;
         this.userComment = comment;
+        this.profile_img_url = profile_img_url;
     }
 
     public void setPlEntity(PLEntity plEntity) {

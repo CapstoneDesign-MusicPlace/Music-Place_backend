@@ -2,9 +2,11 @@ package org.musicplace.member.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.musicplace.global.security.authorizaion.MemberAuthorizationUtil;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
 import org.musicplace.member.domain.SignInEntity;
+import org.musicplace.member.dto.SignInGetUserDataDto;
 import org.musicplace.member.dto.SignInSaveDto;
 import org.musicplace.member.dto.SignInUpdateDto;
 import org.musicplace.member.repository.SignInRepository;
@@ -23,7 +25,7 @@ public class SignInService {
     @Transactional
     public void SignInSave(SignInSaveDto signInSaveDto) {
         signInRepository.save(SignInEntity.builder()
-                .member_id(signInSaveDto.getMember_id())
+                .memberId(signInSaveDto.getMember_id())
                 .pw(passwordEncoder.encode(signInSaveDto.getPw()))
                 .gender(signInSaveDto.getGender())
                 .email(signInSaveDto.getEmail())
@@ -34,10 +36,11 @@ public class SignInService {
     }
 
     @Transactional
-    public void SignInUpdate(String member_id, SignInUpdateDto signInUpdateDto) {
+    public void SignInUpdate(SignInUpdateDto signInUpdateDto) {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = SignInFindById(member_id);
         CheckSignInDelete(signInEntity);
-        signInEntity.SignInUpdate(signInUpdateDto.getPw(),
+        signInEntity.SignInUpdate(
                 signInUpdateDto.getName(),
                 signInUpdateDto.getEmail(),
                 signInUpdateDto.getNickname(),
@@ -45,22 +48,36 @@ public class SignInService {
     }
 
     @Transactional
-    public void SignInDelete(String member_id) {
+    public void SignInDelete() {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
         SignInEntity signInEntity = SignInFindById(member_id);
         CheckSignInDelete(signInEntity);
         signInEntity.SignInDelete();
     }
 
+    public SignInGetUserDataDto SignInGetUserData() {
+        String member_id = MemberAuthorizationUtil.getLoginMemberId();
+        SignInEntity signInEntity = SignInFindById(member_id);
+        CheckSignInDelete(signInEntity);
+        return SignInGetUserDataDto.builder()
+                .email(signInEntity.getEmail())
+                .profile_img_url(signInEntity.getProfile_img_url())
+                .name(signInEntity.getName())
+                .nickname(signInEntity.getNickname())
+                .build();
+    }
+
+
+
     public SignInEntity SignInFindById(String member_id) {
-        SignInEntity signInEntity = signInRepository.findById(member_id)
+        return signInRepository.findById(member_id)
                 .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
-        return signInEntity;
     }
 
     public Boolean SignInCheckSameId(String member_id) {
-        ArrayList<SignInEntity> signInEntityArrayList = (ArrayList<SignInEntity>) signInRepository.findAll();
-        for (SignInEntity getListUser : signInEntityArrayList) {
-            if(getListUser.getMember_id().equals(member_id)) {
+        List<SignInEntity> signInEntityList = signInRepository.findAll();
+        for (SignInEntity getListUser : signInEntityList) {
+            if(getListUser.getMemberId().equals(member_id)) {
                 return false;
             }
         }
@@ -87,19 +104,25 @@ public class SignInService {
         String result = null;
         for(SignInEntity n : signInEntityList) {
             if(n.getPw().equals(pw) && n.getEmail().equals(email)) {
-                result = n.getMember_id();
+                result = n.getMemberId();
             }
         }
         return result;
     }
 
-    public SignInEntity authenticate(String username, String password) {
-        SignInEntity user = signInRepository.findById(username)
+
+
+    public SignInEntity authenticate(String id, String password) {
+        SignInEntity user = signInRepository.findById(id)
                 .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
+        if (user.getDelete_account()) {
+            throw new ExceptionHandler(ErrorCode.ID_DELETE);
+        }
         if (passwordEncoder.matches(password, user.getPw())) {
             return user;
         }
         throw new ExceptionHandler(ErrorCode.INVALID_CREDENTIALS);
     }
+
 
 }

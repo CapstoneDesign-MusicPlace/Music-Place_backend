@@ -4,25 +4,25 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.musicplace.member.domain.Gender;
+
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SignInUpdateDto {
+public class SignInGetUserDataDto {
 
     private String name;
-
-    private String profile_img_url;
 
     private String email;
 
     private String nickname;
 
+    private String profile_img_url;
+
     @Builder
-    public SignInUpdateDto(String name, String email, String nickname, String profile_img_url){
-        this.profile_img_url = profile_img_url;
+    public SignInGetUserDataDto(String name, String email, String nickname, String profile_img_url) {
+        this.name = name;
         this.email = email;
         this.nickname = nickname;
-        this.name = name;
+        this.profile_img_url = profile_img_url;
     }
 }
