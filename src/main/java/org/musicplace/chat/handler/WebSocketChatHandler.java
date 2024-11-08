@@ -1,13 +1,11 @@
 package org.musicplace.chat.handler;
 
-import org.musicplace.Youtube.dto.YoutubeVidioDto;
-import org.musicplace.chat.dto.ChatDto;
-import org.musicplace.chat.chatRoom.ChatRoom;
-import org.musicplace.chat.websocket.WebSocketMessage;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.musicplace.chat.chatRoom.ChatRoom;
+import org.musicplace.chat.dto.ChatDto;
+import org.musicplace.chat.websocket.WebSocketMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -17,50 +15,22 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Log4j2
 @RequiredArgsConstructor
 public class WebSocketChatHandler extends TextWebSocketHandler {
+
     private final ChatRoom chatRoom;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws JsonProcessingException {
-        String username = (String) session.getAttributes().get("username");
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        String username = (String) session.getAttributes().get("username");  // 인증된 사용자 이름
         WebSocketMessage webSocketMessage = objectMapper.readValue(message.getPayload(), WebSocketMessage.class);
 
-        // Debug 로그 추가
-        log.info("Received message: {}", message.getPayload()); // 받은 메시지 로그
+        log.info("Received message from {}: {}", username, message.getPayload());
 
-        switch (webSocketMessage.getType().getValue()) {
-            case "ENTER" -> enterChatRoom(webSocketMessage.getPayload(), session);
-            case "TALK" -> sendMessage(username, webSocketMessage.getPayload());
-            case "YOUTUBE" -> sendYoutubeMessage(webSocketMessage.getYoutubePayload()); // 유튜브 메시지 전송 메서드 호출
+        // WebSocket 메시지 처리 로직
+        switch (webSocketMessage.getType()) {
+            case ENTER -> chatRoom.enter(webSocketMessage.getPayload(), session);
+            case TALK -> chatRoom.sendMessage(webSocketMessage.getPayload());
+            // 다른 메시지 타입 처리...
         }
-    }
-
-    /**
-     * 유튜브 메시지 전송
-     * @param youtubeDto YoutubeVidioDto
-     */
-    private void sendYoutubeMessage(YoutubeVidioDto youtubeDto) {
-        chatRoom.sendYoutubeMessage(youtubeDto); // 채팅방에 유튜브 메시지 전송
-    }
-
-
-
-    /**
-     * 메시지 전송
-     * @param chatDto ChatDto
-     */
-    private void sendMessage(String username, ChatDto chatDto) {
-        log.info("send chatDto : " + chatDto.toString());
-        chatRoom.sendMessage(chatDto);
-    }
-
-    /**
-     * 채팅방 입장
-     * @param chatDto ChatDto
-     * @param session 웹소켓 세션
-     */
-    private void enterChatRoom(ChatDto chatDto, WebSocketSession session) {
-        log.info("enter chatDto : " + chatDto.toString());
-        chatRoom.enter(chatDto, session);
     }
 }

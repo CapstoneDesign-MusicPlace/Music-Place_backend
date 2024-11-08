@@ -1,12 +1,12 @@
 package org.musicplace.chat.interceptor;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.musicplace.chat.security.JwtTokenProvider;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
@@ -17,33 +17,34 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WebSocketAuthInterceptor implements HandshakeInterceptor {
 
-    /**
-     * 웹소켓 연결 전 인터셉터
-     * Authorization 헤더를 확인하여 유저를 인증한다.
-     * 유저 명이 채팅유저로 시작하지 않으면 401을 반환한다.
-     * 유저 명이 채팅유저로 시작해서 인증된 유저라면 session에 username을 저장한다.
-     */
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                    WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        if (request instanceof ServletServerHttpRequest) {
-            HttpServletRequest servletRequest = ((ServletServerHttpRequest) request).getServletRequest();
-            HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
+        // HTTP 요청 헤더에서 Authorization 헤더 추출
+        String authorizationHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-            String username = servletRequest.getHeader("Authorization");
-            if (username != null && username.startsWith("chatUser")) {
-                attributes.put("username", username);
+        // Authorization 헤더에서 JWT 토큰 추출
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
 
-                return true;
-            } else {
-                servletResponse.setStatus(401);
-                return false;
+            // JWT 토큰 유효성 검사
+            if (jwtTokenProvider.validateToken(token)) {
+                String username = jwtTokenProvider.getUsernameFromToken(token);
+                attributes.put("username", username);  // 인증된 사용자 이름을 WebSocket 세션에 저장
+                return true;  // 인증 성공 시 WebSocket 연결 허용
             }
         }
+
+        // 인증 실패 시 HTTP 401 응답
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return false;
     }
+
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                WebSocketHandler wsHandler, Exception exception) {
+        // 인증 후 후처리가 필요한 경우 여기에 추가
     }
 }
