@@ -12,19 +12,14 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
+
     private final WebSocketChatHandler webSocketChatHandler;
     private final WebSocketAuthInterceptor webSocketAuthInterceptor;
 
-    /**
-     * 웹소켓 연결을 위한 설정
-     * 웹소켓 연결 EndPoint: ws://localhost:8080/chats
-     * 에 연결시 동작할 핸들러는 webSocketChatHandler
-     * @param registry
-     */
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(webSocketChatHandler, "/chats")
-                .addInterceptors(webSocketAuthInterceptor)
+                .addInterceptors(webSocketAuthInterceptor) // WebSocket 인증 인터셉터 추가
                 .setAllowedOrigins("*");
     }
 }
