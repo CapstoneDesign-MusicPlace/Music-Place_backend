@@ -29,6 +29,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         switch (webSocketMessage.getType()) {
             case ENTER -> chatRoom.enter(webSocketMessage.getPayload(), session);
             case TALK -> chatRoom.sendMessage(webSocketMessage.getPayload());
+            case EXIT -> chatRoom.exit(webSocketMessage.getPayload(), session);  // EXIT 타입 메시지 처리
         }
     }
 

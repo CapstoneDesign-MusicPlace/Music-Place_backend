@@ -30,7 +30,7 @@ class RedisMessageHandler implements MessageListener {
             WebSocketMessageType messageType = WebSocketMessageType.valueOf(jsonNode.get("type").asText());
 
             // 메시지 타입에 따라 적절한 클래스 사용
-            if (messageType == WebSocketMessageType.TALK) {
+            if (messageType == WebSocketMessageType.TALK || messageType == WebSocketMessageType.EXIT) {
                 WebSocketMessage webSocketMessage = objectMapper.treeToValue(jsonNode, WebSocketMessage.class);
 
                 // 메시지 처리 로직

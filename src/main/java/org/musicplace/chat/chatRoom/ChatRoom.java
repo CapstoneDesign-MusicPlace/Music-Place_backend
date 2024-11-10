@@ -96,6 +96,24 @@ public class ChatRoom {
         redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload));
     }
 
+    public void exit(ChatDto chatDto, WebSocketSession session) {
+        String username = (String) session.getAttributes().get("username");
+        String channel = "chatRoom:" + chatDto.getChatRoomId();
+
+        redisService.unsubscribe(channel, session);  // Redis 구독 해제
+
+        String message = username + "님이 퇴장하셨습니다.";
+        log.info("Publishing exit message: {}", message);
+
+        ChatDto payload = ChatDto.builder()
+                .chatRoomId(chatDto.getChatRoomId())
+                .username(username)
+                .message(message)
+                .build();
+
+        redisService.publish(channel, getTextMessage(WebSocketMessageType.EXIT, payload));
+    }
+
 
 
     /**
