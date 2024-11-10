@@ -8,9 +8,11 @@ import lombok.extern.log4j.Log4j2;
 import org.musicplace.Youtube.dto.YoutubeVidioDto;
 import org.musicplace.chat.dto.ChatDto;
 import org.musicplace.chat.dto.RoomDto;
+import org.musicplace.chat.dto.SendYoutubeVidioDto;
 import org.musicplace.chat.redis.RedisServiceImpl;
 import org.musicplace.chat.websocket.WebSocketMessage;
 import org.musicplace.chat.websocket.WebSocketMessageType;
+import org.musicplace.chat.websocket.WebSocketYoutubeMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -94,19 +96,14 @@ public class ChatRoom {
                 .message(message)
                 .build();
 
-        redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload, null));
+        redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload));
     }
 
 
-    public void sendYoutubeMessage(YoutubeVidioDto youtubeDto) {
-        String channel = "chatRoom:" + youtubeDto.getVidioId();
-        try {
-            String message = objectMapper.writeValueAsString(new WebSocketMessage(WebSocketMessageType.YOUTUBE, null, youtubeDto));
-            log.info("Publishing youtube message: {}", message);
-            redisService.publish(channel, message);
-        } catch (JsonProcessingException e) {
-            log.error("Error sending youtube message: {}", e.getMessage());
-        }
+    public void sendYoutubeMessage(SendYoutubeVidioDto youtubeDto) {
+        log.info(youtubeDto.toString());
+        String channel = "chatRoom:" + youtubeDto.getChatRoomId();
+        redisService.publish(channel, getYoutubeMessage(WebSocketMessageType.YOUTUBE, youtubeDto));
     }
 
 
@@ -117,7 +114,7 @@ public class ChatRoom {
      */
     public void sendMessage(ChatDto chatDto) {
         String channel = "chatRoom:" + chatDto.getChatRoomId();
-        redisService.publish(channel, getTextMessage(WebSocketMessageType.TALK, chatDto, null));
+        redisService.publish(channel, getTextMessage(WebSocketMessageType.TALK, chatDto));
     }
 
     /**
@@ -126,10 +123,22 @@ public class ChatRoom {
      * @param chatDto ChatDto
      * @return String
      */
-    private String getTextMessage(WebSocketMessageType type, ChatDto chatDto, YoutubeVidioDto youtubeDto) {
+    private String getTextMessage(WebSocketMessageType type, ChatDto chatDto) {
         try {
-            WebSocketMessage webSocketMessage = new WebSocketMessage(type, chatDto, youtubeDto);
+            WebSocketMessage webSocketMessage = new WebSocketMessage(type, chatDto);
             String message = objectMapper.writeValueAsString(webSocketMessage);
+            log.info("Generated text message: {}", message);
+            return message;
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getYoutubeMessage(WebSocketMessageType type, SendYoutubeVidioDto youtubeDto) {
+        try {
+            WebSocketYoutubeMessage webSocketYoutubeMessage = new WebSocketYoutubeMessage(type, youtubeDto);
+            String message = objectMapper.writeValueAsString(webSocketYoutubeMessage);
             log.info("Generated text message: {}", message);
             return message;
         } catch (JsonProcessingException e) {

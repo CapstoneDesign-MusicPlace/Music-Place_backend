@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.playList.domain.PLEntity;
-import org.musicplace.streaming.domain.StreamingEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,10 +68,6 @@ public class SignInEntity implements UserDetails {
     @JsonManagedReference
     @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<FollowEntity> followEntities = new ArrayList<>();
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<StreamingEntity> streamingEntities = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

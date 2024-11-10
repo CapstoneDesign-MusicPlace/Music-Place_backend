@@ -27,8 +27,8 @@ public class ChatRoomController {
     }
 
     @PostMapping("/rooms")
-    public RoomDto createChatRoom(@RequestBody RoomDto roomDto) {
-        return chatRoom.createChatRoom(roomDto);
+    public String createChatRoom(@RequestBody RoomDto roomDto) {
+        return chatRoom.createChatRoom(roomDto).getChatRoomId();
     }
 
     @DeleteMapping("/rooms/{roomId}")
