@@ -1,24 +1,21 @@
 package org.musicplace.chat.websocket;
 
-
-import org.musicplace.chat.dto.ChatDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Getter;
 import org.musicplace.chat.dto.SendYoutubeVidioDto;
 
-/**
- * 웹소켓 메시지 프로토콜
- */
 @Getter
-public class WebSocketMessage {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class WebSocketYoutubeMessage {
     private final WebSocketMessageType type;
-    private final ChatDto payload;
+    private final SendYoutubeVidioDto payload;
 
     @JsonCreator
-    public WebSocketMessage(
+    public WebSocketYoutubeMessage(
             @JsonProperty("type") WebSocketMessageType type,
-            @JsonProperty("payload") ChatDto payload) {
+            @JsonProperty("payload") SendYoutubeVidioDto payload) {
         this.type = type;
         this.payload = payload;
     }
