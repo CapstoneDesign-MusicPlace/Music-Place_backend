@@ -5,7 +5,6 @@ import org.musicplace.chat.dto.ChatDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.musicplace.chat.dto.SendYoutubeVidioDto;
 
 /**
  * 웹소켓 메시지 프로토콜

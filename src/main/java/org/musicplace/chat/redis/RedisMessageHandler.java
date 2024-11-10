@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.musicplace.chat.websocket.WebSocketMessage;
-import org.musicplace.chat.websocket.WebSocketYoutubeMessage;
 import org.musicplace.chat.websocket.WebSocketMessageType;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -37,18 +36,6 @@ class RedisMessageHandler implements MessageListener {
                 // 메시지 처리 로직
                 if (session.isOpen() && !webSocketMessage.getPayload().getUsername().equals(session.getAttributes().get("username"))) {
                     session.sendMessage(new TextMessage(new String(message.getBody())));
-                }
-            } else if (messageType == WebSocketMessageType.YOUTUBE) {
-                WebSocketYoutubeMessage webSocketYoutubeMessage = objectMapper.treeToValue(jsonNode, WebSocketYoutubeMessage.class);
-
-                // null 체크 추가
-                if (webSocketYoutubeMessage != null && webSocketYoutubeMessage.getPayload() != null) {
-                    // 메시지 처리 로직
-                    if (session.isOpen() && !webSocketYoutubeMessage.getPayload().getUsername().equals(session.getAttributes().get("username"))) {
-                        session.sendMessage(new TextMessage(new String(message.getBody())));
-                    }
-                } else {
-                    log.error("Received YOUTUBE message with null payload.");
                 }
             }
         } catch (Exception e) {
