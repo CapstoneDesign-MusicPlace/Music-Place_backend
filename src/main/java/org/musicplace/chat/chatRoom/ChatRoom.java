@@ -5,14 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.musicplace.Youtube.dto.YoutubeVidioDto;
 import org.musicplace.chat.dto.ChatDto;
 import org.musicplace.chat.dto.RoomDto;
-import org.musicplace.chat.dto.SendYoutubeVidioDto;
 import org.musicplace.chat.redis.RedisServiceImpl;
 import org.musicplace.chat.websocket.WebSocketMessage;
 import org.musicplace.chat.websocket.WebSocketMessageType;
-import org.musicplace.chat.websocket.WebSocketYoutubeMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -100,13 +97,6 @@ public class ChatRoom {
     }
 
 
-    public void sendYoutubeMessage(SendYoutubeVidioDto youtubeDto) {
-        log.info(youtubeDto.toString());
-        String channel = "chatRoom:" + youtubeDto.getChatRoomId();
-        redisService.publish(channel, getYoutubeMessage(WebSocketMessageType.YOUTUBE, youtubeDto));
-    }
-
-
 
     /**
      * 메시지 전송
@@ -135,16 +125,5 @@ public class ChatRoom {
         }
     }
 
-    private String getYoutubeMessage(WebSocketMessageType type, SendYoutubeVidioDto youtubeDto) {
-        try {
-            WebSocketYoutubeMessage webSocketYoutubeMessage = new WebSocketYoutubeMessage(type, youtubeDto);
-            String message = objectMapper.writeValueAsString(webSocketYoutubeMessage);
-            log.info("Generated text message: {}", message);
-            return message;
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
 
 }
