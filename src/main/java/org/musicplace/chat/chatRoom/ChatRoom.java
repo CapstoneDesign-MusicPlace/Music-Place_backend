@@ -59,7 +59,33 @@ public class ChatRoom {
         return changeRoom;
     }
 
-    public RoomDto deleteCahtRoom(String roomId) {
+    public RoomDto deleteChatRoom(String roomId) {
+        RoomDto room = chatRooms.get(roomId);
+        if (room == null) {
+            log.warn("Chat room with ID {} does not exist.", roomId);
+            return null;
+        }
+
+        // 방에 있는 모든 사용자 세션 가져오기
+        Collection<WebSocketSession> sessions = redisService.getSessionsInRoom(roomId);
+        if (sessions != null) {
+            for (WebSocketSession session : sessions) {
+                String nickname = (String) session.getAttributes().get("username");
+                String message = nickname + "님이 채팅방이 삭제되어 퇴장하셨습니다.";
+                log.info("Publishing exit message for user {}: {}", nickname, message);
+
+                ChatDto payload = ChatDto.builder()
+                        .chatRoomId(roomId)
+                        .username(nickname)
+                        .message(message)
+                        .build();
+
+                // 각 사용자에게 exit 메시지 전송 및 구독 해제
+                exit(payload, session);
+            }
+        }
+
+        // 채팅방 자체를 삭제
         return chatRooms.remove(roomId);
     }
 
