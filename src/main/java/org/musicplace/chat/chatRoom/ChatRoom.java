@@ -69,10 +69,11 @@ public class ChatRoom {
 
 
     public void enter(ChatDto chatDto, WebSocketSession session) {
-        String username = (String) session.getAttributes().get("username");
+        // session에서 nickname을 가져옴
+        String nickname = (String) session.getAttributes().get("username");
 
         if (chatDto.getChatRoomId() == null || chatDto.getChatRoomId().isEmpty()) {
-            log.error("No chat room ID provided for user {}.", username);
+            log.error("No chat room ID provided for user {}.", nickname);
             return;
         }
 
@@ -84,46 +85,55 @@ public class ChatRoom {
         String channel = "chatRoom:" + chatDto.getChatRoomId();
         redisService.subscribe(channel, session);
 
-        String message = username + "님이 입장하셨습니다.";
+        String message = nickname + "님이 입장하셨습니다.";
         log.info("Publishing enter message: {}", message);
 
         ChatDto payload = ChatDto.builder()
                 .chatRoomId(chatDto.getChatRoomId())
-                .username(username)
+                .username(nickname)  // nickname 자동 설정
                 .message(message)
                 .build();
 
         redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload));
     }
 
+    /**
+     * 메시지 전송
+     * @param chatDto ChatDto
+     */
+    public void sendMessage(ChatDto chatDto, WebSocketSession session) {
+        // session에서 nickname을 가져옴
+        String nickname = (String) session.getAttributes().get("username");
+
+        String channel = "chatRoom:" + chatDto.getChatRoomId();
+        ChatDto payload = ChatDto.builder()
+                .chatRoomId(chatDto.getChatRoomId())
+                .username(nickname)  // nickname 자동 설정
+                .message(chatDto.getMessage())
+                .build();
+
+        redisService.publish(channel, getTextMessage(WebSocketMessageType.TALK, payload));
+    }
+
     public void exit(ChatDto chatDto, WebSocketSession session) {
-        String username = (String) session.getAttributes().get("username");
+        // session에서 nickname을 가져옴
+        String nickname = (String) session.getAttributes().get("username");
         String channel = "chatRoom:" + chatDto.getChatRoomId();
 
-        redisService.unsubscribe(channel, session);  // Redis 구독 해제
+        redisService.unsubscribe(channel, session);
 
-        String message = username + "님이 퇴장하셨습니다.";
+        String message = nickname + "님이 퇴장하셨습니다.";
         log.info("Publishing exit message: {}", message);
 
         ChatDto payload = ChatDto.builder()
                 .chatRoomId(chatDto.getChatRoomId())
-                .username(username)
+                .username(nickname)  // nickname 자동 설정
                 .message(message)
                 .build();
 
         redisService.publish(channel, getTextMessage(WebSocketMessageType.EXIT, payload));
     }
 
-
-
-    /**
-     * 메시지 전송
-     * @param chatDto ChatDto
-     */
-    public void sendMessage(ChatDto chatDto) {
-        String channel = "chatRoom:" + chatDto.getChatRoomId();
-        redisService.publish(channel, getTextMessage(WebSocketMessageType.TALK, chatDto));
-    }
 
     /**
      * 메시지 전송

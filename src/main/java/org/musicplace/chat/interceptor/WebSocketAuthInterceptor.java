@@ -2,6 +2,8 @@ package org.musicplace.chat.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import org.musicplace.chat.security.JwtTokenProvider;
+import org.musicplace.member.domain.SignInEntity;
+import org.musicplace.member.service.SignInService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
@@ -17,29 +19,29 @@ import java.util.Map;
 public class WebSocketAuthInterceptor implements HandshakeInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final SignInService signInService;
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                    WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        // HTTP 요청 헤더에서 Authorization 헤더 추출
         String authorizationHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-        // Authorization 헤더에서 JWT 토큰 추출
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
+            String token = authorizationHeader.substring(7);
 
-            // JWT 토큰 유효성 검사
             if (jwtTokenProvider.validateToken(token)) {
-                String username = jwtTokenProvider.getUsernameFromToken(token);
-                attributes.put("username", username);  // 인증된 사용자 이름을 WebSocket 세션에 저장
-                return true;  // 인증 성공 시 WebSocket 연결 허용
+                String userId = jwtTokenProvider.getUsernameFromToken(token);
+
+                // SignInEntity에서 nickname을 가져와 세션에 저장
+                SignInEntity user = signInService.SignInFindById(userId);  // 사용자 ID로 사용자 엔티티 검색
+                attributes.put("username", user.getNickname());  // nickname 저장
+                return true;
             }
         }
-
-        // 인증 실패 시 HTTP 401 응답
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return false;
     }
+
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
