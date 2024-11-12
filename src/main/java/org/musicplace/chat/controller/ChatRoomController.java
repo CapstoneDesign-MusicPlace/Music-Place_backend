@@ -33,7 +33,7 @@ public class ChatRoomController {
 
     @DeleteMapping("/rooms/{roomId}")
     public RoomDto deleteChatRoom(@PathVariable String roomId) {
-        return chatRoom.deleteCahtRoom(roomId);
+        return chatRoom.deleteChatRoom(roomId);
     }
 
     @PatchMapping("/rooms/{roomId}")
