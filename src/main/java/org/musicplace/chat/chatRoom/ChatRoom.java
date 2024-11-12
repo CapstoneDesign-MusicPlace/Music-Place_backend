@@ -69,7 +69,6 @@ public class ChatRoom {
 
 
     public void enter(ChatDto chatDto, WebSocketSession session) {
-        // session에서 nickname을 가져옴
         String nickname = (String) session.getAttributes().get("username");
 
         if (chatDto.getChatRoomId() == null || chatDto.getChatRoomId().isEmpty()) {
@@ -90,25 +89,20 @@ public class ChatRoom {
 
         ChatDto payload = ChatDto.builder()
                 .chatRoomId(chatDto.getChatRoomId())
-                .username(nickname)  // nickname 자동 설정
+                .username(nickname)
                 .message(message)
                 .build();
 
         redisService.publish(channel, getTextMessage(WebSocketMessageType.ENTER, payload));
     }
 
-    /**
-     * 메시지 전송
-     * @param chatDto ChatDto
-     */
     public void sendMessage(ChatDto chatDto, WebSocketSession session) {
-        // session에서 nickname을 가져옴
         String nickname = (String) session.getAttributes().get("username");
 
         String channel = "chatRoom:" + chatDto.getChatRoomId();
         ChatDto payload = ChatDto.builder()
                 .chatRoomId(chatDto.getChatRoomId())
-                .username(nickname)  // nickname 자동 설정
+                .username(nickname)
                 .message(chatDto.getMessage())
                 .build();
 
@@ -116,7 +110,6 @@ public class ChatRoom {
     }
 
     public void exit(ChatDto chatDto, WebSocketSession session) {
-        // session에서 nickname을 가져옴
         String nickname = (String) session.getAttributes().get("username");
         String channel = "chatRoom:" + chatDto.getChatRoomId();
 
@@ -127,12 +120,13 @@ public class ChatRoom {
 
         ChatDto payload = ChatDto.builder()
                 .chatRoomId(chatDto.getChatRoomId())
-                .username(nickname)  // nickname 자동 설정
+                .username(nickname)
                 .message(message)
                 .build();
 
         redisService.publish(channel, getTextMessage(WebSocketMessageType.EXIT, payload));
     }
+
 
 
     /**

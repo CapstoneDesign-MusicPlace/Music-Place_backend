@@ -17,32 +17,25 @@ class RedisMessageHandler implements MessageListener {
     private final WebSocketSession session;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    /**
-     * Redis 메시지 수신
-     * @param message 메시지
-     * @param pattern 패턴
-     */
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            // JSON 데이터를 먼저 노드로 파싱하여 type 필드를 확인
+            // JSON 데이터 파싱 및 메시지 타입 확인
             JsonNode jsonNode = objectMapper.readTree(message.getBody());
             WebSocketMessageType messageType = WebSocketMessageType.valueOf(jsonNode.get("type").asText());
 
-            // 메시지 타입에 따라 적절한 클래스 사용
-            if (messageType == WebSocketMessageType.TALK || messageType == WebSocketMessageType.EXIT) {
-                WebSocketMessage webSocketMessage = objectMapper.treeToValue(jsonNode, WebSocketMessage.class);
+            // WebSocketMessage 객체 생성
+            WebSocketMessage webSocketMessage = objectMapper.treeToValue(jsonNode, WebSocketMessage.class);
 
-                // 메시지 처리 로직
-                if (session.isOpen() && !webSocketMessage.getPayload().getUsername().equals(session.getAttributes().get("username"))) {
-                    session.sendMessage(new TextMessage(new String(message.getBody())));
-                }
+            String messageUsername = webSocketMessage.getPayload().getUsername();
+            String sessionUsername = (String) session.getAttributes().get("username");
+
+            // 현재 세션의 사용자와 메시지 사용자 비교
+            if (session.isOpen() && !messageUsername.equals(sessionUsername)) {
+                session.sendMessage(new TextMessage(new String(message.getBody())));
             }
         } catch (Exception e) {
-            log.error("Error processing message: {}", e.getMessage());
-            log.error("==========");
-            log.error(e.getLocalizedMessage());
+            log.error("Error processing message: {}", e.getMessage(), e);
         }
     }
-
 }
