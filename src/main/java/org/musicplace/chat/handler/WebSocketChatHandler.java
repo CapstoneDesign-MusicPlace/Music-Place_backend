@@ -21,17 +21,18 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String username = (String) session.getAttributes().get("username");
+        String nickname = (String) session.getAttributes().get("username");
         WebSocketMessage webSocketMessage = objectMapper.readValue(message.getPayload(), WebSocketMessage.class);
 
-        log.info("Received message from {}: {}", username, message.getPayload());
+        log.info("Received message from {}: {}", nickname, message.getPayload());
 
         switch (webSocketMessage.getType()) {
             case ENTER -> chatRoom.enter(webSocketMessage.getPayload(), session);
-            case TALK -> chatRoom.sendMessage(webSocketMessage.getPayload());
-            case EXIT -> chatRoom.exit(webSocketMessage.getPayload(), session);  // EXIT 타입 메시지 처리
+            case TALK -> chatRoom.sendMessage(webSocketMessage.getPayload(), session);
+            case EXIT -> chatRoom.exit(webSocketMessage.getPayload(), session);
         }
     }
+
 
 
 }
