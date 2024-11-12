@@ -16,7 +16,7 @@ import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/chat")
+@RequestMapping("/streaming")
 public class ChatRoomController {
 
     private final ChatRoom chatRoom;
