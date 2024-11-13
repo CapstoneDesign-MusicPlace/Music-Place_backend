@@ -13,7 +13,9 @@ import org.musicplace.chat.websocket.WebSocketMessageType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -89,8 +91,8 @@ public class ChatRoom {
         return chatRooms.remove(roomId);
     }
 
-    public Collection<RoomDto> getChatRooms() {
-        return chatRooms.values();
+    public List<RoomDto> getChatRooms() {
+        return new ArrayList<>(chatRooms.values());
     }
 
 

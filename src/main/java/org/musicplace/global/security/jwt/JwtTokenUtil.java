@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.jsonwebtoken.Jwts.claims;
+
 @Component
 public class JwtTokenUtil {
 
@@ -21,27 +23,29 @@ public class JwtTokenUtil {
     private Map<String, String> invalidatedTokens = new HashMap<>();
 
     // JWT 생성
-    public String generateToken(String username) {
+    public String generateToken(String memberId) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(memberId)  // memberId를 subject에 설정
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
 
-    // JWT에서 사용자 이름 추출
-    public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
+    // JWT에서 사용자 memberId 추출
+    public String getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)  // 비밀 키를 사용하여 파싱
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.getSubject();
+
+        return claims.getSubject();  // memberId 반환
     }
 
     // 토큰 검증
-    public boolean validateToken(String token, String username) {
-        return username.equals(getUsernameFromToken(token)) && !isTokenExpired(token) && !isTokenInvalidated(token);
+    public boolean validateToken(String token, String memberId) {
+        return memberId.equals(getUserIdFromToken(token)) && !isTokenExpired(token) && !isTokenInvalidated(token);
     }
 
     // 토큰이 만료되었는지 확인
@@ -55,8 +59,8 @@ public class JwtTokenUtil {
     }
 
     // 토큰 무효화
-    public void invalidateToken(String username, String token) {
-        invalidatedTokens.put(username, token);  // 사용자별로 토큰 무효화
+    public void invalidateToken(String memberId, String token) {
+        invalidatedTokens.put(memberId, token);  // 사용자별로 토큰 무효화
     }
 
     // 토큰이 무효화되었는지 확인

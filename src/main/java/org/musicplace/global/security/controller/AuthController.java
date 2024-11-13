@@ -22,7 +22,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         SignInEntity user = signInService.authenticate(loginRequestDto.getMember_id(), loginRequestDto.getPw());
-        String token = jwtTokenUtil.generateToken(user.getUsername());
+        String token = jwtTokenUtil.generateToken(user.getMemberId());
         return ResponseEntity.ok(new LoginResponseDto(token));
 
     }
@@ -37,9 +37,9 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader(value = "Authorization") String token) {
         String actualToken = token.substring(7);
-        String username = jwtTokenUtil.getUsernameFromToken(actualToken);
+        String memberId = jwtTokenUtil.getUserIdFromToken(actualToken);
 
-        jwtTokenUtil.invalidateToken(username, actualToken);
+        jwtTokenUtil.invalidateToken(memberId, actualToken);
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok().build();
     }
