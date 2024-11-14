@@ -34,9 +34,8 @@ public class JwtTokenUtil {
 
     // JWT에서 사용자 memberId 추출
     public String getUserIdFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)  // 비밀 키를 사용하여 파싱
-                .build()
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
 
