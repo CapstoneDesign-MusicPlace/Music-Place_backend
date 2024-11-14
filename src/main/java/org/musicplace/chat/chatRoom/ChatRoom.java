@@ -132,6 +132,7 @@ public class ChatRoom {
                 .chatRoomId(chatDto.getChatRoomId())
                 .username(nickname)
                 .message(chatDto.getMessage())
+                .vidioId(chatDto.getVidioId())
                 .build();
 
         redisService.publish(channel, getTextMessage(WebSocketMessageType.TALK, payload));
