@@ -1,6 +1,7 @@
 package org.musicplace.global.security.authorizaion;
 
 import org.musicplace.global.security.config.CustomUserDetails;
+import org.musicplace.member.domain.SignInEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -11,7 +12,20 @@ public class MemberAuthorizationUtil {
     }
     public static String getLoginMemberId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        return userDetails.getSignInEntity().getMemberId(); // SignInEntity의 member_id 반환
+
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new IllegalStateException("User not authenticated");
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getSignInEntity().getMemberId();
+        } else if (principal instanceof SignInEntity) {
+            return ((SignInEntity) principal).getMemberId();
+        }
+
+        throw new ClassCastException("Unexpected Principal type: " + principal.getClass().getName());
     }
+
+
 }

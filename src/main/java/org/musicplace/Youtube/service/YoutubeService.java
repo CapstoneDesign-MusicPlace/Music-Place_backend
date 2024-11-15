@@ -92,7 +92,7 @@ public class YoutubeService {
         playlistItemsList.setKey(apiKey);
 
         // 재생목록 ID 설정
-        playlistItemsList.setPlaylistId("OLNY56MxFrczc5CoAvnTCDO_3bAdOLExkJQ");
+        playlistItemsList.setPlaylistId("PL4fGSI1pDJn6jXS_Tv_N9B8Z0HTRVJE0m");
 
         // 결과 수 제한 설정 (최대 50개)
         playlistItemsList.setMaxResults(50L);
