@@ -1,6 +1,7 @@
 package org.musicplace.global.security.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.musicplace.global.security.config.CustomUserDetails;
 import org.musicplace.global.security.dto.LoginResponseDto;
 import org.musicplace.global.security.jwt.JwtTokenUtil;
 import org.musicplace.member.domain.SignInEntity;
@@ -21,8 +22,8 @@ public class AuthController {
     // JWT 로그인
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        SignInEntity user = signInService.authenticate(loginRequestDto.getMember_id(), loginRequestDto.getPw());
-        String token = jwtTokenUtil.generateToken(user.getMemberId());
+        CustomUserDetails user = signInService.authenticate(loginRequestDto.getMember_id(), loginRequestDto.getPw());
+        String token = jwtTokenUtil.generateToken(user.getSignInEntity().getMemberId());
         return ResponseEntity.ok(new LoginResponseDto(token));
 
     }

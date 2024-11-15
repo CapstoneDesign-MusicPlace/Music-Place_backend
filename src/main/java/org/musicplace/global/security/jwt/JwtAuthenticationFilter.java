@@ -40,11 +40,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
         if (memberId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
             SignInEntity userDetails = this.userDetailsService.loadUserByUsername(memberId);
             if (jwtTokenUtil.validateToken(jwt, userDetails.getMemberId())) {
+                CustomUserDetails customUserDetails = new CustomUserDetails(userDetails);
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                        customUserDetails, null, customUserDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
