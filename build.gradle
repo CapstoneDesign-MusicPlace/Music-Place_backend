@@ -40,6 +40,10 @@ dependencies {
 	implementation 'com.google.apis:google-api-services-youtube:v3-rev20230816-2.0.0'
 	implementation 'com.google.http-client:google-http-client-jackson2:1.39.2'
 
+	// 웹 소켓 추가
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 	// swagger
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
 
@@ -51,9 +55,16 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	// oauth2.0
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	// Spring Security Messaging
+	implementation "org.springframework.security:spring-security-messaging"
 
+
+
+}
+
+// 웹 소켓 부분에서 도커 이미지 빌드
+tasks.named('bootBuildImage') {
+	builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
 
 tasks.named('test') {
