@@ -23,7 +23,7 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password: redis6379
+      password: ${Redis_pasword}
 
 server:
   port: 8080
