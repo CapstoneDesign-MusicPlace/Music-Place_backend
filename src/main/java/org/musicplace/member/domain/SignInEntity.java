@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.musicplace.follow.domain.FollowEntity;
 import org.musicplace.playList.domain.PLEntity;
-import org.musicplace.streaming.domain.StreamingEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -60,11 +59,6 @@ public class SignInEntity implements UserDetails {
     @Comment("권한")
     private String role;
 
-    @Column(name = "oauth_provider")
-    private String oauthProvider;  // OAuth2 Provider 정보
-
-    @Column(name = "oauth_provider_id")
-    private String oauthProviderId; // OAuth2 사용자 식별 ID
 
     @JsonManagedReference
     @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -72,14 +66,10 @@ public class SignInEntity implements UserDetails {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<StreamingEntity> streamingEntities = new ArrayList<>();
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "signInEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PLEntity> playlistEntities = new ArrayList<>();
 
     @Builder
-    public SignInEntity(String memberId, String pw, Gender gender, String email, String nickname, String name, String role, String oauthProvider, String oauthProviderId) {
+    public SignInEntity(String memberId, String pw, Gender gender, String email, String nickname, String name, String role) {
         this.memberId = memberId;
         this.pw = pw;
         this.gender = gender;
@@ -87,8 +77,7 @@ public class SignInEntity implements UserDetails {
         this.nickname = nickname;
         this.name = name;
         this.role = role;
-        this.oauthProvider = oauthProvider;
-        this.oauthProviderId = oauthProviderId;
+
 
     }
 

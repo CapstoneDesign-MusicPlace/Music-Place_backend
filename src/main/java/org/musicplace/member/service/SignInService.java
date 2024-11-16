@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.musicplace.global.security.authorizaion.MemberAuthorizationUtil;
 import org.musicplace.global.exception.ErrorCode;
 import org.musicplace.global.exception.ExceptionHandler;
+import org.musicplace.global.security.config.CustomUserDetails;
 import org.musicplace.member.domain.SignInEntity;
 import org.musicplace.member.dto.SignInGetUserDataDto;
 import org.musicplace.member.dto.SignInSaveDto;
@@ -112,14 +113,14 @@ public class SignInService {
 
 
 
-    public SignInEntity authenticate(String id, String password) {
+    public CustomUserDetails authenticate(String id, String password) {
         SignInEntity user = signInRepository.findById(id)
                 .orElseThrow(() -> new ExceptionHandler(ErrorCode.ID_NOT_FOUND));
         if (user.getDelete_account()) {
             throw new ExceptionHandler(ErrorCode.ID_DELETE);
         }
         if (passwordEncoder.matches(password, user.getPw())) {
-            return user;
+            return new CustomUserDetails(user);
         }
         throw new ExceptionHandler(ErrorCode.INVALID_CREDENTIALS);
     }
