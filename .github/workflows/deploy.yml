@@ -17,7 +17,10 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '21'
-        distribution: 'temurin' # JDK 배포판 지정
+        distribution: 'temurin'
+
+    - name: Add execute permission to Gradle Wrapper
+      run: chmod +x ./gradlew # 실행 권한 추가
 
     - name: Build project with Gradle
       run: ./gradlew build
