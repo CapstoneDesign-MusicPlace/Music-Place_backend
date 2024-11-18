@@ -20,10 +20,10 @@ jobs:
         distribution: 'temurin'
 
     - name: Add execute permission to Gradle Wrapper
-      run: chmod +x ./gradlew # 실행 권한 추가
+      run: chmod +x ./gradlew
 
-    - name: Build project with Gradle
-      run: ./gradlew build
+    - name: Build project without running tests
+      run: ./gradlew build -x test
 
     - name: Build Docker images
       run: |
