@@ -46,6 +46,9 @@ jobs:
         docker save mysql | gzip > mysql.tar.gz
         docker save redis | gzip > redis.tar.gz
 
+    - name: List generated files
+      run: ls -lh *.tar.gz
+
     - name: Authenticate to GCP
       uses: google-github-actions/auth@v1
       with:
