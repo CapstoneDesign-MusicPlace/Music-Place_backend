@@ -37,19 +37,23 @@ jobs:
         docker save mysql | gzip > mysql.tar.gz
         docker save redis | gzip > redis.tar.gz
 
-    - name: Deploy to Compute Engine
-      uses: google-github-actions/setup-gcloud@v1
+    - name: Authenticate to GCP
+      uses: google-github-actions/auth@v1
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up GCP configuration
+      run: |
+        gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+        gcloud config set compute/zone ${{ secrets.GCP_ZONE }}
 
     - name: Transfer Docker images to VM
       run: |
-        gcloud compute scp app.tar.gz mysql.tar.gz redis.tar.gz [VM_NAME]:~/ --zone [ZONE]
+        gcloud compute scp app.tar.gz mysql.tar.gz redis.tar.gz ${{ secrets.VM_NAME }}:~/ --zone ${{ secrets.GCP_ZONE }}
 
     - name: Load Docker images on VM and start services
       run: |
-        gcloud compute ssh [VM_NAME] --zone [ZONE] --command "
+        gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
           gunzip < app.tar.gz | docker load &&
           gunzip < mysql.tar.gz | docker load &&
           gunzip < redis.tar.gz | docker load &&
