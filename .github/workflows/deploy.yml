@@ -54,8 +54,8 @@ jobs:
     - name: Load Docker images on VM and start services
       run: |
         gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
-          gunzip < app.tar.gz | sudo docker load &&
-          gunzip < mysql.tar.gz | sudo docker load &&
-          gunzip < redis.tar.gz | sudo docker load &&
+          gunzip -c app.tar.gz | sudo docker load &&
+          gunzip -c mysql.tar.gz | sudo docker load &&
+          gunzip -c redis.tar.gz | sudo docker load &&
           sudo docker-compose up -d
         "
