@@ -59,6 +59,7 @@ jobs:
           EOF
         shell: bash
 
+
       - name: Build and push Docker images
         run: |
           docker-compose -f ${{ github.workspace }}/docker-compose.yml build
