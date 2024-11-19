@@ -59,7 +59,6 @@ jobs:
           EOF
         shell: bash
 
-
       - name: Build and push Docker images
         run: |
           docker-compose -f ${{ github.workspace }}/docker-compose.yml build
@@ -75,23 +74,28 @@ jobs:
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
           gcloud config set compute/zone ${{ secrets.GCP_ZONE }}
 
-      - name: Copy docker-compose.yml to VM
+      - name: Copy configuration files to VM
         run: |
+          # Copy docker-compose.yml
           gcloud compute scp ${{ github.workspace }}/docker-compose.yml ${{ secrets.VM_NAME }}:/tmp/docker-compose.yml --zone ${{ secrets.GCP_ZONE }}
-      
-      - name: Move docker-compose.yml to appropriate directory
+          
+          # Copy .env file
+          gcloud compute scp .env ${{ secrets.VM_NAME }}:/tmp/.env --zone ${{ secrets.GCP_ZONE }}
+
+      - name: Move configuration files to appropriate directory
         run: |
           gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
             sudo mv /tmp/docker-compose.yml /home/${{ secrets.VM_USER }}/docker-compose.yml &&
-            sudo chown $USER:$USER /home/${{ secrets.VM_USER }}/docker-compose.yml
+            sudo mv /tmp/.env /home/${{ secrets.VM_USER }}/.env &&
+            sudo chown $USER:$USER /home/${{ secrets.VM_USER }}/docker-compose.yml &&
+            sudo chown $USER:$USER /home/${{ secrets.VM_USER }}/.env
           "
 
       - name: Pull Docker images and start services on VM
         run: |
           gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
-            export $(cat /home/${{ secrets.VM_USER }}/.env | xargs) &&
             cd /home/${{ secrets.VM_USER }} &&
             sudo docker login -u '${{ secrets.DOCKER_USERNAME }}' -p '${{ secrets.DOCKER_PASSWORD }}' &&
-            sudo docker-compose -f docker-compose.yml pull &&
-            sudo docker-compose -f docker-compose.yml up -d
+            sudo docker-compose --env-file .env -f docker-compose.yml pull &&
+            sudo docker-compose --env-file .env -f docker-compose.yml up -d
           "
