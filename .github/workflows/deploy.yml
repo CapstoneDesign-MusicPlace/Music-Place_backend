@@ -88,6 +88,7 @@ jobs:
       - name: Pull Docker images and start services on VM
         run: |
           gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
+            export $(cat /home/${{ secrets.VM_USER }}/.env | xargs) &&
             cd /home/${{ secrets.VM_USER }} &&
             sudo docker login -u '${{ secrets.DOCKER_USERNAME }}' -p '${{ secrets.DOCKER_PASSWORD }}' &&
             sudo docker-compose -f docker-compose.yml pull &&
