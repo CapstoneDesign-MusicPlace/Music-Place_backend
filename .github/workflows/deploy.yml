@@ -76,13 +76,12 @@ jobs:
 
       - name: Copy docker-compose.yml to VM
         run: |
-          gcloud compute scp ${{ github.workspace }}/docker-compose.yml ${{ secrets.VM_NAME }}:/home/${{ secrets.VM_USER }}/docker-compose.yml --zone ${{ secrets.GCP_ZONE }}
-
-      - name: Pull Docker images and start services on VM
+          gcloud compute scp ${{ github.workspace }}/docker-compose.yml ${{ secrets.VM_NAME }}:/tmp/docker-compose.yml --zone ${{ secrets.GCP_ZONE }}
+      
+      - name: Move docker-compose.yml to appropriate directory
         run: |
           gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
-            cd /home/${{ secrets.VM_USER }} &&
-            sudo docker login -u '${{ secrets.DOCKER_USERNAME }}' -p '${{ secrets.DOCKER_PASSWORD }}' &&
-            sudo docker-compose -f docker-compose.yml pull &&
-            sudo docker-compose -f docker-compose.yml up -d
+            sudo mv /tmp/docker-compose.yml /home/${{ secrets.VM_USER }}/docker-compose.yml &&
+            sudo chown $USER:$USER /home/${{ secrets.VM_USER }}/docker-compose.yml
           "
+
