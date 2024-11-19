@@ -36,10 +36,15 @@ jobs:
           sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
           sudo apt-get update
           sudo apt-get install -y docker-ce
+
       - name: Install standalone Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
+          sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+      - name: Verify Docker Compose installation
+        run: docker-compose --version
 
       - name: Generate .env file
         run: |
@@ -73,6 +78,6 @@ jobs:
         run: |
           gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
             sudo docker login -u '${{ secrets.DOCKER_USERNAME }}' -p '${{ secrets.DOCKER_PASSWORD }}' &&
-            sudo docker-compose pull &&
-            sudo docker-compose up -d
-          "
+            sudo /usr/local/bin/docker-compose pull &&
+            sudo /usr/local/bin/docker-compose up -d
+            "
