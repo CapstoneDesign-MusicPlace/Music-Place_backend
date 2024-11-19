@@ -12,10 +12,10 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}")  // application.properties 또는 application.yml에 설정된 비밀 키
+    @Value("${JWT_SECRET}")  // application.properties 또는 application.yml에 설정된 비밀 키
     private String secretKey;
 
-    @Value("${jwt.expiration}")  // JWT 만료 시간 설정
+    @Value("${JWT_EXPIRATION}")  // JWT 만료 시간 설정
     private long expirationTime;
 
     // JWT에서 사용자 이름을 추출

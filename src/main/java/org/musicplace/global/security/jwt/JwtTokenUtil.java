@@ -13,10 +13,10 @@ import static io.jsonwebtoken.Jwts.claims;
 @Component
 public class JwtTokenUtil {
 
-    @Value("${jwt.secret}")
+    @Value("${JWT_SECRET}")
     private String secretKey;
 
-    @Value("${jwt.expiration}")
+    @Value("${JWT_EXPIRATION}")
     private long expirationTime;
 
     // 유효하지 않은 토큰을 저장할 맵 (예시로 메모리 저장)
