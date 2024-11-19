@@ -22,7 +22,7 @@ services:
     restart: always
 
   mysql:
-    image: ${DOCKER_USERNAME}/mysql:latest
+    image: mysql:8.0
     container_name: mysql
     ports:
       - "3306:3306"
@@ -39,7 +39,7 @@ services:
     restart: always
 
   redis:
-    image: ${DOCKER_USERNAME}/redis:latest
+    image: redis:6.2-alpine
     container_name: redis
     ports:
       - "6379:6379"
