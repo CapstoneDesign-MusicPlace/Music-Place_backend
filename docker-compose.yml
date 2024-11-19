@@ -13,7 +13,7 @@ services:
       DB_URL: ${DB_URL}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      REDIS_PASSWORD: ${REDIS_PASSWORD} # 변수 이름 통일
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     depends_on:
       mysql:
         condition: service_healthy
@@ -47,7 +47,7 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 3
