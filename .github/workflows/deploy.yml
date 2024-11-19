@@ -78,6 +78,6 @@ jobs:
         run: |
           gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
             sudo docker login -u '${{ secrets.DOCKER_USERNAME }}' -p '${{ secrets.DOCKER_PASSWORD }}' &&
-            sudo docker-compose pull &&
-            sudo docker-compose up -d
+            sudo ./docker-compose pull &&
+            sudo ./docker-compose up -d
             "
