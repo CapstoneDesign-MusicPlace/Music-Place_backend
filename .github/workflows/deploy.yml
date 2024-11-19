@@ -65,9 +65,9 @@ jobs:
     - name: Pull Docker images and start services on VM
       run: |
         gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
-          sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
-          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/app:latest &&
-          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/mysql:latest &&
-          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/redis:latest &&
+          sudo docker login -u '${{ secrets.DOCKER_USERNAME }}' -p '${{ secrets.DOCKER_PASSWORD }}' &&
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/app:latest &&
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/mysql:latest &&
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/redis:latest &&
           sudo docker-compose up -d
         "
