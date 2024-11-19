@@ -58,7 +58,8 @@ dependencies {
 	// Spring Security Messaging
 	implementation "org.springframework.security:spring-security-messaging"
 
-
+	// .env 사용
+	implementation("me.paulschwarz:spring-dotenv:3.0.0")
 
 }
 
