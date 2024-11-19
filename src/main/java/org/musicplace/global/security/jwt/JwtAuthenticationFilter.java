@@ -1,5 +1,7 @@
 package org.musicplace.global.security.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,30 +28,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
 
         String memberId = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            memberId = jwtTokenUtil.getUserIdFromToken(jwt);
-
-        }
-
-
-        if (memberId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            SignInEntity userDetails = this.userDetailsService.loadUserByUsername(memberId);
-            if (jwtTokenUtil.validateToken(jwt, userDetails.getMemberId())) {
-                CustomUserDetails customUserDetails = new CustomUserDetails(userDetails);
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        customUserDetails, null, customUserDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        try {
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                jwt = authorizationHeader.substring(7);
+                memberId = jwtTokenUtil.getUserIdFromToken(jwt);
             }
+
+            if (memberId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                SignInEntity userDetails = userDetailsService.loadUserByUsername(memberId);
+
+                if (jwtTokenUtil.validateToken(jwt, userDetails.getMemberId())) {
+                    CustomUserDetails customUserDetails = new CustomUserDetails(userDetails);
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            customUserDetails, null, customUserDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    logger.warn("Invalid JWT token for user: " + memberId);
+                }
+            }
+        } catch (ExpiredJwtException e) {
+            logger.warn("Expired JWT token", e);
+        } catch (JwtException e) {
+            logger.error("Invalid JWT token", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error during JWT authentication", e);
         }
 
         chain.doFilter(request, response);
     }
+
 }

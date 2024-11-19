@@ -34,17 +34,24 @@ public class JwtTokenUtil {
 
     // JWT에서 사용자 memberId 추출
     public String getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject();  // memberId 반환
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            throw new RuntimeException("Token expired");
+        } catch (JwtException e) {
+            throw new RuntimeException("Invalid token");
+        }
     }
 
     // 토큰 검증
     public boolean validateToken(String token, String memberId) {
-        return memberId.equals(getUserIdFromToken(token)) && !isTokenExpired(token) && !isTokenInvalidated(token);
+        return memberId.equals(getUserIdFromToken(token))
+                && !isTokenExpired(token)
+                && !isTokenInvalidated(token);
     }
 
     // 토큰이 만료되었는지 확인
