@@ -33,21 +33,24 @@ jobs:
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
         sudo apt-get update
         sudo apt-get install -y docker-ce
-
     - name: Install standalone Docker Compose
       run: |
         sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
-
     - name: Build Docker images
-      run: |
-        docker-compose build
-        docker save app | gzip > app.tar.gz
-        docker save mysql | gzip > mysql.tar.gz
-        docker save redis | gzip > redis.tar.gz
+      run: docker-compose build
 
-    - name: List generated files
-      run: ls -lh *.tar.gz
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Tag and Push Docker images to Docker Hub
+      run: |
+        docker tag app:latest ${{ secrets.DOCKER_USERNAME }}/app:latest
+        docker tag mysql:latest ${{ secrets.DOCKER_USERNAME }}/mysql:latest
+        docker tag redis:latest ${{ secrets.DOCKER_USERNAME }}/redis:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/app:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/mysql:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/redis:latest
 
     - name: Authenticate to GCP
       uses: google-github-actions/auth@v1
@@ -59,15 +62,12 @@ jobs:
         gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
         gcloud config set compute/zone ${{ secrets.GCP_ZONE }}
 
-    - name: Transfer Docker images to VM
-      run: |
-        gcloud compute scp app.tar.gz mysql.tar.gz redis.tar.gz ${{ secrets.VM_NAME }}:~/ --zone ${{ secrets.GCP_ZONE }}
-
-    - name: Load Docker images on VM and start services
+    - name: Pull Docker images and start services on VM
       run: |
         gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
-          gunzip -c app.tar.gz | sudo docker load &&
-          gunzip -c mysql.tar.gz | sudo docker load &&
-          gunzip -c redis.tar.gz | sudo docker load &&
+          sudo docker login -u '${{ secrets.DOCKER_HUB_USERNAME }}' -p '${{ secrets.DOCKER_HUB_PASSWORD }}' &&
+          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/app:latest &&
+          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/mysql:latest &&
+          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/redis:latest &&
           sudo docker-compose up -d
         "
