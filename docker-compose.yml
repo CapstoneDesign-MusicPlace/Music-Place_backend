@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME}/app:latest
     ports:
       - "8080:8080"
     environment:
@@ -12,13 +13,16 @@ services:
       DB_URL: ${DB_URL}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      Redis_pasword: ${Redis_pasword}
+      REDIS_PASSWORD: ${REDIS_PASSWORD} # 변수 이름 통일
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
 
   mysql:
-    image: mysql:8
+    image: ${DOCKER_USERNAME}/mysql:latest
     container_name: mysql
     ports:
       - "3306:3306"
@@ -27,15 +31,27 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: always
 
   redis:
-    image: redis:latest
+    image: ${DOCKER_USERNAME}/redis:latest
     container_name: redis
     ports:
       - "6379:6379"
     environment:
-      REDIS_PASSWORD: ${Redis_pasword}
-    command: ["redis-server", "--requirepass", "${Redis_pasword}"]
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: always
 
 volumes:
   mysql-data:
