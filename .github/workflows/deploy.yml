@@ -54,6 +54,9 @@ jobs:
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
           REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+          JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          YOUTUBE_KEY=${{ secrets.YOUTUBE_KEY }}
           EOF
         shell: bash
 
