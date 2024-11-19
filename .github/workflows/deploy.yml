@@ -74,16 +74,10 @@ jobs:
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
           gcloud config set compute/zone ${{ secrets.GCP_ZONE }}
 
-      - name: Deploy to GCP instance
-        uses: appleboy/ssh-action@main
-        with:
-          host: ${{ secrets.VM_NAME }}
-          username: ${{ secrets.GCP_USERNAME }}
-          key: ${{ secrets.GCP_PRIVATEKEY }}
-          script: |
-            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/9uin-server
-            sudo docker rm -f $(docker ps -qa) 2>/dev/null || true
-            cd /home/${{ secrets.GCP_USERNAME }}
+      - name: Pull Docker images and start services on VM
+        run: |
+          gcloud compute ssh ${{ secrets.VM_NAME }} --zone ${{ secrets.GCP_ZONE }} --command "
+            sudo docker login -u '${{ secrets.DOCKER_USERNAME }}' -p '${{ secrets.DOCKER_PASSWORD }}' &&
+            sudo docker-compose pull &&
             sudo docker-compose up -d
-            sudo docker image prune -f
+            "
