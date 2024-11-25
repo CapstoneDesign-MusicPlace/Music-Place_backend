@@ -113,7 +113,7 @@ public class PLService {
     public List<ResponsePLDto> PLFindPublic() {
         List<PLEntity> playListAll = plRepository.findAll();
         List<ResponsePLDto> publicPlayLists = playListAll.stream()
-                .filter(plEntity -> plEntity.getOnOff().equals(OnOff.Public))
+                .filter(plEntity -> plEntity.getOnOff().equals(OnOff.Public) && !plEntity.isPLDelete())
                 .map(plEntity -> ResponsePLDto.builder()
                         .playlist_id(plEntity.getPlaylist_id())
                         .member_id(plEntity.getSignInEntity().getMemberId())
