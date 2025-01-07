@@ -1,7 +1,7 @@
 ![슬라이드3](https://github.com/user-attachments/assets/cab29b3f-6ea0-4c51-8dc1-7aba3bb6285b)
 ![슬라이드4](https://github.com/user-attachments/assets/a4362bd1-6c29-46fd-bdca-473e81bb4335)
 ![슬라이드5](https://github.com/user-attachments/assets/9eebb727-a5db-48d5-8191-6ee3a1da04c8)
-![슬라이드6](https://github.com/user-attachments/assets/4431a4d6-7a7a-42cd-9bb3-4a4b27c117df)
+![2024-캡스톤디자인-MusicPlace (1)](https://github.com/user-attachments/assets/f4e33e8c-6e90-488f-8bae-000e89bcda1f)
 ![슬라이드7](https://github.com/user-attachments/assets/c2e16cb5-a8a2-4866-a7c6-a6650e179a9b)
 ![슬라이드8](https://github.com/user-attachments/assets/57c12f75-1d0a-4d5b-9200-f349380486c8)
 ![슬라이드9](https://github.com/user-attachments/assets/4ccd4434-1c8c-4329-9643-b0de7aadbd07)
