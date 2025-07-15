@@ -77,7 +77,7 @@ jobs:
         run: |
           # Copy docker-compose.yml
           gcloud compute scp ${{ github.workspace }}/docker-compose.yml ${{ secrets.VM_NAME }}:/tmp/docker-compose.yml --zone ${{ secrets.GCP_ZONE }}
-          
+        
           # Copy .env file
           gcloud compute scp .env ${{ secrets.VM_NAME }}:/tmp/.env --zone ${{ secrets.GCP_ZONE }}
       - name: Move configuration files to appropriate directory
