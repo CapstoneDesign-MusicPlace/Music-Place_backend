@@ -7,3 +7,5 @@ scrape_configs:
     metrics_path: '/actuator/prometheus' # 스프링 부트 지표 경로
     static_configs:
       - targets: ['host.docker.internal:8081'] # Spring Boot 애플리케이션 주소
+        labels:
+          instance: 'spring-app'

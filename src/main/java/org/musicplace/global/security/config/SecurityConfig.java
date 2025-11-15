@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/metrics",
                                 "/health",
                                 "/info",
-                                "/targets"
+                                "/targets",
+                                "/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,7 +1,4 @@
 spring:
-  config:
-    import: optional:file:.env
-
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
@@ -23,22 +20,41 @@ spring:
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
 
-# ✅ 모니터링 / 메트릭 설정 추가
+  server:
+    port: 8080
+
+# =================================
+#        Monitoring / Metrics
+# =================================
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus,metrics  # Prometheus & Metrics 엔드포인트 공개
+        include: health,info,prometheus,metrics
+
   endpoint:
     health:
-      show-details: always                      # 헬스 상세 정보 표시
+      show-details: always
+
   metrics:
     tags:
-      application: music-place                  # 기본 태그 (PromQL에서 구분용)
+      application: music-place
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true   # ← ★ histogram 활성화 (필수)
+      percentiles:
+        http.server.requests: 0.5, 0.9, 0.95
+
+  observations:
+    http:
+      server:
+        requests:
+          enabled: true              # ← HTTP 요청 관찰 활성화
+
   prometheus:
     metrics:
       export:
-        enabled: true                           # Prometheus exporter 활성화
+        enabled: true
 
   server:
     port: 8081

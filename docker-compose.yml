@@ -34,7 +34,7 @@ services:
     container_name: musicplace_prometheus
     restart: always
     ports:
-      - "9090:9090"  # 브라우저 접근 가능
+      - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     command:
@@ -45,12 +45,13 @@ services:
     container_name: musicplace_grafana
     restart: always
     ports:
-      - "3000:3000"  # 브라우저에서 Grafana 접근
+      - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
     depends_on:
       - prometheus
 
