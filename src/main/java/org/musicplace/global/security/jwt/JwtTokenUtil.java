@@ -16,7 +16,7 @@ public class JwtTokenUtil {
     @Value("${JWT_SECRET}")
     private String secretKey;
 
-    @Value("${JWT_EXPIRATION}")
+    @Value("${JWT_ACCESS_TIME}")
     private long expirationTime;
 
     // 유효하지 않은 토큰을 저장할 맵 (예시로 메모리 저장)
