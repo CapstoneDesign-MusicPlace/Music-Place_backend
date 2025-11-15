@@ -65,7 +65,7 @@ dependencies {
 	// 모니터링
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
-
+    implementation 'io.micrometer:micrometer-observation'
 }
 
 // 웹 소켓 부분에서 도커 이미지 빌드
