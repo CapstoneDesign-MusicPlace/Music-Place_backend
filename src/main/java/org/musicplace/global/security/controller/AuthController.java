@@ -28,12 +28,6 @@ public class AuthController {
 
     }
 
-    // OAuth 로그인 후 JWT 반환
-    @GetMapping("/google")
-    public ResponseEntity<LoginResponseDto> getOAuth2Jwt(@RequestParam String jwtToken) {
-        return ResponseEntity.ok(new LoginResponseDto(jwtToken));
-    }
-
     // 로그아웃 기능
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader(value = "Authorization") String token) {
