@@ -1,6 +1,5 @@
 // =========================================
 // Music Place 워밍업 테스트
-// 목적: 시스템이 정상 작동하는지 확인
 // =========================================
 
 import http from 'k6/http';
@@ -20,7 +19,7 @@ const BASE_URL = 'http://app:8080';
 
 export default function () {
     // 1. Health Check
-    const healthRes = http.get(`${BASE_URL}/actuator/health`);
+    const healthRes = http.get(`http://app:8081/actuator/health`);
     check(healthRes, {
         'health check status 200': (r) => r.status === 200,
     });
@@ -33,13 +32,15 @@ export default function () {
     });
     sleep(1);
 
-    // 3. Login Test
+    // 3. Login Test (수정됨: member_id/pw)
+    const loginPayload = JSON.stringify({
+        member_id: 'testuser1',
+        pw: 'Test1234!',
+    });
+
     const loginRes = http.post(
         `${BASE_URL}/auth/login`,
-        JSON.stringify({
-            member_id: 'testuser1',
-            pw: 'Test1234!',
-        }),
+        loginPayload,
         { headers: { 'Content-Type': 'application/json' } }
     );
 
