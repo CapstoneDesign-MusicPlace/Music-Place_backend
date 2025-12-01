@@ -27,7 +27,11 @@ COPY --from=builder /app/build/libs/*.jar app.jar
 
 # JVM 옵션 설정
 ENV JAVA_OPTS="-Xms512m -Xmx1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
-
+ENV TZ=Asia/Seoul
+ENV LANG=ko_KR.UTF-8
+ENV LC_ALL=ko_KR.UTF-8
+ENV LANGUAGE=ko_KR.UTF-8
+ENV JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 # 포트 노출
 EXPOSE 8080 8081
 
