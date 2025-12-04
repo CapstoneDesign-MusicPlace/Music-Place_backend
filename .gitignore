@@ -38,4 +38,3 @@ out/
 
 ### docker compose password ###
 .env
-/db

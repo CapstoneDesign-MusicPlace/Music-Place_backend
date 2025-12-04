@@ -1,4 +1,4 @@
-package org.musicplace.global.test;
+package org.musicplace;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
