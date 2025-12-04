@@ -15,7 +15,7 @@ public class JwtTokenProvider {
     @Value("${JWT_SECRET}")  // application.properties 또는 application.yml에 설정된 비밀 키
     private String secretKey;
 
-    @Value("${JWT_EXPIRATION}")  // JWT 만료 시간 설정
+    @Value("${JWT_ACCESS_TIME}")  // JWT 만료 시간 설정
     private long expirationTime;
 
     // JWT에서 사용자 이름을 추출
