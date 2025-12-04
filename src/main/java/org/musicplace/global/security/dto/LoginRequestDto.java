@@ -1,19 +1,11 @@
 package org.musicplace.global.security.dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
 public class LoginRequestDto {
-    private String member_id;
-    private String pw;
-
-    @Builder
-    public LoginRequestDto(String member_id, String pw) {
-        this.member_id = member_id;
-        this.pw = pw;
-    }
+    private String username;
+    private String password;
 }

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class YoutubeService {
 
     //@Value 어노테이션을 사용하여 application.yml에서 정의한 YouTube API 키를 주입 받음
-    @Value("${YOUTUBE_API_KEY}")
+    @Value("${YOUTUBE_KEY}")
     private String apiKey;
 
     public List<YoutubeVidioDto> searchVideo(String query) throws IOException {

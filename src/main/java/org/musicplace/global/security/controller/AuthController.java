@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.musicplace.global.security.config.CustomUserDetails;
 import org.musicplace.global.security.dto.LoginResponseDto;
 import org.musicplace.global.security.jwt.JwtTokenUtil;
-import org.musicplace.global.security.dto.LoginRequestDto;
+import org.musicplace.member.domain.SignInEntity;
+import org.musicplace.member.dto.LoginRequestDto;
 import org.musicplace.member.service.SignInService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,12 @@ public class AuthController {
         String token = jwtTokenUtil.generateToken(user.getSignInEntity().getMemberId());
         return ResponseEntity.ok(new LoginResponseDto(token));
 
+    }
+
+    // OAuth 로그인 후 JWT 반환
+    @GetMapping("/google")
+    public ResponseEntity<LoginResponseDto> getOAuth2Jwt(@RequestParam String jwtToken) {
+        return ResponseEntity.ok(new LoginResponseDto(jwtToken));
     }
 
     // 로그아웃 기능
